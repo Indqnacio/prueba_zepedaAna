@@ -32,13 +32,18 @@ const fetchPersonajes = async() => {
     const res = await axios.get('https://swapi.info/api/people');
     const datos = res.data;
     
+    datos.forEach(async (personaje) => {
+        const resPlaneta = await axios.get(personaje.homeworld);
+        const planeta = resPlaneta.data.name;
+        personaje.homeworld = planeta;
+    });
     //console.log("informacion ",datos[0]);
     setPersonajes(datos)
 }
 const fetchPlanetas = async(aux) => {
     const res = await axios.get(`https://swapi.info/api/planets/1`);
-    const datos = res.data;
-    return(res.data.name);
+    const datos = await res.data;
+    return(datos.name);
     //setPlanetas(datos)
 }
 useEffect(() => {
