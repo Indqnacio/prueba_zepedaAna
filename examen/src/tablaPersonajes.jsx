@@ -11,11 +11,11 @@ import Button from '@mui/material/Button';
 import axios from "axios";
 import ExtraInfoModal from "./extraInfoModal";
 
-function TablaPersonajes() {
+function TablaPersonajes({ personajes }) {
 const [pagina, setPagina] = useState(0);
 const [filasPPag, setFilasPPag] = useState(10);
-const [personajes, setPersonajes] = useState([]);
-const [vehiculos, setVehiculos] = useState([]);
+//const [personajes, setPersonajes] = useState([]);
+//const [vehiculos, setVehiculos] = useState([]);
 const [item, setItem] = useState();
 //const [open, setOpen] = useState(false);
 const [isModalOpen, setIsModalOpen] = useState(false);
@@ -30,30 +30,9 @@ const columns = [
     {id: 'gender', label: 'Género'},
     {id: 'homeworld', label: 'Planeta de Nacimiento'},
 ]
-
-const fetchPersonajes = async() => {
-    const res = await axios.get('https://swapi.info/api/people');
-    const datos = res.data;
-    
-    datos.forEach(async (personaje) => {
-        const resPlaneta = await axios.get(personaje.homeworld);
-        const planeta = resPlaneta.data.name;
-        personaje.homeworld = planeta;
-    });
-    console.log("informacion ",datos[0].films);
-    setPersonajes(datos)
-}
-const fetchPlanetas = async(aux) => {
-    const res = await axios.get(`${aux}}`);
-    const datos = await res.data;
-    return(datos.name);
-}
 useEffect(() => {
-    fetchPersonajes();
-    fetchPlanetas();
-    console.log(isModalOpen);
-},[]);
-
+    console.log(personajes);
+}, [personajes]);
 const handleChangePage = (event, newPage) => {
     setPagina(newPage);
   };
