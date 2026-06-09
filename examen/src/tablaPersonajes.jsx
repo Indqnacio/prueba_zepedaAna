@@ -7,7 +7,20 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TablePagination from '@mui/material/TablePagination';
 import TableRow from '@mui/material/TableRow';
+import Button from '@mui/material/Button';
 import axios from "axios";
+import ExtraInfoModal from "./extraInfoModal";
+
+function TablaPersonajes() {
+const [pagina, setPagina] = useState(0);
+const [filasPPag, setFilasPPag] = useState(10);
+const [personajes, setPersonajes] = useState([]);
+const [vehiculos, setVehiculos] = useState([]);
+//const [planetas, setPlanetas] = useState([]);
+//const [cargando, setCargando] = useState(true);
+const [item, setItem] = useState();
+//const [open, setOpen] = useState(false);
+const [isModalOpen, setIsModalOpen] = useState(false);
 
 const columns = [
     {id: 'name', label: 'Nombre', minWidth:60 },
@@ -20,14 +33,6 @@ const columns = [
     {id: 'homeworld', label: 'Planeta de Nacimiento'},
 ]
 
-function PaginaPrincipal() {
-const [pagina, setPagina] = useState(0);
-const [filasPPag, setFilasPPag] = useState(10);
-const [personajes, setPersonajes] = useState([]);
-const [vehiculos, setVehiculos] = useState([]);
-const [planetas, setPlanetas] = useState([]);
-const [cargando, setCargando] = useState(true);
-
 const fetchPersonajes = async() => {
     const res = await axios.get('https://swapi.info/api/people');
     const datos = res.data;
@@ -37,23 +42,23 @@ const fetchPersonajes = async() => {
         const planeta = resPlaneta.data.name;
         personaje.homeworld = planeta;
     });
-    //console.log("informacion ",datos[0]);
+    console.log("informacion ",datos[0].films);
     setPersonajes(datos)
 }
 const fetchPlanetas = async(aux) => {
-    const res = await axios.get(`https://swapi.info/api/planets/1`);
+    const res = await axios.get(`${aux}}`);
     const datos = await res.data;
     return(datos.name);
-    //setPlanetas(datos)
 }
 useEffect(() => {
     fetchPersonajes();
     fetchPlanetas();
+    console.log(isModalOpen);
 },[]);
 
 useEffect(() => {
-    console.log("personajes ",personajes);
-},[personajes]);
+    console.log("se abrio el modal ");
+},[isModalOpen]);
 
 const handleChangePage = (event, newPage) => {
     setPagina(newPage);
@@ -63,9 +68,18 @@ const handleChangePage = (event, newPage) => {
     setFilasPPag(+event.target.value);
     setPagina(0);
   };
+  const handleOpen = (e, personaje) => {
+    setItem(personaje); 
+    console.log(item); 
+    setIsModalOpen(true)
+  }
+
+  const closeModal = () => setIsModalOpen(false);
 return(
 
     <Paper sx={{ width: '100%', overflow: 'hidden' }}>
+      <Button onClick={handleOpen}>Open modal</Button>
+      <ExtraInfoModal isOpen={isModalOpen} onClose={closeModal} info={item}></ExtraInfoModal>
       <TableContainer sx={{ maxHeight: 440 }}>
         <Table stickyHeader aria-label="sticky table">
           <TableHead>
@@ -86,7 +100,7 @@ return(
               .slice(pagina * filasPPag, pagina * filasPPag + filasPPag)
               .map((personaje) => {
                 return (
-                  <TableRow hover role="checkbox" tabIndex={-1} key={personaje.name}>
+                  <TableRow hover role="checkbox" tabIndex={-1} key={personaje.name} onClick={() => {setItem(personaje); setIsModalOpen(true)}}>
                     {columns.map((column) => {
                       const value = personaje[column.id];
                       return (
@@ -112,7 +126,8 @@ return(
         onPageChange={handleChangePage}
         onRowsPerPageChange={handleChangeRowsPerPage}
       />
+      
     </Paper>
   );
 }
-export default PaginaPrincipal;
+export default TablaPersonajes;
