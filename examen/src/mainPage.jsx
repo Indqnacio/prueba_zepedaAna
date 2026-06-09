@@ -1,6 +1,5 @@
 import {useState, useEffect} from 'react'
 import TablaPersonajes from './tablaPersonajes'
-import ExtraInfoModal from './extraInfoModal'
 import Toolbar from '@mui/material/Toolbar';
 import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
@@ -12,7 +11,7 @@ import axios from "axios";
 export default function MainPage() {
 
     const [personajes, setPersonajes] = useState([]);
-    //const [filteredData, setFilteredData] = useState([]);
+    const [personajesFiltrados, setPersonajesFiltrados] = useState([]);
     const [planetas, setPlanetas] = useState([]);
     const [searchText, setSearchText] = useState("");
 
@@ -27,6 +26,7 @@ export default function MainPage() {
         });
         console.log("informacion ",datos[0].films);
         setPersonajes(datos)
+        setPersonajesFiltrados(datos);
     }
     const fetchPlanetas = async(aux) => {
         const res = await axios.get(`${aux}}`);
@@ -86,8 +86,11 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
             personaje.name.toLowerCase().includes(searchText.toLowerCase())
         );
         
-        setPersonajes(filtered);
-        //setFilteredData(filtered);
+        setPersonajesFiltrados(filtered);
+    }
+
+    function handleSearchChange(event) {
+        setSearchText(event.target.value);
     }
     useEffect(() => {
         filterData();
@@ -97,36 +100,18 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
         <h1>Personajes de Star Wars</h1>
         <AppBar position="static">
         <Toolbar>
-          <IconButton
-            size="large"
-            edge="start"
-            color="inherit"
-            aria-label="open drawer"
-            sx={{ mr: 2 }}
-          >
-          </IconButton>
-          <Typography
-            variant="h6"
-            noWrap
-            component="div"
-            sx={{ flexGrow: 1, display: { xs: 'none', sm: 'block' } }}
-          >
-            MUI
-          </Typography>
           <Search>
-            <SearchIconWrapper>
-            </SearchIconWrapper>
             <StyledInputBase
               placeholder="Search…"
               inputProps={{ 'aria-label': 'search' }}
               value={searchText}
-              onChange={(e) => setSearchText(e.target.value)}
+              autoFocus
+              onChange={handleSearchChange}
             />
           </Search>
         </Toolbar>
       </AppBar>
-        <TablaPersonajes personajes={personajes}></TablaPersonajes>
+        <TablaPersonajes personajes={personajesFiltrados}></TablaPersonajes>
         </>
-        
     )
 }

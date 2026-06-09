@@ -9,6 +9,8 @@ export default function ExtraInfoModal({ isOpen, onClose, info }) {
 
     const [peliculas, setPeliculas] = useState([]);
     const [vehiculos, setVehiculos] = useState([]);
+    const [naves, setNaves] = useState([]);
+    
     function fetchVehicles() {
         info.vehicles.forEach(async (vehiculo) => {
             const resVehiculo = await axios.get(vehiculo);
@@ -22,6 +24,13 @@ export default function ExtraInfoModal({ isOpen, onClose, info }) {
             const peliculaData = resPelicula.data.title;
             setPeliculas((prevPeliculas) => [...prevPeliculas, peliculaData]);
         });
+    }
+    function fetchStarships() {
+        info.starships.forEach(async (nave) => {
+            const resNave = await axios.get(nave);
+            const naveData = resNave.data.name;
+            setNaves((prevNaves) => [...prevNaves, naveData]);
+        })
     }
     useEffect(() => {
         if (isOpen) {
@@ -54,6 +63,14 @@ export default function ExtraInfoModal({ isOpen, onClose, info }) {
                         {vehiculos.length === 0 ? (<p>No tiene vehículos</p>) : 
                          vehiculos.map((vehiculo, index) => (
                             <li key={index}>{vehiculo}</li>
+                        ))
+                        }
+                    </Typography>
+                    <Typography id="modal-modal-description" sx={{ mt: 2 }}>
+                        Naves:
+                        {naves.length === 0 ? (<p>No tiene naves</p>) : 
+                         naves.map((nave, index) => (
+                            <li key={index}>{nave}</li>
                         ))
                         }
                     </Typography>

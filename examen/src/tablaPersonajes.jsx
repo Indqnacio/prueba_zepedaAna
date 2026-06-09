@@ -14,16 +14,14 @@ import ExtraInfoModal from "./extraInfoModal";
 function TablaPersonajes({ personajes }) {
 const [pagina, setPagina] = useState(0);
 const [filasPPag, setFilasPPag] = useState(10);
-//const [personajes, setPersonajes] = useState([]);
-//const [vehiculos, setVehiculos] = useState([]);
 const [item, setItem] = useState();
-//const [open, setOpen] = useState(false);
 const [isModalOpen, setIsModalOpen] = useState(false);
 
 const columns = [
     {id: 'name', label: 'Nombre', minWidth:60 },
     {id: 'height', label: 'Altura', format: (value) => value.toFixed(2)},
     {id: 'mass', label: 'Peso', format: (value) => value.toFixed(2)},
+    {id: 'skin_color', label: 'Color de Piel'},
     {id: 'hair_color', label: 'Color de Cabello'},
     {id: 'eye_color', label: 'Color de Ojos'},
     {id: 'birth_year', label: 'Fecha de Nacimiento'},
