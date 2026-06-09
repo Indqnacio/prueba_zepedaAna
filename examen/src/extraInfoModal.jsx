@@ -7,13 +7,8 @@ import axios from "axios";
 
 export default function ExtraInfoModal({ isOpen, onClose, info }) {
 
-    //const [open, setOpen] = useState(false);
-    //const handleOpen = () => setOpen(true);
-    //const handleClose = () => setOpen(false);
-    //console.log(isOpen);
     const [peliculas, setPeliculas] = useState([]);
     const [vehiculos, setVehiculos] = useState([]);
-    console.log(info);
     function fetchVehicles() {
         info.vehicles.forEach(async (vehiculo) => {
             const resVehiculo = await axios.get(vehiculo);
@@ -28,7 +23,6 @@ export default function ExtraInfoModal({ isOpen, onClose, info }) {
             setPeliculas((prevPeliculas) => [...prevPeliculas, peliculaData]);
         });
     }
-
     useEffect(() => {
         if (isOpen) {
             fetchVehicles();

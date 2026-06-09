@@ -16,8 +16,6 @@ const [pagina, setPagina] = useState(0);
 const [filasPPag, setFilasPPag] = useState(10);
 const [personajes, setPersonajes] = useState([]);
 const [vehiculos, setVehiculos] = useState([]);
-//const [planetas, setPlanetas] = useState([]);
-//const [cargando, setCargando] = useState(true);
 const [item, setItem] = useState();
 //const [open, setOpen] = useState(false);
 const [isModalOpen, setIsModalOpen] = useState(false);
@@ -56,10 +54,6 @@ useEffect(() => {
     console.log(isModalOpen);
 },[]);
 
-useEffect(() => {
-    console.log("se abrio el modal ");
-},[isModalOpen]);
-
 const handleChangePage = (event, newPage) => {
     setPagina(newPage);
   };
@@ -78,7 +72,6 @@ const handleChangePage = (event, newPage) => {
 return(
 
     <Paper sx={{ width: '100%', overflow: 'hidden' }}>
-      <Button onClick={handleOpen}>Open modal</Button>
       <ExtraInfoModal isOpen={isModalOpen} onClose={closeModal} info={item}></ExtraInfoModal>
       <TableContainer sx={{ maxHeight: 440 }}>
         <Table stickyHeader aria-label="sticky table">
