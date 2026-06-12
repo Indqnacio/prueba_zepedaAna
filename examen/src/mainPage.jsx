@@ -10,9 +10,9 @@ import axios from "axios";
 
 export default function MainPage() {
 
-    const [personajes, setPersonajes] = useState([]);
-    const [personajesFiltrados, setPersonajesFiltrados] = useState([]);
-    const [planetas, setPlanetas] = useState([]);
+    const [characters, setCharacters] = useState([]);
+    const [filteredCharacters, setFilteredCharacters] = useState([]);
+    const [planets, setPlanets] = useState([]);
     const [searchText, setSearchText] = useState("");
 
     const fetchPersonajes = async() => {
@@ -25,8 +25,8 @@ export default function MainPage() {
             personaje.homeworld = planeta;
         });
         console.log("informacion ",datos[0].films);
-        setPersonajes(datos)
-        setPersonajesFiltrados(datos);
+        setCharacters(datos)
+        setFilteredCharacters(datos);
     }
     const fetchPlanetas = async(aux) => {
         const res = await axios.get(`${aux}}`);
@@ -82,11 +82,11 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
     },[]);
 
     function filterData() {
-        const filtered = personajes.filter(personaje =>
+        const filtered = characters.filter(personaje =>
             personaje.name.toLowerCase().includes(searchText.toLowerCase())
         );
         
-        setPersonajesFiltrados(filtered);
+        setFilteredCharacters(filtered);
     }
 
     function handleSearchChange(event) {
@@ -111,7 +111,7 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
           </Search>
         </Toolbar>
       </AppBar>
-        <TablaPersonajes personajes={personajesFiltrados}></TablaPersonajes>
+        <TablaPersonajes personajes={filteredCharacters}></TablaPersonajes>
         </>
     )
 }
