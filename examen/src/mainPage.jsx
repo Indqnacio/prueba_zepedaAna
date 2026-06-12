@@ -5,6 +5,7 @@ import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
 import InputBase from '@mui/material/InputBase';
 import AppBar from '@mui/material/AppBar';
+import Sidebar from './sidebarPage';
 import { styled, alpha } from '@mui/material/styles';
 import axios from "axios";
 
@@ -97,6 +98,8 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
     }, [searchText]);
     return (
         <>
+        <Sidebar></Sidebar>
+        <div></div>
         <h1>Personajes de Star Wars</h1>
         <AppBar position="static">
         <Toolbar>
