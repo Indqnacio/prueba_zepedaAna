@@ -37,8 +37,11 @@ export default function CharactersPage(){
     }
     return(
         <>
-        <div>
+        <div className="w-full">
             <h1>Personajes de Starwars</h1>
+            <div className="w-full justify-end">
+                <button className={"hover: cursor-pointer"}>+ Agregar Personaje</button>
+            </div>
             {characters && characters.length>0?(
                 <TableData columns={columns}data={characters}/>
             ):(

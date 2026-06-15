@@ -2,8 +2,10 @@ import react from "react"
 import { useEffect, useState } from "react"
 import axios from "axios";
 import TableData from "./tableData";
+import MoviesModal from "./modals/movies";
 export default function MoviesPage(){
     const [movies, setMovies] = useState([]);
+    const [isModalOpen, setIsModalOpen] = useState(false);
     const [totalPages, setTotalPages] = useState(0);
     const [index, setIndex]=useState(1);
     const columns = [
@@ -29,12 +31,14 @@ export default function MoviesPage(){
     return(
         <>
             <h1>Página principal de Películas</h1>
+            <button onClick={()=>setIsModalOpen(true)}>Agregar Película</button>
             <TableData columns={columns} data={movies}></TableData>
             <div className="flex">
                 <button disabled={index==1} className={"hover: cursor-pointer border "} onClick={prevPage}>Página Anterior</button>
                 <button disabled={index==totalPages} className={"hover: cursor-pointer border"} onClick={nextPage}>Página Siguiente</button>
                 <p>Página: {index}/{totalPages}</p>
             </div>
+            <MoviesModal isOpen={isModalOpen} onClose={()=>{setIsModalOpen(false); getMovies()}}></MoviesModal>
         </>
     )
 }

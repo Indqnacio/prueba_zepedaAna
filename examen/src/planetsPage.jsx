@@ -2,10 +2,12 @@ import react from "react"
 import axios from "axios"
 import { useEffect, useState } from "react"
 import TableData from "./tableData"
+import PlanetsModal from "./modals/planets"
 
 export default function PlanetsPage(){
 
     const [planets,setPlanets] = useState([])
+    const [isModalOpen, setIsModalOpen] = useState(false);
     const [totalPages, setTotalPages] = useState(0);
     const [index, setIndex]=useState(1);
     const columns = [
@@ -38,6 +40,7 @@ export default function PlanetsPage(){
     return(
         <>
         <h1>Página principal de Planetas</h1>
+         <button onClick={()=>setIsModalOpen(true)}>Agregar Planeta</button>
         <TableData columns={columns} data={planets}/>
         <div className="flex">
                 
@@ -45,6 +48,7 @@ export default function PlanetsPage(){
                 <button disabled={index===totalPages} className={"hover: cursor-pointer border"} onClick={nextPage}>Página Siguiente</button>
                 <p>Página: {index}/{totalPages}</p>
             </div>
+        <PlanetsModal isOpen={isModalOpen} onClose={()=>{setIsModalOpen(false); fetchPlanets()}}/>
         </>
     )
 }

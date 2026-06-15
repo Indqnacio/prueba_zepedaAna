@@ -2,8 +2,10 @@ import react from "react"
 import axios from "axios"
 import { useState, useEffect } from "react"
 import TableData from "./tableData"
+import StarshipsModal from "./modals/starships"
 export default function StarshipsPage(){
     const [starships, setStarships] = useState([])
+    const [isModalOpen, setIsModalOpen] = useState(false);
     const [totalPages, setTotalPages] = useState(0);
     const [index, setIndex]=useState(1);
 
@@ -37,6 +39,7 @@ export default function StarshipsPage(){
     return(
         <>
         <h1>Página principal de Naves</h1>
+         <button onClick={()=>setIsModalOpen(true)}>Agregar Nave</button>
         <TableData columns={columns} data={starships}/>
           <div className="flex">
                 
@@ -44,6 +47,7 @@ export default function StarshipsPage(){
                 <button disabled={index===totalPages} className={"hover: cursor-pointer border"} onClick={nextPage}>Página Siguiente</button>
                 <p>Página: {index}/{totalPages}</p>
             </div>
+            <StarshipsModal isOpen={isModalOpen} onClose={()=>{setIsModalOpen(false); fetchStarships()}}></StarshipsModal>
         </>
     )
 }

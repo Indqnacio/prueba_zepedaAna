@@ -1,4 +1,5 @@
-import react from "react"
+import {useState, useEffect} from "react"
+
 export default function SpeciesModal(){
     return(
         <h1>Modal de Especies</h1>
