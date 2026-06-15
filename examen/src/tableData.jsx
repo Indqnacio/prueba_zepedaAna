@@ -28,13 +28,9 @@ export default function TableData({columns, data}){
   };
   const handleOpen = (e, personaje) => {
     setItem(personaje); 
-    console.log(item); 
+   // console.log(item); 
     setIsModalOpen(true)
   }
-  useEffect(()=>{
-    console.log("columnas ",columns)
-    console.log("data ",data)
-  },[data])
     return(
       <div className="w-full  mx-auto my-8 p-4">
         <div className="overflow-x-auto rounded-lg border border-gray-200 shadow-md">

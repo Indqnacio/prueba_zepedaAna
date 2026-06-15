@@ -12,7 +12,7 @@ import PlanetsPage from './planetsPage'
 import SpeciesPage from './speciesPage'
 import StarshipsPage from './starshipsPage'
 import VehiclesPage from './vehiclesPage'
-import CharactersPage from './characters'
+import CharactersPage from './charactersPage'
 
 function App() {
   const [count, setCount] = useState(0)

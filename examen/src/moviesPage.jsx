@@ -24,10 +24,8 @@ export default function MoviesPage(){
 
     return(
         <>
-                    <h1>Página principal de Películas</h1>
-        <TableData columns={columns} data={movies}></TableData>
-
+            <h1>Página principal de Películas</h1>
+            <TableData columns={columns} data={movies}></TableData>
         </>
-
     )
 }
