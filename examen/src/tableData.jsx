@@ -31,65 +31,45 @@ export default function TableData({columns, data}){
     console.log(item); 
     setIsModalOpen(true)
   }
+  useEffect(()=>{
+    console.log("columnas ",columns)
+    console.log("data ",data)
+  },[data])
     return(
-      <Paper sx={{ width: '100%', overflow: 'hidden' }}>
-      <TableContainer sx={{ maxHeight: 440 }}>
-        <Table stickyHeader aria-label="sticky table">
-          <TableHead>
-            <TableRow>
-              {columns.map((column) => (
-                <>
-                <TableCell
-                  key={column.id}
-                  align={column.align}
-                  style={{ minWidth: column.minWidth }}
-                >
-                  {column.label}
-                </TableCell>
-                
-                </>
-                
-              ))}
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {data
-              .slice(pagina * filasPPag, pagina * filasPPag + filasPPag)
-              .map((personaje) => {
-                return (
-                  <TableRow hover role="checkbox" tabIndex={-1} key={personaje.name} onClick={() => {setItem(personaje); setIsModalOpen(true)}}>
-                    {columns.map((column) => {
-                      let value = personaje[column.id];
-                      {if (column.id === 'actions') value=(<><Button>Ver</Button>
-                                <Button>Actualizar</Button>
-                                <Button>Eliminar</Button></>)}
-                      
-                      return (
-                        <TableCell key={column.id} align={column.align}>
-                          {column.format && typeof value === 'number'
-                            ? column.format(value)
-                            : value}
-                            
-                        </TableCell>
-                        
-                      );
-                    })}
-                  </TableRow>
-                );
-              })}
-          </TableBody>
-        </Table>
-      </TableContainer>
-      <TablePagination
-        rowsPerPageOptions={[10, 25, 100]}
-        component="div"
-        count={data.length}
-        rowsPerPage={filasPPag}
-        page={pagina}
-        onPageChange={handleChangePage}
-        onRowsPerPageChange={handleChangeRowsPerPage}
-      />
-      
-    </Paper>
+      <div className="w-full  mx-auto my-8 p-4">
+        <div className="overflow-x-auto rounded-lg border border-gray-200 shadow-md">
+            <table className="w-full">
+            <thead className="bg-gray-50">
+              <tr>
+                {columns.map((column) =>(
+                    (<th className="px-6 py-4 font-medium text-gray-900" key={column.id}>{column.label}</th>)
+                ))}
+              </tr>
+            </thead>
+            <tbody className="">
+                {data.map((item)=>{
+                  return(
+                    <tr className="hover:cursor-pointer" key={item.name}>
+                      {columns.map((column)=>{
+                        const value = item[column.id];
+                        return(
+                          <td>{value}</td>
+                        )
+                      })}
+                   </tr>
+                  )
+                   
+                  {data.map((item)=>{
+                    const value = item[column.id]
+                    (<td>{value}</td>)
+                  })}
+                })}
+
+            </tbody>
+        </table>
+        </div>
+              
+      </div>
+
     )
 }

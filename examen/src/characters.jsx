@@ -13,7 +13,8 @@ export default function CharactersPage(){
     {id: 'hair_color', label: 'Color de Cabello', minWidth:"10%"},
     {id: 'height', label: 'Altura', minWidth:"10%"},
     {id: 'mass', label: 'Peso', minWidth:"10%"},
-    {id: 'homeworld', label: 'Planeta', minWidth:"10%"}
+    {id: 'homeworld', label: 'Planeta', minWidth:"10%"},
+    {id: 'actions', label: 'Acciones', minWidth:"10%"}
 ]
 
     async function fetchCharacters() {
@@ -29,7 +30,8 @@ export default function CharactersPage(){
     return(
         <>
         <h1>Página principal de Personajes</h1>
-        <TableData columns={columns} data={characters}/></>
+        <TableData columns={columns} data={characters}/>
+        </>
         
     )
 }

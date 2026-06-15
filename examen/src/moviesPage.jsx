@@ -1,7 +1,6 @@
 import react from "react"
 import { useEffect, useState } from "react"
 import axios from "axios";
-import './Movies.css'
 import TableData from "./tableData";
 export default function MoviesPage(){
     const [movies, setMovies] = useState([]);
@@ -24,9 +23,10 @@ export default function MoviesPage(){
     }, [movies]);
 
     return(
-        <>  
-        <h1>Página principal de Películas</h1>
+        <>
+                    <h1>Página principal de Películas</h1>
         <TableData columns={columns} data={movies}></TableData>
+
         </>
 
     )

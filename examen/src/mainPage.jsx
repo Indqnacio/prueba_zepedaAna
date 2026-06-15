@@ -5,34 +5,39 @@ import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
 import InputBase from '@mui/material/InputBase';
 import AppBar from '@mui/material/AppBar';
-import Sidebar from './sidebarPage';
+import Sidebar from './sidebar';
+import MoviesPage from './moviesPage';
+import CharactersPage from './charactersPage';
+import VehiclesPage from './vehiclesPage';
+import StarshipsPage from './starshipsPage';
+import SpeciesPage from './speciesPage';
+import PlanetsPage from './planetsPage';
 import { styled, alpha } from '@mui/material/styles';
 import axios from "axios";
 
 export default function MainPage() {
 
-    const [characters, setCharacters] = useState([]);
-    const [filteredCharacters, setFilteredCharacters] = useState([]);
-    const [planets, setPlanets] = useState([]);
-    const [searchText, setSearchText] = useState("");
+    //const [characters, setCharacters] = useState([]);
+    //const [filteredCharacters, setFilteredCharacters] = useState([]);
+    //const [planets, setPlanets] = useState([]);
+    //const [searchText, setSearchText] = useState("");
 
-    const fetchPersonajes = async() => {
-        const res = await axios.get('https://swapi.info/api/people');
-        const datos = res.data;
-        
-        datos.forEach(async (personaje) => {
-            const resPlaneta = await axios.get(personaje.homeworld);
-            const planeta = resPlaneta.data.name;
-            personaje.homeworld = planeta;
-        });
-        console.log("informacion ",datos[0].films);
-        setCharacters(datos)
-        setFilteredCharacters(datos);
-    }
-    const fetchPlanetas = async(aux) => {
-        const res = await axios.get(`${aux}}`);
-        const datos = await res.data;
-        return(datos.name);
+    const [activePage, setActivePage] = useState("characters");
+    const renderPage = () =>{
+        switch(activePage){
+            case 'characters':
+                return <CharactersPage/>
+            case 'movies':
+                return <MoviesPage/>
+            case 'vehicles':
+                return <VehiclesPage/>
+            case 'starships':
+                return <StarshipsPage/>
+            case 'species':
+                return <SpeciesPage/>
+            case 'planets':
+                return <PlanetsPage/>
+        }
     }
 
     const Search = styled('div')(({ theme }) => ({
@@ -77,11 +82,6 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
   },
 }));
 
-    useEffect(() => {
-        fetchPersonajes();
-        fetchPlanetas();
-    },[]);
-
     function filterData() {
         const filtered = characters.filter(personaje =>
             personaje.name.toLowerCase().includes(searchText.toLowerCase())
@@ -93,28 +93,16 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
     function handleSearchChange(event) {
         setSearchText(event.target.value);
     }
-    useEffect(() => {
-        filterData();
-    }, [searchText]);
     return (
         <>
-        <Sidebar></Sidebar>
-        <div></div>
-        <h1>Personajes de Star Wars</h1>
-        <AppBar position="static">
-        <Toolbar>
-          <Search>
-            <StyledInputBase
-              placeholder="Search…"
-              inputProps={{ 'aria-label': 'search' }}
-              value={searchText}
-              autoFocus
-              onChange={handleSearchChange}
-            />
-          </Search>
-        </Toolbar>
-      </AppBar>
-        <TablaPersonajes personajes={filteredCharacters}></TablaPersonajes>
+        <div className='flex'>
+            <div className='flex bg-slate-950 h-screen text-slate-100 overflow-hidden'>
+                <Sidebar activePage={activePage} setActivePage={setActivePage}/>
+            </div>
+            <main className='flex-1 h-screen flex w-full flex-col p-8 transition-all duration-300'>
+                <div className='p-6 h-[80vh] w-full'>{renderPage()}</div>
+            </main>
+        </div>
         </>
     )
 }

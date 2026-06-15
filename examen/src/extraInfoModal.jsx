@@ -4,6 +4,7 @@ import Typography from '@mui/material/Typography';
 import Modal from '@mui/material/Modal';
 import Button from '@mui/material/Button';
 import axios from "axios";
+import { Divider } from "@mui/material";
 
 export default function ExtraInfoModal({ isOpen, onClose, info }) {
 
@@ -48,17 +49,22 @@ export default function ExtraInfoModal({ isOpen, onClose, info }) {
                 aria-labelledby="modal-modal-title"
                 aria-describedby="modal-modal-description"
             >
-                <Box sx={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', width: 400, bgcolor: 'background.paper', border: '2px solid #000', boxShadow: 24, p: 4 }}>
-                     <Typography id="modal-modal-title" variant="h6" component="h2">
+                <Box sx={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', width: 400, bgcolor: '#ffffff', border: '2px solid #000', boxShadow: 24, p: 4 }}>
+                     <Typography id="modal-modal-title" variant="h6" component="h2" sx={{color:'#333333'}}>
                         Información adicional
                     </Typography>
-                    <Typography id="modal-modal-description" sx={{ mt: 2 }}>
+                    <Divider/>
+                
+                    <br />
+                    <Typography id="modal-modal-description" sx={{ mt: 2}} sx={{color:'#333333'}}>
                         Aparece en las Peliculas:
                        {peliculas.map((pelicula, index) => (
                             <li key={index}>{pelicula}</li>
                         ))}
                     </Typography>
-                    <Typography id="modal-modal-description" sx={{ mt: 2 }}>
+                    <Divider/>
+                    <br />
+                    <Typography id="modal-modal-description" sx={{ mt: 3 }} sx={{color:'#333333'}}>
                         Vehículos:
                         {vehiculos.length === 0 ? (<p>No tiene vehículos</p>) : 
                          vehiculos.map((vehiculo, index) => (
@@ -66,7 +72,9 @@ export default function ExtraInfoModal({ isOpen, onClose, info }) {
                         ))
                         }
                     </Typography>
-                    <Typography id="modal-modal-description" sx={{ mt: 2 }}>
+                    <Divider/>
+                    <br />
+                    <Typography id="modal-modal-description" sx={{ mt: 2 }} sx={{color:'#333333'}}>
                         Naves:
                         {naves.length === 0 ? (<p>No tiene naves</p>) : 
                          naves.map((nave, index) => (

@@ -35,7 +35,5 @@ export default function PlanetsPage(){
         <h1>Página principal de Planetas</h1>
         <TableData columns={columns} data={planets}/>
         </>
-        
-
     )
 }
