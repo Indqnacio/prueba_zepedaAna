@@ -4,18 +4,27 @@ import TablaPersonajes from './tablaPersonajes';
 import TableData from './tableData';
 export default function SpeciesPage(){
     const [species, setSpecies] = useState([]);
-    
+    const [totalPages, setTotalPages] = useState(0);
+    const [index, setIndex]=useState(1);
+
      async function getSpecies(){
-        const aux = await axios.get('http://localhost:3000/getEspecies')
+        const aux = await axios.get(`http://localhost:3000/getEspecies?page=${index}&limit=10`)
         setSpecies(aux.data.docs)
+        setTotalPages(aux.data.totalPages)
     }
     useEffect(() => {
         getSpecies();
-    }, []);
+    }, [index]);
     useEffect(() => {
         console.log("especies ",species);
     }, [species]);
 
+    async function nextPage() {
+         setIndex(index+1)
+    }
+    async function prevPage() {
+         setIndex(index-1)
+    }
     const columns = [
     {id: 'name', label: 'Nombre', minWidth:"10%" },
     {id: 'classification', label: 'Clasificación', minWidth:"10%"},
@@ -33,6 +42,12 @@ export default function SpeciesPage(){
         <>
         <h1>Página principal de Especies</h1>
         <TableData columns={columns} data={species}/>
+          <div className="flex">
+                
+                <button disabled={index===1} className={"hover: cursor-pointer border "} onClick={prevPage}>Página Anterior</button>
+                <button disabled={index===totalPages} className={"hover: cursor-pointer border"} onClick={nextPage}>Página Siguiente</button>
+                <p>Página: {index}/{totalPages}</p>
+            </div>
         </>
         
     )

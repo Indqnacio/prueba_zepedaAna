@@ -3,8 +3,6 @@ import axios from "axios";
 import TableData from "./tableData";
 
 export default function CharactersPage(){
-    const [isPrevButtonDisabled, setIsPrevButtonDisabled]=useState(true)
-    const [isNextButtonDisabled, setIsNextButtonDisabled]=useState(false)
     const [characters, setCharacters] = useState([])
     const [filteredCharacters, setFilteredCharacters] = useState([])
     const [totalPages, setTotalPages] = useState(0);
@@ -22,11 +20,8 @@ export default function CharactersPage(){
 ]
     
     const fetchPersonajes = async() => {
-        //console.log("index ",index)
         const res = await axios.get(`http://localhost:3000/getPersonajes?page=${index}&limit=10`);
         const datos = res.data.docs;
-        //console.log("peticion en personaje de personajes ",datos);
-        setTotalPages(res.data.totalPages)
         setCharacters(datos)
         setFilteredCharacters(datos);
         setTotalPages(res.data.totalPages)
@@ -34,27 +29,12 @@ export default function CharactersPage(){
     useEffect(()=>{
         fetchPersonajes();
     },[index])
-   /* useEffect(()=>{
-        console.log("personajes recibidos ", characters);
-        console.log("Total pages ", totalPages)
-        console.log("isPrev disabled: ",isPrevButtonDisabled)
-        console.log("isNext disabled: ",isNextButtonDisabled)
-    },[characters])*/
     async function nextPage() {
-        //console.log("indice antes de sumar ", index)
          setIndex(index+1)
-        //console.log("index despues de sumar ", index)
-        //await fetchPersonajes();
     }
     async function prevPage() {
-        //console.log("indice antes de restar ", index)
          setIndex(index-1)
-        //console.log("index despues de restar ", index)
-       // await fetchPersonajes();
     }
-   /* useEffect(()=>{
-        console.log(index)
-    },[index])*/
     return(
         <>
         <div>

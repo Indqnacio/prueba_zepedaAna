@@ -6,7 +6,8 @@ import TableData from "./tableData"
 export default function PlanetsPage(){
 
     const [planets,setPlanets] = useState([])
-
+    const [totalPages, setTotalPages] = useState(0);
+    const [index, setIndex]=useState(1);
     const columns = [
     {id: 'name', label: 'Nombre', minWidth:"10%" },
     {id: 'diameter', label: 'Diametro', minWidth:"10%"},
@@ -20,20 +21,30 @@ export default function PlanetsPage(){
     {id:'actions',label:'Acciones',minWidth:"10%"}
 ]
     async function fetchPlanets(){
-        const aux = await axios.get('http://localhost:3000/getPlanetas')
+        const aux = await axios.get(`http://localhost:3000/getPlanetas?page=${index}&limit=10`)
         setPlanets(aux.data.docs)
+        setTotalPages(aux.data.totalPages)
     }
     useEffect(()=>{
         fetchPlanets();
-    },[])
-    useEffect(()=>{
-        console.log("planetas", planets)
-    },[planets])
+    },[index])
+     async function nextPage() {
+         setIndex(index+1)
+    }
+    async function prevPage() {
+         setIndex(index-1)
+    }
 
     return(
         <>
         <h1>Página principal de Planetas</h1>
         <TableData columns={columns} data={planets}/>
+        <div className="flex">
+                
+                <button disabled={index===1} className={"hover: cursor-pointer border "} onClick={prevPage}>Página Anterior</button>
+                <button disabled={index===totalPages} className={"hover: cursor-pointer border"} onClick={nextPage}>Página Siguiente</button>
+                <p>Página: {index}/{totalPages}</p>
+            </div>
         </>
     )
 }
