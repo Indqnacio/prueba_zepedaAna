@@ -1,8 +1,10 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
 import TableData from "./tableData";
+import CharactersModal from "./modals/characters";
 
 export default function CharactersPage(){
+    const [isModalOpen, setIsModalOpen] = useState(false)
     const [characters, setCharacters] = useState([])
     const [filteredCharacters, setFilteredCharacters] = useState([])
     const [totalPages, setTotalPages] = useState(0);
@@ -19,7 +21,7 @@ export default function CharactersPage(){
     {id: 'homeworld', label: 'Planeta de Nacimiento'},
 ]
     
-    const fetchPersonajes = async() => {
+    const fetchCharacters = async() => {
         const res = await axios.get(`http://localhost:3000/getPersonajes?page=${index}&limit=10`);
         const datos = res.data.docs;
         setCharacters(datos)
@@ -27,7 +29,7 @@ export default function CharactersPage(){
         setTotalPages(res.data.totalPages)
     }
     useEffect(()=>{
-        fetchPersonajes();
+        fetchCharacters();
     },[index])
     async function nextPage() {
          setIndex(index+1)
@@ -39,9 +41,7 @@ export default function CharactersPage(){
         <>
         <div className="w-full">
             <h1>Personajes de Starwars</h1>
-            <div className="w-full justify-end">
-                <button className={"hover: cursor-pointer"}>+ Agregar Personaje</button>
-            </div>
+             <button onClick={()=>setIsModalOpen(true)} className={"hover: cursor-pointer"}> Agregar Personaje</button>
             {characters && characters.length>0?(
                 <TableData columns={columns}data={characters}/>
             ):(
@@ -53,6 +53,7 @@ export default function CharactersPage(){
                 <button disabled={index===totalPages} className={"hover: cursor-pointer border"} onClick={nextPage}>Página Siguiente</button>
                 <p>Página: {index}/{totalPages}</p>
             </div>
+            <CharactersModal isOpen={isModalOpen} onClose={()=>{setIsModalOpen(false); fetchCharacters()}}></CharactersModal>
         </div>
 
         </>
