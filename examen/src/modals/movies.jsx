@@ -61,8 +61,6 @@ export default function MoviesModal({isOpen, onClose, data}){
 
             <div className="mt-6 relative flex-1 px-4 sm:px-6">
               <form onSubmit={formik.handleSubmit} className="space-y-6">
-                
-                {/* Name Field */}
                 <div>
                   <label htmlFor="title" className="block text-sm font-medium text-gray-700">Nombre</label>
                   <input

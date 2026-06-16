@@ -8,6 +8,7 @@ export default function CharactersPage(){
     const [characters, setCharacters] = useState([])
     const [filteredCharacters, setFilteredCharacters] = useState([])
     const [totalPages, setTotalPages] = useState(0);
+    const [films, setFilms] = useState([])
     const [index, setIndex]=useState(1);
     const columns = [
     {id: 'name', label: 'Nombre', minWidth:60 },
@@ -20,7 +21,15 @@ export default function CharactersPage(){
     {id: 'gender', label: 'Género'},
     {id: 'homeworld', label: 'Planeta de Nacimiento'},
 ]
-    
+useEffect(() => {
+        console.log(films)
+    }, [films]);
+
+        async function fetchMovies(){
+      const res = await axios.get('http://localhost:3000/getPeliPerso')
+      const data = res.data.docs
+      setFilms(data)
+    }
     const fetchCharacters = async() => {
         const res = await axios.get(`http://localhost:3000/getPersonajes?page=${index}&limit=10`);
         const datos = res.data.docs;
@@ -30,6 +39,7 @@ export default function CharactersPage(){
     }
     useEffect(()=>{
         fetchCharacters();
+        fetchMovies();
     },[index])
     async function nextPage() {
          setIndex(index+1)
