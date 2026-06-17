@@ -1,4 +1,4 @@
-import react from "react"
+import react, { useEffect } from "react"
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Modal from '@mui/material/Modal';
@@ -8,8 +8,10 @@ import { useFormik } from "formik";
 import * as Yup from 'yup';
 import { Divider } from "@mui/material";
 
-export default function MoviesModal({isOpen, onClose, data}){
-    
+export default function MoviesModal({isOpen, onClose, data, mode, onSave}){
+    const isReadOnly = mode ==="viewing";
+    const isEditing = mode === "editing";
+    console.log(isEditing)
     const validationSchema=Yup.object({
         title: Yup.string()
         .required('El título es obligatorio'),
@@ -19,23 +21,27 @@ export default function MoviesModal({isOpen, onClose, data}){
         .required('El productor es obligatorio')
     });
 
+    useEffect(()=>{
+      console.log(mode)
+    }, [mode])
     const formik = useFormik({
         initialValues:{
+            _id: data?._id||'',
             title: data?.title||'',
             director: data?.director || '',
             producer: data?.producer||''
         }, validationSchema: validationSchema,
+        enableReinitialize:true,
         onSubmit: async(values, {setSubmitting, resetForm}) =>{
             try{
-                console.log(values)
-                const response = await axios.post('http://localhost:3000/postPeli', values);
-                console.log("Form mandado exitosamente ", response.data);
-                alert('Data enviado')
+              await onSave(values);
                 resetForm();
                 onClose();
             }catch(error){
                 console.error("Error mandando los datos: ", error)
-                alert('fallo al submit ', error);
+                alert('Fallo al guardar cambios ', error);
+            } finally{
+              setSubmitting(false);
             }
         }
     });
@@ -51,7 +57,7 @@ export default function MoviesModal({isOpen, onClose, data}){
             
             {/* Modal Header */}
             <div className="px-4 py-6 bg-gray-50 border-b border-gray-200 flex items-center justify-between">
-                {data?(<h2 className="text-lg font-medium text-gray-900">Editar Película</h2>):(<h2 className="text-lg font-medium text-gray-900">REgistrar Nueva Película</h2>)}
+                {isEditing?(<h2 className="text-lg font-medium text-gray-900">Editar Película</h2>):(<h2 className="text-lg font-medium text-gray-900">Registrar Nueva Película</h2>)}
               <button 
                 onClick={onClose}
                 className="rounded-md text-gray-400 hover:text-gray-500 focus:outline-none"
@@ -67,6 +73,7 @@ export default function MoviesModal({isOpen, onClose, data}){
                     id="title"
                     name="title"
                     type="text"
+                    disabled={isReadOnly}
                     onChange={formik.handleChange}
                     onBlur={formik.handleBlur}
                     value={formik.values.title}
@@ -82,6 +89,7 @@ export default function MoviesModal({isOpen, onClose, data}){
                     id="director"
                     name="director"
                     type="text"
+                    disabled={isReadOnly}
                     onChange={formik.handleChange}
                     onBlur={formik.handleBlur}
                     value={formik.values.director}
@@ -97,6 +105,7 @@ export default function MoviesModal({isOpen, onClose, data}){
                     id="producer"
                     name="producer"
                     type="text"
+                    disabled={isReadOnly}
                     onChange={formik.handleChange}
                     onBlur={formik.handleBlur}
                     value={formik.values.producer}
@@ -107,7 +116,8 @@ export default function MoviesModal({isOpen, onClose, data}){
                   ) : null}
                 </div>
 
-                <div className="flex justify-end space-x-3 pt-4 border-t border-gray-200">
+                {!isReadOnly?(
+                  <div className="flex justify-end space-x-3 pt-4 border-t border-gray-200">
                   <button
                     type="button"
                     onClick={onClose}
@@ -123,6 +133,15 @@ export default function MoviesModal({isOpen, onClose, data}){
                     {formik.isSubmitting ? 'Guardando...' : 'Guardar'}
                   </button>
                 </div>
+                ):(<div className="flex justify-end space-x-3 pt-4 border-t border-gray-200">
+                  <button
+                    type="button"
+                    onClick={onClose}
+                    className="bg-white py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none"
+                  >
+                    Cancel
+                  </button> </div>)}
+                
               </form>
             </div>
             

@@ -8,6 +8,8 @@ export default function MoviesPage(){
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [totalPages, setTotalPages] = useState(0);
     const [index, setIndex]=useState(1);
+    const [modalMode, setModalMode] = useState('creating')
+    const [selectedMovie, setSelectedMovie] = useState(null);
     const columns = [
     {id: 'title', label: 'Personaje', minWidth:"10%" },
     {id: 'director', label: 'Director', minWidth:"10%"},
@@ -21,6 +23,7 @@ export default function MoviesPage(){
     }
       useEffect(() => {
         getMovies();
+        console.log(modalMode)
     }, [index]);
     async function nextPage() {
          setIndex(index+1)
@@ -28,17 +31,53 @@ export default function MoviesPage(){
     async function prevPage() {
          setIndex(index-1)
     }
+
+    const handleCreating = ()=>{
+        setModalMode("creating")
+        setSelectedMovie(null)
+        setIsModalOpen(true)
+    }
+
+    const handleEditing = (movie)=>{
+        setModalMode("editing")
+        setSelectedMovie(movie)
+        setIsModalOpen(true)
+        console.log("se disparo handle editing")
+    }
+    const handleViewing = (movie)=>{
+        setModalMode("viewing")
+        setSelectedMovie(movie)
+        setIsModalOpen(true)
+    }
+    const handleDeleting = ()=>{
+        
+    }
+    const handleSaving = async (datos)=>{
+        console.log("MOdal mode ", modalMode)
+        if(modalMode === "editing"){
+            console.log("datos a actualizar ", datos)
+            const res= await axios.put("http://localhost:3000/putPeli", datos)
+            console.log(res)
+        };
+        alert("Pelicula actualizada con éxito")
+        if(modalMode === "creating"){
+            console.log("datos a postear ", datos)
+           const res= await axios.post("http://localhost:3000/postPeli", datos)
+           console.log(res)
+        };
+        getMovies();
+    }
     return(
         <>
             <h1>Página principal de Películas</h1>
-            <button onClick={()=>setIsModalOpen(true)}>Agregar Película</button>
-            <TableData columns={columns} data={movies}></TableData>
+            <button onClick={handleCreating}>Agregar Película</button>
+            <TableData columns={columns} data={movies} onView={handleViewing} onEdit={handleEditing}></TableData>
             <div className="flex">
                 <button disabled={index==1} className={"hover: cursor-pointer border "} onClick={prevPage}>Página Anterior</button>
                 <button disabled={index==totalPages} className={"hover: cursor-pointer border"} onClick={nextPage}>Página Siguiente</button>
                 <p>Página: {index}/{totalPages}</p>
             </div>
-            <MoviesModal isOpen={isModalOpen} onClose={()=>{setIsModalOpen(false); getMovies()}}></MoviesModal>
+            <MoviesModal isOpen={isModalOpen} mode={modalMode} onClose={()=>{setIsModalOpen(false); setSelectedMovie(null)}} data={selectedMovie}onSave={handleSaving}></MoviesModal>
         </>
     )
 }
