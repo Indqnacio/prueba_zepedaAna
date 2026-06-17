@@ -5,7 +5,10 @@ import { useFormik } from "formik";
 import * as Yup from 'yup';
 import {Loader2, X} from 'lucide-react';
 import { Select, Chip, MenuItem, FormControl } from "@mui/material";
-export default function CharactersModal({isOpen, onClose, data, isReadOnly=false}){
+export default function CharactersModal({isOpen, onClose, data, mode, onSave}){
+    const isReadOnly = mode ==="viewing";
+    const isEditing = mode === "editing";
+    
     const [species, setSpecies] = useState([])
     const [selectedSpecies, setSelectedSpecies]=useState([])
     const [films, setFilms] = useState([])
@@ -18,7 +21,6 @@ export default function CharactersModal({isOpen, onClose, data, isReadOnly=false
     const [selectedStarships, setSelectedStarships]=useState([])
     const [isLoading, setIsLoading] = useState(true)
     const [index, setIndex] = useState(1)
-
     async function fetchVehicles(){
         const res = await axios.get('http://localhost:3000/getVehiculoPerso')
         const data = res.data
@@ -55,8 +57,8 @@ export default function CharactersModal({isOpen, onClose, data, isReadOnly=false
     }, []);
 
     useEffect(()=>{
-      console.log("peliculas ", films)
-    },[films])
+      console.log("modal mode ", mode)
+    },[mode])
 
     const handleMoviesOnChange=(event)=>{
       setSelectedFilms(event.target.value);
@@ -98,7 +100,8 @@ export default function CharactersModal({isOpen, onClose, data, isReadOnly=false
 
         const formik = useFormik({
         initialValues:{
-            name: data?.title||'',
+            _id: data?._id||'',
+            name: data?.name||'',
             birth_year: data?.birth_year||'',
             eye_color: data?.eye_color||'',
             gender: data?.gender || '',
@@ -112,6 +115,7 @@ export default function CharactersModal({isOpen, onClose, data, isReadOnly=false
             starships: data?.starships||[],
             vehicles: data?.vehicles||[],
         }, validationSchema: validationSchema,
+        enableReinitialize:true,
         onSubmit: async(values, {setSubmitting, resetForm}) =>{
             try{
                 const data={
@@ -121,15 +125,26 @@ export default function CharactersModal({isOpen, onClose, data, isReadOnly=false
                   films: values.films.map((film)=>film._id||film),
                   species: values.species.map((specie)=>specie._id||specie)
                 }
-                console.log(data);
-                const response = await axios.post('http://localhost:3000/postPersonaje', data);
-                console.log("Form mandado exitosamente ", response.data);
-                alert('Data enviado')
+                const payload={...data}
+                if(!payload._id){
+                  delete payload._id
+                  console.log("se elimino")
+                }
+                if(!payload.homeworld){
+                  delete payload.homeworld
+                }
+               /* const response = await axios.post('http://localhost:3000/postPersonaje', data);
+                c*/
+                await onSave(payload);
+               // console.log("Form mandado exitosamente ", data);
+                
                 resetForm();
                 onClose();
             }catch(error){
                 console.error("Error mandando los datos: ", error)
-                alert('fallo al submit ', error);
+                alert('Fallo al guardar cambios ', error);
+            } finally{
+              setSubmitting(false);
             }
         }
     });
@@ -143,7 +158,7 @@ export default function CharactersModal({isOpen, onClose, data, isReadOnly=false
                 <div className="h-full flex flex-col bg-white shadow-xl overflow-y-auto">
 
                   <div className="px-4 py-6 bg-gray-50 border-b border-gray-200 flex items-center justify-between">
-                    {data?(<h2 className="text-lg font-medium text-gray-900">Editar Personaje</h2>):(<h2 className="text-lg font-medium text-gray-900">REgistrar Nuevo Personaje</h2>)}
+                    {isEditing?(<h2 className="text-lg font-medium text-gray-900">Editar Personaje</h2>):(<h2 className="text-lg font-medium text-gray-900">REgistrar Nuevo Personaje</h2>)}
                     <button 
                       onClick={onClose}
                       className="rounded-md text-gray-400 hover:text-gray-500 focus:outline-none"
@@ -160,6 +175,7 @@ export default function CharactersModal({isOpen, onClose, data, isReadOnly=false
                     id="name"
                     name="name"
                     type="text"
+                    disabled={isReadOnly}
                     onChange={formik.handleChange}
                     onBlur={formik.handleBlur}
                     value={formik.values.name}
@@ -175,6 +191,7 @@ export default function CharactersModal({isOpen, onClose, data, isReadOnly=false
                     id="birth_year"
                     name="birth_year"
                     type="text"
+                    disabled={isReadOnly}
                     onChange={formik.handleChange}
                     onBlur={formik.handleBlur}
                     value={formik.values.birth_year}
@@ -190,6 +207,7 @@ export default function CharactersModal({isOpen, onClose, data, isReadOnly=false
                     id="eye_color"
                     name="eye_color"
                     type="text"
+                    disabled={isReadOnly}
                     onChange={formik.handleChange}
                     onBlur={formik.handleBlur}
                     value={formik.values.eye_color}
@@ -205,6 +223,7 @@ export default function CharactersModal({isOpen, onClose, data, isReadOnly=false
                     id="gender"
                     name="gender"
                     type="text"
+                    disabled={isReadOnly}
                     onChange={formik.handleChange}
                     onBlur={formik.handleBlur}
                     value={formik.values.gender}
@@ -220,6 +239,7 @@ export default function CharactersModal({isOpen, onClose, data, isReadOnly=false
                     id="hair_color"
                     name="hair_color"
                     type="text"
+                    disabled={isReadOnly}
                     onChange={formik.handleChange}
                     onBlur={formik.handleBlur}
                     value={formik.values.hair_color}
@@ -235,6 +255,7 @@ export default function CharactersModal({isOpen, onClose, data, isReadOnly=false
                     id="height"
                     name="height"
                     type="number"
+                    disabled={isReadOnly}
                     onChange={formik.handleChange}
                     onBlur={formik.handleBlur}
                     value={formik.values.height}
@@ -250,6 +271,7 @@ export default function CharactersModal({isOpen, onClose, data, isReadOnly=false
                     id="mass"
                     name="mass"
                     type="text"
+                    disabled={isReadOnly}
                     onChange={formik.handleChange}
                     onBlur={formik.handleBlur}
                     value={formik.values.mass}
@@ -265,6 +287,7 @@ export default function CharactersModal({isOpen, onClose, data, isReadOnly=false
                     id="skin_color"
                     name="skin_color"
                     type="text"
+                    disabled={isReadOnly}
                     onChange={formik.handleChange}
                     onBlur={formik.handleBlur}
                     value={formik.values.skin_color}
@@ -281,6 +304,7 @@ export default function CharactersModal({isOpen, onClose, data, isReadOnly=false
                   name="planet" 
                   id="planet"
                   disabled={isLoading}
+                  disabled={isReadOnly}
                   value={formik.values.homeworld}
                   onChange={(e)=>{
                     formik.setFieldValue('homeworld', e.target.value)
@@ -300,7 +324,8 @@ export default function CharactersModal({isOpen, onClose, data, isReadOnly=false
                   <div className="border border-slate-800 bg-slate-950/40 p-5 rounded-xl space-y-4">
                     <div>
                       <label className="block text-sm font-medium text-slate-300 mb-2">Especie</label>
-                      <FormControl fullWidth size="small">
+                      {!isReadOnly && (
+                        <FormControl fullWidth size="small">
                         <Select displayEmpty
                         disabled={isReadOnly}
                         value=""
@@ -327,6 +352,7 @@ export default function CharactersModal({isOpen, onClose, data, isReadOnly=false
                           ))}
                         </Select>
                       </FormControl>
+                      )}
                       {formik.touched.species && formik.errors.species && (
                         <div className="text-rose-500 text-xs mt-1">{formik.errors.species}</div>
                       )}
@@ -358,7 +384,8 @@ export default function CharactersModal({isOpen, onClose, data, isReadOnly=false
                    <div className="border border-slate-800 bg-slate-950/40 p-5 rounded-xl space-y-4">
                     <div>
                       <label className="block text-sm font-medium text-slate-300 mb-2">Naves</label>
-                      <FormControl fullWidth size="small">
+                      {!isReadOnly &&(
+                         <FormControl fullWidth size="small">
                         <Select displayEmpty
                         disabled={isReadOnly}
                         value=""
@@ -385,6 +412,7 @@ export default function CharactersModal({isOpen, onClose, data, isReadOnly=false
                           ))}
                         </Select>
                       </FormControl>
+                      )}
                       {formik.touched.starships && formik.errors.starships && (
                         <div className="text-rose-500 text-xs mt-1">{formik.errors.starships}</div>
                       )}
@@ -416,7 +444,8 @@ export default function CharactersModal({isOpen, onClose, data, isReadOnly=false
                     <div className="border border-slate-800 bg-slate-950/40 p-5 rounded-xl space-y-4">
                     <div>
                       <label className="block text-sm font-medium text-slate-300 mb-2">Vehículos</label>
-                      <FormControl fullWidth size="small">
+                      {!isReadOnly &&(
+                        <FormControl fullWidth size="small">
                         <Select displayEmpty
                         disabled={isReadOnly}
                         value=""
@@ -443,6 +472,8 @@ export default function CharactersModal({isOpen, onClose, data, isReadOnly=false
                           ))}
                         </Select>
                       </FormControl>
+                      )}
+                      
                       {formik.touched.species && formik.errors.species && (
                         <div className="text-rose-500 text-xs mt-1">{formik.errors.species}</div>
                       )}
@@ -473,7 +504,8 @@ export default function CharactersModal({isOpen, onClose, data, isReadOnly=false
                     <div className="border border-slate-800 bg-slate-950/40 p-5 rounded-xl space-y-4">
                     <div>
                       <label className="block text-sm font-medium text-slate-300 mb-2">Películas</label>
-                      <FormControl fullWidth size="small">
+                      {!isReadOnly && (
+                        <FormControl fullWidth size="small">
                         <Select displayEmpty
                         disabled={isReadOnly}
                         value=""
@@ -500,6 +532,8 @@ export default function CharactersModal({isOpen, onClose, data, isReadOnly=false
                           ))}
                         </Select>
                       </FormControl>
+                      )}
+                      
                       {formik.touched.films && formik.errors.films && (
                         <div className="text-rose-500 text-xs mt-1">{formik.errors.films}</div>
                       )}
@@ -527,13 +561,14 @@ export default function CharactersModal({isOpen, onClose, data, isReadOnly=false
                       </div>
                     )})}
                   </div>
-                <div className="flex justify-end space-x-3 pt-4 border-t border-gray-200">
+                {!isReadOnly?( 
+                  <div className="flex justify-end space-x-3 pt-4 border-t border-gray-200">
                   <button
                     type="button"
                     onClick={onClose}
                     className="bg-white py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none"
                   >
-                    Cancel
+                    Cancelar
                   </button>
                   <button
                     type="submit"
@@ -542,8 +577,17 @@ export default function CharactersModal({isOpen, onClose, data, isReadOnly=false
                   >
                     {formik.isSubmitting ? 'Guardando...' : 'Guardar'}
                   </button>
-                </div>
-                  
+                </div>):(
+                   <div className="flex justify-end space-x-3 pt-4 border-t border-gray-200">
+                  <button
+                    type="button"
+                    onClick={onClose}
+                    className="bg-white py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none"
+                  >
+                    Cerrar
+                  </button>
+                  </div>
+                )}
                     </form>
                   </div>
                 </div>

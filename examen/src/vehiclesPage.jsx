@@ -74,7 +74,7 @@ export default function VehiclesPage(){
     return(
         <>
         <h1>Página principal de Vehículos</h1>
-         <button onClick={()=>setIsModalOpen(true)}>Agregar Vehículo</button>
+         <button onClick={handleCreating}>Agregar Vehículo</button>
         <TableData columns={columns} data={vehicles} onView={handleViewing} onEdit={handleEditing}/>
          <div className="flex">
                 

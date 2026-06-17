@@ -77,7 +77,7 @@ export default function MoviesPage(){
                 <button disabled={index==totalPages} className={"hover: cursor-pointer border"} onClick={nextPage}>Página Siguiente</button>
                 <p>Página: {index}/{totalPages}</p>
             </div>
-            <MoviesModal isOpen={isModalOpen} mode={modalMode} onClose={()=>{setIsModalOpen(false); setSelectedMovie(null)}} data={selectedMovie}onSave={handleSaving}></MoviesModal>
+            <MoviesModal isOpen={isModalOpen} mode={modalMode} onClose={()=>{setIsModalOpen(false); setSelectedMovie(null)}} data={selectedMovie} onSave={handleSaving}></MoviesModal>
         </>
     )
 }

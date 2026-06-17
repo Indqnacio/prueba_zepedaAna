@@ -76,7 +76,7 @@ export default function StarshipsPage(){
     return(
         <>
         <h1>Página principal de Naves</h1>
-         <button onClick={()=>setIsModalOpen(true)}>Agregar Nave</button>
+         <button onClick={handleCreating}>Agregar Nave</button>
         <TableData columns={columns} data={starships} onView={handleViewing} onEdit={handleEditing} />
           <div className="flex">
                 

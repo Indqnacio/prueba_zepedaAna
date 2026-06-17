@@ -34,7 +34,12 @@ export default function VehiclesModal({isOpen, onClose, data, mode, onSave}){
         enableReinitialize:true,
         onSubmit: async(values, {setSubmitting, resetForm}) =>{
             try{
-              await onSave(values)
+               const payload={...values}
+              if(!payload._id){
+                delete payload._id
+                console.log("se elimino")
+              }
+              await onSave(payload)
 /*                console.log(values)
                 const response = await axios.post('http://localhost:3000/postVehiculo', values);
                 console.log("Form mandado exitosamente ", response.data);

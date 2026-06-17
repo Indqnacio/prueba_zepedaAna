@@ -32,7 +32,12 @@ export default function PlanetsModal({isOpen, onClose, data, mode, onSave}){
         enableReinitialize:true,
         onSubmit: async(values, {setSubmitting, resetForm}) =>{
             try{
-              await onSave(values)
+              const payload={...values}
+              if(!payload._id){
+                delete payload._id
+                console.log("se elimino")
+              }
+              await onSave(payload)
               resetForm();
               onClose();
 /*                const response = await axios.post('http://localhost:3000/postPlaneta', values);
@@ -47,6 +52,9 @@ export default function PlanetsModal({isOpen, onClose, data, mode, onSave}){
             }
         }
     });
+    useEffect(()=>{
+        console.log("MODE ", mode)
+    },[mode])
     if(!isOpen) return null;
     return(
         <>

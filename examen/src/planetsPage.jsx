@@ -80,7 +80,7 @@ export default function PlanetsPage(){
     return(
         <>
         <h1>Página principal de Planetas</h1>
-         <button onClick={()=>setIsModalOpen(true)}>Agregar Planeta</button>
+         <button onClick={handleCreating}>Agregar Planeta</button>
         <TableData columns={columns} data={planets} onView={handleViewing} onEdit={handleEditing} />
         <div className="flex">
                 
@@ -92,7 +92,7 @@ export default function PlanetsPage(){
         isOpen={isModalOpen} 
         mode={modalMode} 
         onClose={()=>{setIsModalOpen(false); 
-        setSelectedPlanet(null)}} data={selectedPlanet} onSave={handleSaving}/>
+        setSelectedPlanet(null); setIsModalOpen(null)}} data={selectedPlanet} onSave={handleSaving}/>
         </>
     )
 }

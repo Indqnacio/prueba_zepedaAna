@@ -36,8 +36,12 @@ export default function StarshipsModal({isOpen, onClose, data, mode, onSave}){
         }, validationSchema: validationSchema,
         enableReinitialize:true,
         onSubmit: async(values, {setSubmitting, resetForm}) =>{
-            try{
-              await onSave(values);
+            try{ const payload={...values}
+              if(!payload._id){
+                delete payload._id
+                console.log("se elimino")
+              }
+              await onSave(payload)
 /*                console.log(values)
                 const response = await axios.post('http://localhost:3000/postNave', values);
                 console.log("Form mandado exitosamente ", response.data);

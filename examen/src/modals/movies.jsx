@@ -31,7 +31,11 @@ export default function MoviesModal({isOpen, onClose, data, mode, onSave}){
         enableReinitialize:true,
         onSubmit: async(values, {setSubmitting, resetForm}) =>{
             try{
-              await onSave(values);
+              const payload={...values}
+              if(!payload._id){
+                delete payload._id
+              }
+              await onSave(payload);
                 resetForm();
                 onClose();
             }catch(error){
