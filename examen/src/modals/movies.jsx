@@ -124,7 +124,7 @@ export default function MoviesModal({isOpen, onClose, data, mode, onSave}){
                     onClick={onClose}
                     className="bg-white py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none"
                   >
-                    Cancel
+                    Cancelar
                   </button>
                   <button
                     type="submit"
@@ -140,7 +140,7 @@ export default function MoviesModal({isOpen, onClose, data, mode, onSave}){
                     onClick={onClose}
                     className="bg-white py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none"
                   >
-                    Cancel
+                    Cerrar
                   </button> </div>)}
                 
               </form>
