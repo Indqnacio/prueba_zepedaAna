@@ -7,6 +7,8 @@ export default function VehiclesPage(){
     const [vehicles, setVehicles] = useState([])
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [totalPages, setTotalPages] = useState(0);
+    const [modalMode, setModalMode] = useState('creating')
+    const [selectedVehicle, setSelectedVehicle] = useState(null);
     const [index, setIndex]=useState(1);
 
     const columns = [
@@ -34,18 +36,53 @@ export default function VehiclesPage(){
     async function prevPage() {
          setIndex(index-1)
     }
+    const handleCreating = ()=>{
+        setModalMode("creating")
+        setSelectedVehicle(null)
+        setIsModalOpen(true)
+    }
+
+    const handleEditing = (vehicle)=>{
+        setModalMode("editing")
+        setSelectedVehicle(vehicle)
+        setIsModalOpen(true)
+        console.log("se disparo handle editing")
+    }
+    const handleViewing = (vehicle)=>{
+        setModalMode("viewing")
+        setSelectedVehicle(vehicle)
+        setIsModalOpen(true)
+    }
+    const handleDeleting = ()=>{
+        
+    }
+    const handleSaving = async (datos)=>{
+        console.log("MOdal mode ", modalMode)
+        if(modalMode === "editing"){
+            console.log("datos a actualizar ", datos)
+            const res= await axios.put("http://localhost:3000/putVehiculo", datos)
+            console.log(res)
+        };
+        alert("Pelicula actualizada con éxito")
+        if(modalMode === "creating"){
+            console.log("datos a postear ", datos)
+           const res= await axios.post("http://localhost:3000/postVehiculo", datos)
+           console.log(res)
+        };
+        fetchVehicles();
+    }
     return(
         <>
         <h1>Página principal de Vehículos</h1>
          <button onClick={()=>setIsModalOpen(true)}>Agregar Vehículo</button>
-        <TableData columns={columns} data={vehicles}/>
+        <TableData columns={columns} data={vehicles} onView={handleViewing} onEdit={handleEditing}/>
          <div className="flex">
                 
                 <button disabled={index===1} className={"hover: cursor-pointer border "} onClick={prevPage}>Página Anterior</button>
                 <button disabled={index===totalPages} className={"hover: cursor-pointer border"} onClick={nextPage}>Página Siguiente</button>
                 <p>Página: {index}/{totalPages}</p>
         </div>
-        <VehiclesModal isOpen={isModalOpen} onClose={()=>{setIsModalOpen(false); fetchVehicles()}}></VehiclesModal>
+        <VehiclesModal isOpen={isModalOpen} mode={modalMode} onClose={()=>{setIsModalOpen(false); setSelectedVehicle(null)}} data={selectedVehicle} onSave={handleSaving}></VehiclesModal>
         </>
     )
 }

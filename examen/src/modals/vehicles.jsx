@@ -3,7 +3,9 @@ import axios from "axios";
 import { useFormik } from "formik";
 import * as Yup from 'yup';
 
-export default function VehiclesModal({isOpen, onClose, data}){
+export default function VehiclesModal({isOpen, onClose, data, mode, onSave}){
+    const isReadOnly = mode ==="viewing";
+    const isEditing = mode === "editing";
     const validationSchema=Yup.object({
             name: Yup.string()
             .required('El título es obligatorio'),
@@ -19,6 +21,7 @@ export default function VehiclesModal({isOpen, onClose, data}){
     
     const formik = useFormik({
         initialValues:{
+          _id: data?._id||'',
             name: data?.name||'',
             model: data?.model || '',
             vehicle_class: data?.vehicle_class||'',
@@ -28,17 +31,21 @@ export default function VehiclesModal({isOpen, onClose, data}){
             cargo_capacity: data?.cargo_capacity||'',
             consumables: data?.consumables||''
         }, validationSchema: validationSchema,
+        enableReinitialize:true,
         onSubmit: async(values, {setSubmitting, resetForm}) =>{
             try{
-                console.log(values)
+              await onSave(values)
+/*                console.log(values)
                 const response = await axios.post('http://localhost:3000/postVehiculo', values);
                 console.log("Form mandado exitosamente ", response.data);
-                alert('Data enviado')
+                alert('Data enviado')*/
                 resetForm();
                 onClose();
             }catch(error){
                 console.error("Error mandando los datos: ", error)
                 alert('fallo al submit ', error);
+            }finally{
+              setSubmitting(false);
             }
         }
     });
@@ -52,7 +59,7 @@ export default function VehiclesModal({isOpen, onClose, data}){
           <div className="h-full flex flex-col bg-white shadow-xl overflow-y-auto">
             
             <div className="px-4 py-6 bg-gray-50 border-b border-gray-200 flex items-center justify-between">
-                {data?(<h2 className="text-lg font-medium text-gray-900">Editar Vehículo</h2>):(<h2 className="text-lg font-medium text-gray-900">Agregar Vehículo</h2>)}
+                {isEditing?(<h2 className="text-lg font-medium text-gray-900">Editar Vehículo</h2>):(<h2 className="text-lg font-medium text-gray-900">Agregar Vehículo</h2>)}
               <button 
                 onClick={onClose}
                 className="rounded-md text-gray-400 hover:text-gray-500 focus:outline-none"
@@ -68,6 +75,7 @@ export default function VehiclesModal({isOpen, onClose, data}){
                     id="name"
                     name="name"
                     type="text"
+                    disabled={isReadOnly}
                     onChange={formik.handleChange}
                     onBlur={formik.handleBlur}
                     value={formik.values.name}
@@ -83,6 +91,7 @@ export default function VehiclesModal({isOpen, onClose, data}){
                     id="model"
                     name="model"
                     type="text"
+                    disabled={isReadOnly}
                     onChange={formik.handleChange}
                     onBlur={formik.handleBlur}
                     value={formik.values.model}
@@ -98,6 +107,7 @@ export default function VehiclesModal({isOpen, onClose, data}){
                     id="vehicle_class"
                     name="vehicle_class"
                     type="text"
+                    disabled={isReadOnly}
                     onChange={formik.handleChange}
                     onBlur={formik.handleBlur}
                     value={formik.values.vehicle_class}
@@ -113,6 +123,7 @@ export default function VehiclesModal({isOpen, onClose, data}){
                     id="length"
                     name="length"
                     type="number"
+                    disabled={isReadOnly}
                     onChange={formik.handleChange}
                     onBlur={formik.handleBlur}
                     value={formik.values.length}
@@ -128,6 +139,7 @@ export default function VehiclesModal({isOpen, onClose, data}){
                     id="passengers"
                     name="passengers"
                     type="number"
+                    disabled={isReadOnly}
                     onChange={formik.handleChange}
                     onBlur={formik.handleBlur}
                     value={formik.values.passengers}
@@ -143,6 +155,7 @@ export default function VehiclesModal({isOpen, onClose, data}){
                     id="max_atmosphering_speed"
                     name="max_atmosphering_speed"
                     type="number"
+                    disabled={isReadOnly}
                     onChange={formik.handleChange}
                     onBlur={formik.handleBlur}
                     value={formik.values.max_atmosphering_speed}
@@ -158,6 +171,7 @@ export default function VehiclesModal({isOpen, onClose, data}){
                     id="cargo_capacity"
                     name="cargo_capacity"
                     type="number"
+                    disabled={isReadOnly}
                     onChange={formik.handleChange}
                     onBlur={formik.handleBlur}
                     value={formik.values.cargo_capacity}
@@ -173,6 +187,7 @@ export default function VehiclesModal({isOpen, onClose, data}){
                     id="consumables"
                     name="consumables"
                     type="text"
+                    disabled={isReadOnly}
                     onChange={formik.handleChange}
                     onBlur={formik.handleBlur}
                     value={formik.values.consumables}
@@ -182,14 +197,14 @@ export default function VehiclesModal({isOpen, onClose, data}){
                     <div className="text-red-600 text-sm mt-1">{formik.errors.consumables}</div>
                   ) : null}
                 </div>
-
-                <div className="flex justify-end space-x-3 pt-4 border-t border-gray-200">
+                {!isReadOnly?(
+                  <div className="flex justify-end space-x-3 pt-4 border-t border-gray-200">
                   <button
                     type="button"
                     onClick={onClose}
                     className="bg-white py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none"
                   >
-                    Cancel
+                    Cancelar
                   </button>
                   <button
                     type="submit"
@@ -199,6 +214,18 @@ export default function VehiclesModal({isOpen, onClose, data}){
                     {formik.isSubmitting ? 'Guardando...' : 'Guardar'}
                   </button>
                 </div>
+                ):(
+                   <div className="flex justify-end space-x-3 pt-4 border-t border-gray-200">
+                  <button
+                    type="button"
+                    onClick={onClose}
+                    className="bg-white py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none"
+                  >
+                    Cancelar
+                  </button></div>
+                )}
+
+                
               </form>
             </div>
             
