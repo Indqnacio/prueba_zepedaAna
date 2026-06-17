@@ -2,8 +2,11 @@ import {useState, useEffect} from "react";
 import axios from "axios";
 import { useFormik } from "formik";
 import * as Yup from 'yup';
-export default function PlanetsModal({isOpen, onClose, data}){
-    const validationSchema = Yup.object({
+export default function PlanetsModal({isOpen, onClose, data, mode, onSave}){
+  const isReadOnly = mode ==="viewing";
+  const isEditing = mode === "editing"; 
+  console.log(data) 
+  const validationSchema = Yup.object({
         name: Yup.string()
         .required('El nombre del planeta es obligatorio'),
         diameter: Yup.string(),
@@ -16,6 +19,7 @@ export default function PlanetsModal({isOpen, onClose, data}){
     })
     const formik = useFormik({
         initialValues:{
+          _id:data?._id||'',
             name: data?.name||'',
             diameter: data?.diameter||'',
             rotation_period: data?.rotation_period||'',
@@ -25,15 +29,21 @@ export default function PlanetsModal({isOpen, onClose, data}){
             climate: data?.climate||'',
             surface_water: data?.surface_water||''
         }, validationSchema: validationSchema,
+        enableReinitialize:true,
         onSubmit: async(values, {setSubmitting, resetForm}) =>{
             try{
-                const response = await axios.post('http://localhost:3000/postPlaneta', values);
+              await onSave(values)
+              resetForm();
+              onClose();
+/*                const response = await axios.post('http://localhost:3000/postPlaneta', values);
                 alert('Data enviado')
                 resetForm();
-                onClose();
+                onClose();*/
             }catch(error){
                 console.error("Error mandando los datos: ", error.message)
-                alert('fallo al submit ', error.message);
+                alert('Fallo al guardar los datos ', error.message);
+            } finally{
+              setSubmitting(false)
             }
         }
     });
@@ -46,9 +56,8 @@ export default function PlanetsModal({isOpen, onClose, data}){
         <div className="w-screen max-w-md transform transition-all ease-in-out duration-500 sm:duration-700">
           <div className="h-full flex flex-col bg-white shadow-xl overflow-y-auto">
             
-            {/* Modal Header */}
             <div className="px-4 py-6 bg-gray-50 border-b border-gray-200 flex items-center justify-between">
-                {data?(<h2 className="text-lg font-medium text-gray-900">Editar Planeta</h2>):(<h2 className="text-lg font-medium text-gray-900">Registrar Nuevo Planeta</h2>)}
+                {isEditing?(<h2 className="text-lg font-medium text-gray-900">Editar Planeta</h2>):(<h2 className="text-lg font-medium text-gray-900">Registrar Nuevo Planeta</h2>)}
               <button 
                 onClick={onClose}
                 className="rounded-md text-gray-400 hover:text-gray-500 focus:outline-none"
@@ -64,6 +73,7 @@ export default function PlanetsModal({isOpen, onClose, data}){
                     id="name"
                     name="name"
                     type="text"
+                    disabled={isReadOnly}
                     onChange={formik.handleChange}
                     onBlur={formik.handleBlur}
                     value={formik.values.name}
@@ -80,6 +90,7 @@ export default function PlanetsModal({isOpen, onClose, data}){
                     id="diameter"
                     name="diameter"
                     type="number"
+                    disabled={isReadOnly}
                     onChange={formik.handleChange}
                     onBlur={formik.handleBlur}
                     value={formik.values.diameter}
@@ -95,6 +106,7 @@ export default function PlanetsModal({isOpen, onClose, data}){
                     id="rotation_period"
                     name="rotation_period"
                     type="number"
+                    disabled={isReadOnly}
                     onChange={formik.handleChange}
                     onBlur={formik.handleBlur}
                     value={formik.values.rotation_period}
@@ -111,6 +123,7 @@ export default function PlanetsModal({isOpen, onClose, data}){
                     id="orbital_period"
                     name="orbital_period"
                     type="number"
+                    disabled={isReadOnly}
                     onChange={formik.handleChange}
                     onBlur={formik.handleBlur}
                     value={formik.values.orbital_period}
@@ -127,6 +140,7 @@ export default function PlanetsModal({isOpen, onClose, data}){
                     id="gravity"
                     name="gravity"
                     type="text"
+                    disabled={isReadOnly}
                     onChange={formik.handleChange}
                     onBlur={formik.handleBlur}
                     value={formik.values.gravity}
@@ -143,6 +157,7 @@ export default function PlanetsModal({isOpen, onClose, data}){
                     id="population"
                     name="population"
                     type="number"
+                    disabled={isReadOnly}
                     onChange={formik.handleChange}
                     onBlur={formik.handleBlur}
                     value={formik.values.population}
@@ -159,6 +174,7 @@ export default function PlanetsModal({isOpen, onClose, data}){
                     id="climate"
                     name="climate"
                     type="text"
+                    disabled={isReadOnly}
                     onChange={formik.handleChange}
                     onBlur={formik.handleBlur}
                     value={formik.values.climate}
@@ -175,6 +191,7 @@ export default function PlanetsModal({isOpen, onClose, data}){
                     id="terrain"
                     name="terrain"
                     type="text"
+                    disabled={isReadOnly}
                     onChange={formik.handleChange}
                     onBlur={formik.handleBlur}
                     value={formik.values.terrain}
@@ -191,6 +208,7 @@ export default function PlanetsModal({isOpen, onClose, data}){
                     id="surface_water"
                     name="surface_water"
                     type="number"
+                    disabled={isReadOnly}
                     onChange={formik.handleChange}
                     onBlur={formik.handleBlur}
                     value={formik.values.surface_water}
@@ -201,14 +219,14 @@ export default function PlanetsModal({isOpen, onClose, data}){
                   ) : null}
                 </div>
 
-
-                <div className="flex justify-end space-x-3 pt-4 border-t border-gray-200">
+                  {!isReadOnly?(
+                        <div className="flex justify-end space-x-3 pt-4 border-t border-gray-200">
                   <button
                     type="button"
                     onClick={onClose}
                     className="bg-white py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none"
                   >
-                    Cancel
+                    Cancelar
                   </button>
                   <button
                     type="submit"
@@ -218,6 +236,16 @@ export default function PlanetsModal({isOpen, onClose, data}){
                     {formik.isSubmitting ? 'Guardando...' : 'Guardar'}
                   </button>
                 </div>
+                  ):(<div className="flex justify-end space-x-3 pt-4 border-t border-gray-200">
+                  <button
+                    type="button"
+                    onClick={onClose}
+                    className="bg-white py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none"
+                  >
+                    Cerrar
+                  </button></div>
+
+                  )}
               </form>
             </div>
             

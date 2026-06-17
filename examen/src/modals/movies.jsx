@@ -21,9 +21,6 @@ export default function MoviesModal({isOpen, onClose, data, mode, onSave}){
         .required('El productor es obligatorio')
     });
 
-    useEffect(()=>{
-      console.log(mode)
-    }, [mode])
     const formik = useFormik({
         initialValues:{
             _id: data?._id||'',

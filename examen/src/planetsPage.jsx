@@ -9,6 +9,8 @@ export default function PlanetsPage(){
     const [planets,setPlanets] = useState([])
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [totalPages, setTotalPages] = useState(0);
+    const [modalMode, setModalMode] = useState('creating')
+    const [selectedPlanet, setSelectedPlanet] = useState(null);
     const [index, setIndex]=useState(1);
     const columns = [
     {id: 'name', label: 'Nombre', minWidth:"10%" },
@@ -37,18 +39,60 @@ export default function PlanetsPage(){
          setIndex(index-1)
     }
 
+    const handleCreating = ()=>{
+        setModalMode("creating")
+        setSelectedPlanet(null)
+        setIsModalOpen(true)
+    }
+
+    const handleEditing = (planet)=>{
+        setModalMode("editing")
+        setSelectedPlanet(planet)
+        setIsModalOpen(true)
+        console.log("se disparo handle editing")
+    }
+    const handleViewing = (planet)=>{
+        setModalMode("viewing")
+        setSelectedPlanet(planet)
+        setIsModalOpen(true)
+    }
+
+    const handleSaving = async (datos)=>{
+        console.log("MOdal mode ", modalMode)
+        if(modalMode === "editing"){
+            console.log("datos a actualizar ", datos)
+            const res= await axios.put("http://localhost:3000/putPlaneta", datos)
+            console.log(res)
+        };
+        alert("Planeta actualizada con éxito")
+        if(modalMode === "creating"){
+            console.log("datos a postear ", datos)
+           const res= await axios.post("http://localhost:3000/postPlaneta", datos)
+           console.log(res)
+        };
+        fetchPlanets();
+    }
+
+    const handleDeleting = ()=>{
+        
+    }
+
     return(
         <>
         <h1>Página principal de Planetas</h1>
          <button onClick={()=>setIsModalOpen(true)}>Agregar Planeta</button>
-        <TableData columns={columns} data={planets}/>
+        <TableData columns={columns} data={planets} onView={handleViewing} onEdit={handleEditing} />
         <div className="flex">
                 
                 <button disabled={index===1} className={"hover: cursor-pointer border "} onClick={prevPage}>Página Anterior</button>
                 <button disabled={index===totalPages} className={"hover: cursor-pointer border"} onClick={nextPage}>Página Siguiente</button>
                 <p>Página: {index}/{totalPages}</p>
             </div>
-        <PlanetsModal isOpen={isModalOpen} onClose={()=>{setIsModalOpen(false); fetchPlanets()}}/>
+        <PlanetsModal 
+        isOpen={isModalOpen} 
+        mode={modalMode} 
+        onClose={()=>{setIsModalOpen(false); 
+        setSelectedPlanet(null)}} data={selectedPlanet} onSave={handleSaving}/>
         </>
     )
 }
