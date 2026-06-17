@@ -31,6 +31,20 @@ export default function TableData({columns, data}){
    // console.log(item); 
     setIsModalOpen(true)
   }
+
+  const handleEdit=(e,data)=>{
+    console.log("editing")
+    console.log(data)
+  }
+  const handleView=(e,data)=>{
+    console.log("viewing")
+    console.log(data)
+  }
+  const handleDelete=(e,data)=>{
+    console.log("deleting")
+    console.log(data)
+  }
+
     return(
       <div className="w-full  mx-auto my-8 p-4">
         <div className="overflow-x-auto rounded-lg border border-gray-200 shadow-md">
@@ -48,17 +62,26 @@ export default function TableData({columns, data}){
                     <tr className="hover:cursor-pointer" key={item.name}>
                       {columns.map((column)=>{
                         const value = item[column.id];
+
+                        if(column.id==='actions'){
+                          return(
+                            
+                            <td key={column.id}>
+                              <div className="flex">
+                                <button className="hover:cursor-pointer border" onClick={handleView(item)}>Ver</button>
+                              <button className="hover:cursor-pointer border" onClick={handleEdit(item)}>Editar</button>
+                              <button className="hover:cursor-pointer border" onClick={handleDelete}>Eliminar</button>
+                              </div>
+                              
+                            </td>
+                          )
+                        }
                         return(
-                          <td>{value}</td>
+                          <td key={column.id}>{value}</td>
                         )
                       })}
                    </tr>
                   )
-                   
-                  {data.map((item)=>{
-                    const value = item[column.id]
-                    (<td>{value}</td>)
-                  })}
                 })}
 
             </tbody>

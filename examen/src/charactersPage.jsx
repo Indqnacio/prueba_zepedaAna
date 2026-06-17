@@ -19,7 +19,7 @@ export default function CharactersPage(){
     {id: 'eye_color', label: 'Color de Ojos'},
     {id: 'birth_year', label: 'Fecha de Nacimiento'},
     {id: 'gender', label: 'Género'},
-    {id: 'homeworld', label: 'Planeta de Nacimiento'},
+//    {id: 'homeworld', label: 'Planeta de Nacimiento'},
 ]
 useEffect(() => {
         console.log(films)

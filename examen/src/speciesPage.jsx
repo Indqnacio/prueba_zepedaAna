@@ -35,7 +35,7 @@ export default function SpeciesPage(){
     {id: 'hair_colors', label: 'Color de Cabello', minWidth:"10%"},
     {id: 'skin_colors', label: 'Color de Piel', minWidth:"10%"},
     {id: 'language', label: 'Lenguaje', minWidth:"10%"},
-    {id: 'homeworld', label: 'Planeta', minWidth:"10%"},
+    //{id: 'homeworld', label: 'Planeta', minWidth:"10%"},
     {id:'actions',label:'Acciones',minWidth:"10%"}
 ]
     return(
