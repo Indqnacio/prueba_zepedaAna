@@ -8,6 +8,8 @@ export default function StarshipsPage(){
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [totalPages, setTotalPages] = useState(0);
     const [index, setIndex]=useState(1);
+    const [modalMode, setModalMode] = useState('creating')
+    const [selectedStarship, setSelectedStarship] = useState(null);
 
     const columns = [
     {id: 'name', label: 'Nombre', minWidth:"10%" },
@@ -36,18 +38,53 @@ export default function StarshipsPage(){
     async function prevPage() {
          setIndex(index-1)
     }
+    const handleCreating = ()=>{
+        setModalMode("creating")
+        setSelectedStarship(null)
+        setIsModalOpen(true)
+    }
+
+    const handleEditing = (starship)=>{
+        setModalMode("editing")
+        setSelectedStarship(starship)
+        setIsModalOpen(true)
+        //console.log("se disparo handle editing")
+    }
+    const handleViewing = (starship)=>{
+        setModalMode("viewing")
+        setSelectedStarship(starship)
+        setIsModalOpen(true)
+    }
+    const handleDeleting = ()=>{
+        
+    }
+    const handleSaving = async (datos)=>{
+        console.log("MOdal mode ", modalMode)
+        if(modalMode === "editing"){
+            console.log("datos a actualizar ", datos)
+            const res= await axios.put("http://localhost:3000/putNave", datos)
+            console.log(res)
+        };
+        alert("Pelicula actualizada con éxito")
+        if(modalMode === "creating"){
+            console.log("datos a postear ", datos)
+           const res= await axios.post("http://localhost:3000/postNave", datos)
+           console.log(res)
+        };
+        fetchStarships();
+    }
     return(
         <>
         <h1>Página principal de Naves</h1>
          <button onClick={()=>setIsModalOpen(true)}>Agregar Nave</button>
-        <TableData columns={columns} data={starships}/>
+        <TableData columns={columns} data={starships} onView={handleViewing} onEdit={handleEditing} />
           <div className="flex">
                 
                 <button disabled={index===1} className={"hover: cursor-pointer border "} onClick={prevPage}>Página Anterior</button>
                 <button disabled={index===totalPages} className={"hover: cursor-pointer border"} onClick={nextPage}>Página Siguiente</button>
                 <p>Página: {index}/{totalPages}</p>
             </div>
-            <StarshipsModal isOpen={isModalOpen} onClose={()=>{setIsModalOpen(false); fetchStarships()}}></StarshipsModal>
+            <StarshipsModal isOpen={isModalOpen} mode={modalMode} onClose={()=>{setIsModalOpen(false); setSelectedStarship(null)}} data={selectedStarship} onSave={handleSaving}></StarshipsModal>
         </>
     )
 }

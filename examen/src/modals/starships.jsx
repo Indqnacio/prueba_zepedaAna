@@ -2,8 +2,10 @@ import {useState, useEffect} from "react"
 import axios from "axios";
 import { useFormik } from "formik";
 import * as Yup from 'yup';
-export default function StarshipsModal({isOpen, onClose, data}){
-    const validationSchema=Yup.object({
+export default function StarshipsModal({isOpen, onClose, data, mode, onSave}){
+  const isReadOnly = mode ==="viewing";
+  const isEditing = mode === "editing";  
+  const validationSchema=Yup.object({
             name: Yup.string()
             .required('El nombre es obligatorio'),
             model: Yup.string()
@@ -20,6 +22,7 @@ export default function StarshipsModal({isOpen, onClose, data}){
     
     const formik = useFormik({
         initialValues:{
+            _id: data?._id||'',
             name: data?.name||'',
             model: data?.model || '',
             starship_class: data?.starship_class||'',
@@ -31,17 +34,21 @@ export default function StarshipsModal({isOpen, onClose, data}){
             cargo_capacity: data?.cargo_capacity||'',
             consumables: data?.consumables||''
         }, validationSchema: validationSchema,
+        enableReinitialize:true,
         onSubmit: async(values, {setSubmitting, resetForm}) =>{
             try{
-                console.log(values)
+              await onSave(values);
+/*                console.log(values)
                 const response = await axios.post('http://localhost:3000/postNave', values);
                 console.log("Form mandado exitosamente ", response.data);
-                alert('Data enviado')
+                alert('Data enviado')*/
                 resetForm();
                 onClose();
             }catch(error){
                 console.error("Error mandando los datos: ", error)
-                alert('fallo al submit ', error);
+                alert('Fallo al guardar cambios ', error);
+            }finally{
+              setSubmitting(false)
             }
         }
     });
@@ -53,10 +60,8 @@ export default function StarshipsModal({isOpen, onClose, data}){
                 <div className="absolute inset-y-0 right-0 max-w-full flex">
         <div className="w-screen max-w-md transform transition-all ease-in-out duration-500 sm:duration-700">
           <div className="h-full flex flex-col bg-white shadow-xl overflow-y-auto">
-            
-            {/* Modal Header */}
             <div className="px-4 py-6 bg-gray-50 border-b border-gray-200 flex items-center justify-between">
-                {data?(<h2 className="text-lg font-medium text-gray-900">Editar Nave</h2>):(<h2 className="text-lg font-medium text-gray-900">Registrar nueva Nave</h2>)}
+                {isEditing?(<h2 className="text-lg font-medium text-gray-900">Editar Nave</h2>):(<h2 className="text-lg font-medium text-gray-900">Registrar nueva Nave</h2>)}
               <button 
                 onClick={onClose}
                 className="rounded-md text-gray-400 hover:text-gray-500 focus:outline-none"
@@ -72,6 +77,7 @@ export default function StarshipsModal({isOpen, onClose, data}){
                     id="name"
                     name="name"
                     type="text"
+                    disabled={isReadOnly}
                     onChange={formik.handleChange}
                     onBlur={formik.handleBlur}
                     value={formik.values.name}
@@ -87,6 +93,7 @@ export default function StarshipsModal({isOpen, onClose, data}){
                     id="model"
                     name="model"
                     type="text"
+                    disabled={isReadOnly}
                     onChange={formik.handleChange}
                     onBlur={formik.handleBlur}
                     value={formik.values.model}
@@ -102,6 +109,7 @@ export default function StarshipsModal({isOpen, onClose, data}){
                     id="starship_class"
                     name="starship_class"
                     type="text"
+                    disabled={isReadOnly}
                     onChange={formik.handleChange}
                     onBlur={formik.handleBlur}
                     value={formik.values.starship_class}
@@ -117,6 +125,7 @@ export default function StarshipsModal({isOpen, onClose, data}){
                     id="length"
                     name="length"
                     type="number"
+                    disabled={isReadOnly}
                     onChange={formik.handleChange}
                     onBlur={formik.handleBlur}
                     value={formik.values.length}
@@ -132,6 +141,7 @@ export default function StarshipsModal({isOpen, onClose, data}){
                     id="passengers"
                     name="passengers"
                     type="number"
+                    disabled={isReadOnly}
                     onChange={formik.handleChange}
                     onBlur={formik.handleBlur}
                     value={formik.values.passengers}
@@ -147,6 +157,7 @@ export default function StarshipsModal({isOpen, onClose, data}){
                     id="max_atmosphering_speed"
                     name="max_atmosphering_speed"
                     type="number"
+                    disabled={isReadOnly}
                     onChange={formik.handleChange}
                     onBlur={formik.handleBlur}
                     value={formik.values.max_atmosphering_speed}
@@ -161,7 +172,8 @@ export default function StarshipsModal({isOpen, onClose, data}){
                   <input
                     id="hyperdrive_rating"
                     name="hyperdrive_rating"
-                    type="text"
+                    type="number"
+                    disabled={isReadOnly}
                     onChange={formik.handleChange}
                     onBlur={formik.handleBlur}
                     value={formik.values.hyperdrive_rating}
@@ -179,6 +191,7 @@ export default function StarshipsModal({isOpen, onClose, data}){
                     type="number"
                     onChange={formik.handleChange}
                     onBlur={formik.handleBlur}
+                    disabled={isReadOnly}
                     value={formik.values.MGLT}
                     className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm p-2 border"
                   />
@@ -194,6 +207,7 @@ export default function StarshipsModal({isOpen, onClose, data}){
                     type="number"
                     onChange={formik.handleChange}
                     onBlur={formik.handleBlur}
+                    disabled={isReadOnly}
                     value={formik.values.cargo_capacity}
                     className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm p-2 border"
                   />
@@ -209,6 +223,7 @@ export default function StarshipsModal({isOpen, onClose, data}){
                     type="text"
                     onChange={formik.handleChange}
                     onBlur={formik.handleBlur}
+                    disabled={isReadOnly}
                     value={formik.values.consumables}
                     className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm p-2 border"
                   />
@@ -216,13 +231,14 @@ export default function StarshipsModal({isOpen, onClose, data}){
                     <div className="text-red-600 text-sm mt-1">{formik.errors.consumables}</div>
                   ) : null}
                 </div>
-                <div className="flex justify-end space-x-3 pt-4 border-t border-gray-200">
+                {!isReadOnly?(
+                    <div className="flex justify-end space-x-3 pt-4 border-t border-gray-200">
                   <button
                     type="button"
                     onClick={onClose}
                     className="bg-white py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none"
                   >
-                    Cancel
+                    Cancelar
                   </button>
                   <button
                     type="submit"
@@ -232,6 +248,18 @@ export default function StarshipsModal({isOpen, onClose, data}){
                     {formik.isSubmitting ? 'Guardando...' : 'Guardar'}
                   </button>
                 </div>
+                ):(
+                   <div className="flex justify-end space-x-3 pt-4 border-t border-gray-200">
+                  <button
+                    type="button"
+                    onClick={onClose}
+                    className="bg-white py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none"
+                  >
+                    Cerrar
+                  </button>
+                </div>
+                )}
+               
               </form>
             </div>
             
