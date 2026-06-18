@@ -2,6 +2,7 @@ import react from "react"
 import ListItemIcon from '@mui/material/ListItemIcon';
 import { useEffect, useState } from "react";
 import { Button } from "@mui/material";
+import AirplanemodeActiveIcon from '@mui/icons-material/AirplanemodeActive';
 
 export default function Sidebar({activePage, setActivePage}){
     const [isCollapsed, setIsCollapsed] = useState(true);
@@ -35,7 +36,7 @@ export default function Sidebar({activePage, setActivePage}){
                             <buton key={item.id} type="button" onClick={()=> setActivePage(item.id)} className={`w-full flex items-center gap-4 p-3 rounded-xl transition-all duration-200 group relative cursor-pointer
                                 ${isActive ? "bg-blue-600/20 text-blue-400 font-semibold border-1-4 border-blue-500 rounded-1-none pl-2" : "text-slate-400 hover:text-white hover:bg-slate-800"}`}>
                                     <span className={`whitespace-nowrap transition-all duration-300 overflowhidden text-left ${isCollapsed ? "w-0 opacity-0 pointer-events-none" : "w-auto opacity-100"}`}>
-                                        {item.label}
+                                       <AirplanemodeActiveIcon></AirplanemodeActiveIcon> {item.label}
                                     </span>
                                     {isCollapsed && (
                                         <div className="absolute left-full rounded-md px-2 py-1 ml-4 bg-blue-600 text-white text-xs font-semiboldopacity-0 -translate-x-2 group-hover:opacity">

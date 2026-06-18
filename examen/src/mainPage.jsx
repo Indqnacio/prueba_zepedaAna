@@ -40,7 +40,7 @@ export default function MainPage() {
         }
     }
 
-    const Search = styled('div')(({ theme }) => ({
+   /* const Search = styled('div')(({ theme }) => ({
         position: 'relative',
         borderRadius: theme.shape.borderRadius,
         backgroundColor: alpha(theme.palette.common.white, 0.15),
@@ -80,7 +80,7 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
       },
     },
   },
-}));
+}));*/
 
     function filterData() {
         const filtered = characters.filter(personaje =>

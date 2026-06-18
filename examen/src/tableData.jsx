@@ -10,6 +10,7 @@ import TableRow from '@mui/material/TableRow';
 import Button from '@mui/material/Button';
 import axios from "axios";
 import ExtraInfoModal from "./extraInfoModal";
+import { Eye, Pencil, Trash2 } from "lucide-react";
 
 export default function TableData({columns, data, onView, onEdit, onDelete}){
   const [pagina, setPagina] = useState(0);
@@ -28,38 +29,46 @@ export default function TableData({columns, data, onView, onEdit, onDelete}){
     setIsModalOpen(true)
   }
     return(
-      <div className="w-full  mx-auto my-8 p-4">
-        <div className="overflow-x-auto rounded-lg border border-gray-200 shadow-md">
-            <table className="w-full">
-            <thead className="bg-gray-50">
+      <div className="w-full  mx-auto my-4">
+        <div className="overflow-hidden rounded-2xl border border-gray-200 shadow-xl">
+            <table className="w-full border-collapse ">
+            <thead className="bg-blue-800 text-md text-lg tracking-wider">
               <tr>
                 {columns.map((column) =>(
-                    (<th className="px-6 py-4 font-medium text-gray-900" key={column.id}>{column.label}</th>)
+                    (<th className="px-6 py-4 font-semibold text-center text-gray-50" key={column.id}>{column.label}</th>)
                 ))}
               </tr>
             </thead>
             <tbody className="divide-y- divide-slate-800/60">
               {data.length===0 &&(
                 <tr>
-                  <td colSpan={columns.length+1} className="px-6 py-8 text-center text-slate-500 italic">
+                  <td colSpan={columns.length} className="px-6 py-12 text-center text-slate-500 roboto font-medium">
                     No hay registros disponibles para esta entidad
                   </td>
                 </tr>
               )}
                 {data.map((item)=>{
                   return(
-                    <tr className="hover:cursor-pointer" key={item.name}>
+                    <tr className="hover:bg-slate-100 transition-colors text-center" key={item.name}>
                       {columns.map((column)=>{
                         const value = item[column.id];
 
                         if(column.id==='actions'){
                           return(
                             
-                            <td key={column.id}>
-                              <div className="flex">
-                                <button className="hover:cursor-pointer border" onClick={()=>onView(item)}>Ver</button>
-                              <button className="hover:cursor-pointer border" onClick={()=>onEdit(item)}>Editar</button>
-                              <button className="hover:cursor-pointer border" onClick={()=>onDelete(item)}>Eliminar</button>
+                            <td  className="px-6 py-2 text-center" key={column.id}>
+                              <div className="flex justify-center items-center gap-1">
+                                <button className="hover:cursor-pointer p-1 rounded-xl 
+                                bg-blue-800/10 text-blue-400 hover:bg-blue-800/20" 
+                                onClick={()=>onView(item)}><Eye/></button>
+
+                              <button className="hover:cursor-pointer p-1 rounded-xl 
+                                bg-orange-500/10 text-orange-400 hover:bg-orange-800/20" 
+                                onClick={()=>onEdit(item)}><Pencil/></button>
+
+                              <button className="hover:cursor-pointer p-1 rounded-xl 
+                                bg-red-500/10 text-red-400 hover:bg-red-800/20"  
+                                onClick={()=>onDelete(item)}><Trash2/></button>
                               </div>
                               
                             </td>

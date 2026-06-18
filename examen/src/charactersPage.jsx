@@ -122,7 +122,7 @@ useEffect(() => {
             {characters && characters.length>0?(
                 <TableData columns={columns} onView={handleViewing} onEdit={handleEditing} data={filteredData} onDelete={handleDeleteOpen}/>
             ):(
-                <p>Cargando información...</p>
+                <TableData columns={columns} onView={handleViewing} onEdit={handleEditing} data={filteredData} onDelete={handleDeleteOpen}/>
             )}
             <div className="flex">
                 
