@@ -3,13 +3,16 @@ import axios from "axios"
 import { useState, useEffect } from "react"
 import TableData from "./tableData"
 import StarshipsModal from "./modals/starships"
+import ConfirmModal from "./confirmModal"
 export default function StarshipsPage(){
     const [starships, setStarships] = useState([])
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const [isConfirmOpen, setIsConfirmOpen] = useState(false);
     const [totalPages, setTotalPages] = useState(0);
     const [index, setIndex]=useState(1);
     const [modalMode, setModalMode] = useState('creating')
     const [selectedStarship, setSelectedStarship] = useState(null);
+    const [toDeleteItem, setToDeleteItem] = useState('');
 
     const columns = [
     {id: 'name', label: 'Nombre', minWidth:"10%" },
@@ -55,8 +58,25 @@ export default function StarshipsPage(){
         setSelectedStarship(starship)
         setIsModalOpen(true)
     }
-    const handleDeleting = ()=>{
-        
+    const handleDeleteOpen = (starship)=>{
+        setIsConfirmOpen(true)
+        setToDeleteItem(starship)
+
+    }
+    const handleDeleting = async()=>{
+        try{
+            const payload={
+            id: `${toDeleteItem._id}`
+            }
+            console.log("data a enviar ", payload);
+            const res = await axios.delete("http://localhost:3000/deleNave",{data:payload})
+            console.log(res)
+            setIsConfirmOpen(false);
+            fetchStarships();
+        }catch(error){
+            alert("Error al borrar elemento ", error)
+            console.log("Error ", error);
+        }
     }
     const handleSaving = async (datos)=>{
         console.log("MOdal mode ", modalMode)
@@ -77,7 +97,7 @@ export default function StarshipsPage(){
         <>
         <h1>Página principal de Naves</h1>
          <button onClick={handleCreating}>Agregar Nave</button>
-        <TableData columns={columns} data={starships} onView={handleViewing} onEdit={handleEditing} />
+        <TableData columns={columns} data={starships} onView={handleViewing} onEdit={handleEditing} onDelete={handleDeleteOpen}/>
           <div className="flex">
                 
                 <button disabled={index===1} className={"hover: cursor-pointer border "} onClick={prevPage}>Página Anterior</button>
@@ -85,6 +105,7 @@ export default function StarshipsPage(){
                 <p>Página: {index}/{totalPages}</p>
             </div>
             <StarshipsModal isOpen={isModalOpen} mode={modalMode} onClose={()=>{setIsModalOpen(false); setSelectedStarship(null)}} data={selectedStarship} onSave={handleSaving}></StarshipsModal>
+            <ConfirmModal isOpen={isConfirmOpen} onClose={()=>{setIsConfirmOpen(false); setToDeleteItem(null);}} message={`¿Desea eliminar la nave?`} onDelete={handleDeleting}></ConfirmModal>
         </>
     )
 }

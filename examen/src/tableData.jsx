@@ -11,7 +11,7 @@ import Button from '@mui/material/Button';
 import axios from "axios";
 import ExtraInfoModal from "./extraInfoModal";
 
-export default function TableData({columns, data, onView, onEdit}){
+export default function TableData({columns, data, onView, onEdit, onDelete}){
   const [pagina, setPagina] = useState(0);
   const [filasPPag, setFilasPPag] = useState(10);
   const [item, setItem] = useState();
@@ -59,7 +59,7 @@ export default function TableData({columns, data, onView, onEdit}){
                               <div className="flex">
                                 <button className="hover:cursor-pointer border" onClick={()=>onView(item)}>Ver</button>
                               <button className="hover:cursor-pointer border" onClick={()=>onEdit(item)}>Editar</button>
-                              <button className="hover:cursor-pointer border" onClick={()=>alert("eliminando")}>Eliminar</button>
+                              <button className="hover:cursor-pointer border" onClick={()=>onDelete(item)}>Eliminar</button>
                               </div>
                               
                             </td>

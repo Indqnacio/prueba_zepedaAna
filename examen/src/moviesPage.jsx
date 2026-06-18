@@ -3,12 +3,15 @@ import { useEffect, useState } from "react"
 import axios from "axios";
 import TableData from "./tableData";
 import MoviesModal from "./modals/movies";
+import ConfirmModal from "./confirmModal";
 export default function MoviesPage(){
     const [movies, setMovies] = useState([]);
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const [isConfirmOpen, setIsConfirmOpen] = useState(false);
     const [totalPages, setTotalPages] = useState(0);
     const [index, setIndex]=useState(1);
     const [modalMode, setModalMode] = useState('creating')
+    const [toDeleteItem, setToDeleteItem] = useState('');
     const [selectedMovie, setSelectedMovie] = useState(null);
     const columns = [
     {id: 'title', label: 'Personaje', minWidth:"10%" },
@@ -49,8 +52,25 @@ export default function MoviesPage(){
         setSelectedMovie(movie)
         setIsModalOpen(true)
     }
-    const handleDeleting = ()=>{
-        
+    const handleDeleteOpen = (movie)=>{
+        setIsConfirmOpen(true)
+        setToDeleteItem(movie)
+
+    }
+    const handleDeleting = async()=>{
+        try{
+            const payload={
+            id: `${toDeleteItem._id}`
+            }
+            console.log("data a enviar ", payload);
+            const res = await axios.delete("http://localhost:3000/delePeli",{data:payload})
+            console.log(res)
+            setIsConfirmOpen(false);
+            getMovies();
+        }catch(error){
+            alert("Error al borrar elemento ", error)
+            console.log("Error ", error);
+        }
     }
     const handleSaving = async (datos)=>{
         console.log("MOdal mode ", modalMode)
@@ -71,13 +91,14 @@ export default function MoviesPage(){
         <>
             <h1>Página principal de Películas</h1>
             <button onClick={handleCreating}>Agregar Película</button>
-            <TableData columns={columns} data={movies} onView={handleViewing} onEdit={handleEditing}></TableData>
+            <TableData columns={columns} data={movies} onView={handleViewing} onEdit={handleEditing} onDelete={handleDeleteOpen}></TableData>
             <div className="flex">
                 <button disabled={index==1} className={"hover: cursor-pointer border "} onClick={prevPage}>Página Anterior</button>
                 <button disabled={index==totalPages} className={"hover: cursor-pointer border"} onClick={nextPage}>Página Siguiente</button>
                 <p>Página: {index}/{totalPages}</p>
             </div>
             <MoviesModal isOpen={isModalOpen} mode={modalMode} onClose={()=>{setIsModalOpen(false); setSelectedMovie(null)}} data={selectedMovie} onSave={handleSaving}></MoviesModal>
+            <ConfirmModal isOpen={isConfirmOpen} onClose={()=>{setIsConfirmOpen(false); setToDeleteItem(null);}} message={"Desea eliminar la película"} onDelete={handleDeleting}></ConfirmModal>
         </>
-    )
+    ) 
 }

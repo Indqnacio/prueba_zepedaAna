@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import TablaPersonajes from './tablaPersonajes';
 import TableData from './tableData';
 import SpeciesModal from './modals/species';
+import ConfirmModal from './confirmModal';
 export default function SpeciesPage(){
     const [species, setSpecies] = useState([]);
     const [totalPages, setTotalPages] = useState(0);
@@ -10,8 +11,10 @@ export default function SpeciesPage(){
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [modalMode, setModalMode] = useState('creating')
     const [selectedSpecie, setSelectedSpecie] = useState(null); 
-
-     async function getSpecies(){
+    const [isConfirmOpen, setIsConfirmOpen] = useState(false);
+    const [toDeleteItem, setToDeleteItem] = useState('');
+     
+    async function getSpecies(){
         const aux = await axios.get(`http://localhost:3000/getEspecies?page=${index}&limit=10`)
         setSpecies(aux.data.docs)
         setTotalPages(aux.data.totalPages)
@@ -19,9 +22,7 @@ export default function SpeciesPage(){
     useEffect(() => {
         getSpecies();
     }, [index]);
-    useEffect(() => {
-        console.log("especies ",species);
-    }, [species]);
+
 
     async function nextPage() {
          setIndex(index+1)
@@ -46,12 +47,29 @@ export default function SpeciesPage(){
         setSelectedSpecie(specie)
         setIsModalOpen(true)
     }
-    const handleDeleting = ()=>{
-        
+    const handleDeleteOpen = (movie)=>{
+        setIsConfirmOpen(true)
+        setToDeleteItem(movie)
+
+    }
+    const handleDeleting =async ()=>{
+          try{
+            const payload={
+            id: `${toDeleteItem._id}`
+            }
+            console.log("data a enviar ", payload);
+            const res = await axios.delete("http://localhost:3000/deleEspecie",{data:payload})
+            console.log(res)
+            setIsConfirmOpen(false);
+            getSpecies();
+        }catch(error){
+            alert("Error al borrar elemento ", error)
+            console.log("Error ", error);
+        }
     }
     const handleSaving = async (datos)=>{
         console.log("MOdal mode ", modalMode)
-        if(modalMode === "editing"){
+        if(modalMode === "editing"){onDelete
             console.log("datos a actualizar ", datos)
             const res= await axios.put("http://localhost:3000/putEspecie", datos)
             console.log(res)
@@ -81,7 +99,7 @@ export default function SpeciesPage(){
         <>
         <h1>Página principal de Especies</h1>
         <button onClick={handleCreating}>Agregar Vehículo</button>
-        <TableData columns={columns} data={species} onView={handleViewing} onEdit={handleEditing}/>
+        <TableData columns={columns} data={species} onView={handleViewing} onEdit={handleEditing} onDelete={handleDeleteOpen}/>
           <div className="flex">
                 
                 <button disabled={index===1} className={"hover: cursor-pointer border "} onClick={prevPage}>Página Anterior</button>
@@ -89,6 +107,7 @@ export default function SpeciesPage(){
                 <p>Página: {index}/{totalPages}</p>
             </div>
         <SpeciesModal isOpen={isModalOpen} mode={modalMode} onClose={()=>{setIsModalOpen(false); setSelectedSpecie(null)}} data={selectedSpecie} onSave={handleSaving} ></SpeciesModal>
+        <ConfirmModal isOpen={isConfirmOpen} onClose={()=>{setIsConfirmOpen(false); setToDeleteItem(null);}} message={`¿Desea eliminar la especie?`} onDelete={handleDeleting}></ConfirmModal>
         </>
         
     )

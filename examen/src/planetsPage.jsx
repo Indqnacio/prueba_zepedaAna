@@ -3,15 +3,17 @@ import axios from "axios"
 import { useEffect, useState } from "react"
 import TableData from "./tableData"
 import PlanetsModal from "./modals/planets"
-
+import ConfirmModal from "./confirmModal"
 export default function PlanetsPage(){
 
     const [planets,setPlanets] = useState([])
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const [isConfirmOpen, setIsConfirmOpen] = useState(false);
     const [totalPages, setTotalPages] = useState(0);
     const [modalMode, setModalMode] = useState('creating')
     const [selectedPlanet, setSelectedPlanet] = useState(null);
     const [index, setIndex]=useState(1);
+    const [toDeleteItem, setToDeleteItem] = useState('');
     const columns = [
     {id: 'name', label: 'Nombre', minWidth:"10%" },
     {id: 'diameter', label: 'Diametro', minWidth:"10%"},
@@ -57,6 +59,10 @@ export default function PlanetsPage(){
         setIsModalOpen(true)
     }
 
+    const handleDeleteOpen = (movie)=>{
+        setIsConfirmOpen(true)
+        setToDeleteItem(movie)
+    }
     const handleSaving = async (datos)=>{
         console.log("MOdal mode ", modalMode)
         if(modalMode === "editing"){
@@ -73,15 +79,27 @@ export default function PlanetsPage(){
         fetchPlanets();
     }
 
-    const handleDeleting = ()=>{
-        
+    const handleDeleting = async()=>{
+        try{
+            const payload={
+            id: `${toDeleteItem._id}`
+            }
+            console.log("data a enviar ", payload);
+            const res = await axios.delete("http://localhost:3000/delePlaneta",{data:payload})
+            console.log(res)
+            setIsConfirmOpen(false);
+            fetchPlanets();
+        }catch(error){
+            alert("Error al borrar elemento ", error)
+            console.log("Error ", error);
+        }
     }
 
     return(
         <>
         <h1>Página principal de Planetas</h1>
          <button onClick={handleCreating}>Agregar Planeta</button>
-        <TableData columns={columns} data={planets} onView={handleViewing} onEdit={handleEditing} />
+        <TableData columns={columns} data={planets} onView={handleViewing} onDelete={handleDeleteOpen} onEdit={handleEditing} />
         <div className="flex">
                 
                 <button disabled={index===1} className={"hover: cursor-pointer border "} onClick={prevPage}>Página Anterior</button>
@@ -93,6 +111,7 @@ export default function PlanetsPage(){
         mode={modalMode} 
         onClose={()=>{setIsModalOpen(false); 
         setSelectedPlanet(null); setIsModalOpen(null)}} data={selectedPlanet} onSave={handleSaving}/>
+        <ConfirmModal isOpen={isConfirmOpen} onClose={()=>{setIsConfirmOpen(false); setToDeleteItem(null);}} message={"Desea eliminar el planeta"} onDelete={handleDeleting}></ConfirmModal>
         </>
     )
 }

@@ -3,12 +3,16 @@ import axios from "axios"
 import { useEffect, useState } from "react"
 import TableData from "./tableData"
 import VehiclesModal from "./modals/vehicles"
+import ConfirmModal from "./confirmModal"
+
 export default function VehiclesPage(){
     const [vehicles, setVehicles] = useState([])
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const [isConfirmOpen, setIsConfirmOpen] = useState(false);
     const [totalPages, setTotalPages] = useState(0);
     const [modalMode, setModalMode] = useState('creating')
     const [selectedVehicle, setSelectedVehicle] = useState(null);
+    const [toDeleteItem, setToDeleteItem] = useState('');
     const [index, setIndex]=useState(1);
 
     const columns = [
@@ -53,8 +57,25 @@ export default function VehiclesPage(){
         setSelectedVehicle(vehicle)
         setIsModalOpen(true)
     }
-    const handleDeleting = ()=>{
-        
+    const handleDeleteOpen = (vehicle)=>{
+        setIsConfirmOpen(true)
+        setToDeleteItem(vehicle)
+
+    }
+    const handleDeleting = async()=>{
+        try{
+            const payload={
+            id: `${toDeleteItem._id}`
+            }
+            console.log("data a enviar ", payload);
+            const res = await axios.delete("http://localhost:3000/deleteVehiculo",{data:payload})
+            console.log(res)
+            setIsConfirmOpen(false);
+            fetchVehicles();
+        }catch(error){
+            alert("Error al borrar elemento ", error)
+            console.log("Error ", error);
+        }
     }
     const handleSaving = async (datos)=>{
         console.log("MOdal mode ", modalMode)
@@ -75,7 +96,7 @@ export default function VehiclesPage(){
         <>
         <h1>Página principal de Vehículos</h1>
          <button onClick={handleCreating}>Agregar Vehículo</button>
-        <TableData columns={columns} data={vehicles} onView={handleViewing} onEdit={handleEditing}/>
+        <TableData columns={columns} data={vehicles} onView={handleViewing} onDelete={handleDeleteOpen} onEdit={handleEditing}/>
          <div className="flex">
                 
                 <button disabled={index===1} className={"hover: cursor-pointer border "} onClick={prevPage}>Página Anterior</button>
@@ -83,6 +104,7 @@ export default function VehiclesPage(){
                 <p>Página: {index}/{totalPages}</p>
         </div>
         <VehiclesModal isOpen={isModalOpen} mode={modalMode} onClose={()=>{setIsModalOpen(false); setSelectedVehicle(null)}} data={selectedVehicle} onSave={handleSaving}></VehiclesModal>
+        <ConfirmModal isOpen={isConfirmOpen} onClose={()=>{setIsConfirmOpen(false); setToDeleteItem("");}} message={`¿Desea eliminar el vehículo? ${toDeleteItem.name}`} onDelete={handleDeleting}></ConfirmModal>
         </>
     )
 }

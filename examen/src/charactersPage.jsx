@@ -2,14 +2,16 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import TableData from "./tableData";
 import CharactersModal from "./modals/characters";
-
+import ConfirmModal from "./confirmModal";
 export default function CharactersPage(){
     const [isModalOpen, setIsModalOpen] = useState(false)
+    const [isConfirmOpen, setIsConfirmOpen] = useState(false);
     const [characters, setCharacters] = useState([])
     const [filteredCharacters, setFilteredCharacters] = useState([])
     const [totalPages, setTotalPages] = useState(0);
     const [films, setFilms] = useState([])
     const [index, setIndex]=useState(1);
+    const [toDeleteItem, setToDeleteItem] = useState('');
     const [modalMode, setModalMode] = useState('creating')
     const [selectedCharacter, setSelectedCharacter] = useState(null);
     const columns = [
@@ -67,8 +69,25 @@ useEffect(() => {
         setSelectedCharacter(character)
         setIsModalOpen(true)
     }
-    const handleDeleting = ()=>{
-        
+     const handleDeleteOpen = (character)=>{
+        setIsConfirmOpen(true)
+        setToDeleteItem(character)
+
+    }
+    const handleDeleting = async()=>{
+        try{
+            const payload={
+            id: `${toDeleteItem._id}`
+            }
+            console.log("data a enviar ", payload);
+            const res = await axios.delete("http://localhost:3000/deletePersonaje",{data:payload})
+            console.log(res)
+            setIsConfirmOpen(false);
+            fetchCharacters();
+        }catch(error){
+            alert("Error al borrar elemento ", error)
+            console.log("Error ", error);
+        }
     }
     const handleSaving = async (datos)=>{
         console.log("Quiere guardar")
@@ -92,7 +111,7 @@ useEffect(() => {
             <h1>Personajes de Starwars</h1>
              <button onClick={handleCreating} className={"hover: cursor-pointer"}> Agregar Personaje</button>
             {characters && characters.length>0?(
-                <TableData columns={columns} onView={handleViewing} onEdit={handleEditing} data={characters}/>
+                <TableData columns={columns} onView={handleViewing} onEdit={handleEditing} data={characters} onDelete={handleDeleteOpen}/>
             ):(
                 <p>Cargando información...</p>
             )}
@@ -103,6 +122,7 @@ useEffect(() => {
                 <p>Página: {index}/{totalPages}</p>
             </div>
             <CharactersModal mode={modalMode} isOpen={isModalOpen} modal={modalMode} onClose={()=>{setIsModalOpen(false); setSelectedCharacter(null)}} data={selectedCharacter} onSave={handleSaving}></CharactersModal>
+            <ConfirmModal isOpen={isConfirmOpen} onClose={()=>{setIsConfirmOpen(false); setToDeleteItem(null);}} message={"¿Desea eliminar el personaje?"} onDelete={handleDeleting}></ConfirmModal>
         </div>
 
         </>

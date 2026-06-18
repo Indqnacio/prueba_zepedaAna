@@ -55,14 +55,12 @@ export default function MoviesModal({isOpen, onClose, data, mode, onSave}){
                 <div className="absolute inset-y-0 right-0 max-w-full flex">
         <div className="w-screen max-w-md transform transition-all ease-in-out duration-500 sm:duration-700">
           <div className="h-full flex flex-col bg-white shadow-xl overflow-y-auto">
-            
-            {/* Modal Header */}
             <div className="px-4 py-6 bg-gray-50 border-b border-gray-200 flex items-center justify-between">
                 {isEditing?(<h2 className="text-lg font-medium text-gray-900">Editar Película</h2>):(<h2 className="text-lg font-medium text-gray-900">Registrar Nueva Película</h2>)}
               <button 
                 onClick={onClose}
                 className="rounded-md text-gray-400 hover:text-gray-500 focus:outline-none"
-              >
+              >Borrar
               </button>
             </div>
 
