@@ -4,6 +4,7 @@ import { useEffect, useState } from "react"
 import TableData from "./tableData"
 import PlanetsModal from "./modals/planets"
 import ConfirmModal from "./confirmModal"
+import Searchbar from "./searchbar";
 export default function PlanetsPage(){
 
     const [planets,setPlanets] = useState([])
@@ -14,6 +15,7 @@ export default function PlanetsPage(){
     const [selectedPlanet, setSelectedPlanet] = useState(null);
     const [index, setIndex]=useState(1);
     const [toDeleteItem, setToDeleteItem] = useState('');
+    const [searchQuery, setSearchQuery] = useState('');
     const columns = [
     {id: 'name', label: 'Nombre', minWidth:"10%" },
     {id: 'diameter', label: 'Diametro', minWidth:"10%"},
@@ -41,6 +43,12 @@ export default function PlanetsPage(){
          setIndex(index-1)
     }
 
+    const filteredData=planets.filter((item)=>{
+        const query = searchQuery.toLocaleLowerCase();
+        return(
+            item.name.toLocaleLowerCase().includes(query)
+        );
+    });
     const handleCreating = ()=>{
         setModalMode("creating")
         setSelectedPlanet(null)
@@ -99,7 +107,8 @@ export default function PlanetsPage(){
         <>
         <h1>Página principal de Planetas</h1>
          <button onClick={handleCreating}>Agregar Planeta</button>
-        <TableData columns={columns} data={planets} onView={handleViewing} onDelete={handleDeleteOpen} onEdit={handleEditing} />
+         <Searchbar searchQuery={searchQuery} onSearchChange={setSearchQuery}></Searchbar>
+        <TableData columns={columns} data={filteredData} onView={handleViewing} onDelete={handleDeleteOpen} onEdit={handleEditing} />
         <div className="flex">
                 
                 <button disabled={index===1} className={"hover: cursor-pointer border "} onClick={prevPage}>Página Anterior</button>

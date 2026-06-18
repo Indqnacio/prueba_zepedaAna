@@ -3,6 +3,7 @@ import axios from "axios";
 import TableData from "./tableData";
 import CharactersModal from "./modals/characters";
 import ConfirmModal from "./confirmModal";
+import Searchbar from "./searchbar";
 export default function CharactersPage(){
     const [isModalOpen, setIsModalOpen] = useState(false)
     const [isConfirmOpen, setIsConfirmOpen] = useState(false);
@@ -14,6 +15,7 @@ export default function CharactersPage(){
     const [toDeleteItem, setToDeleteItem] = useState('');
     const [modalMode, setModalMode] = useState('creating')
     const [selectedCharacter, setSelectedCharacter] = useState(null);
+    const [searchQuery, setSearchQuery] = useState('');
     const columns = [
     {id: 'name', label: 'Nombre', minWidth:60 },
     {id: 'height', label: 'Altura', format: (value) => value.toFixed(2)},
@@ -46,6 +48,12 @@ useEffect(() => {
         fetchCharacters();
         fetchMovies();
     },[index])
+     const filteredData=characters.filter((item)=>{
+        const query = searchQuery.toLocaleLowerCase();
+        return(
+            item.name.toLocaleLowerCase().includes(query)
+        );
+    });
     async function nextPage() {
          setIndex(index+1)
     }
@@ -110,8 +118,9 @@ useEffect(() => {
         <div className="w-full">
             <h1>Personajes de Starwars</h1>
              <button onClick={handleCreating} className={"hover: cursor-pointer"}> Agregar Personaje</button>
+             <Searchbar searchQuery={searchQuery} onSearchChange={setSearchQuery}></Searchbar>
             {characters && characters.length>0?(
-                <TableData columns={columns} onView={handleViewing} onEdit={handleEditing} data={characters} onDelete={handleDeleteOpen}/>
+                <TableData columns={columns} onView={handleViewing} onEdit={handleEditing} data={filteredData} onDelete={handleDeleteOpen}/>
             ):(
                 <p>Cargando información...</p>
             )}

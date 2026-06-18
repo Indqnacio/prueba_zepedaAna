@@ -4,6 +4,7 @@ import { useState, useEffect } from "react"
 import TableData from "./tableData"
 import StarshipsModal from "./modals/starships"
 import ConfirmModal from "./confirmModal"
+import Searchbar from "./searchbar"
 export default function StarshipsPage(){
     const [starships, setStarships] = useState([])
     const [isModalOpen, setIsModalOpen] = useState(false);
@@ -13,6 +14,7 @@ export default function StarshipsPage(){
     const [modalMode, setModalMode] = useState('creating')
     const [selectedStarship, setSelectedStarship] = useState(null);
     const [toDeleteItem, setToDeleteItem] = useState('');
+    const [searchQuery, setSearchQuery] = useState('');
 
     const columns = [
     {id: 'name', label: 'Nombre', minWidth:"10%" },
@@ -63,6 +65,12 @@ export default function StarshipsPage(){
         setToDeleteItem(starship)
 
     }
+    const filteredData=starships.filter((item)=>{
+        const query = searchQuery.toLocaleLowerCase();
+        return(
+            item.name.toLocaleLowerCase().includes(query)
+        );
+    });
     const handleDeleting = async()=>{
         try{
             const payload={
@@ -97,7 +105,8 @@ export default function StarshipsPage(){
         <>
         <h1>Página principal de Naves</h1>
          <button onClick={handleCreating}>Agregar Nave</button>
-        <TableData columns={columns} data={starships} onView={handleViewing} onEdit={handleEditing} onDelete={handleDeleteOpen}/>
+         <Searchbar searchQuery={searchQuery} onSearchChange={setSearchQuery}></Searchbar>
+        <TableData columns={columns} data={filteredData} onView={handleViewing} onEdit={handleEditing} onDelete={handleDeleteOpen}/>
           <div className="flex">
                 
                 <button disabled={index===1} className={"hover: cursor-pointer border "} onClick={prevPage}>Página Anterior</button>

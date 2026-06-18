@@ -4,6 +4,7 @@ import axios from "axios";
 import TableData from "./tableData";
 import MoviesModal from "./modals/movies";
 import ConfirmModal from "./confirmModal";
+import Searchbar from "./searchbar";
 export default function MoviesPage(){
     const [movies, setMovies] = useState([]);
     const [isModalOpen, setIsModalOpen] = useState(false);
@@ -13,6 +14,7 @@ export default function MoviesPage(){
     const [modalMode, setModalMode] = useState('creating')
     const [toDeleteItem, setToDeleteItem] = useState('');
     const [selectedMovie, setSelectedMovie] = useState(null);
+    const [searchQuery, setSearchQuery] = useState('');
     const columns = [
     {id: 'title', label: 'Personaje', minWidth:"10%" },
     {id: 'director', label: 'Director', minWidth:"10%"},
@@ -35,6 +37,12 @@ export default function MoviesPage(){
          setIndex(index-1)
     }
 
+    const filteredData=movies.filter((item)=>{
+        const query = searchQuery.toLocaleLowerCase();
+        return(
+            item.title.toLocaleLowerCase().includes(query)
+        );
+    });
     const handleCreating = ()=>{
         setModalMode("creating")
         setSelectedMovie(null)
@@ -91,7 +99,8 @@ export default function MoviesPage(){
         <>
             <h1>Página principal de Películas</h1>
             <button onClick={handleCreating}>Agregar Película</button>
-            <TableData columns={columns} data={movies} onView={handleViewing} onEdit={handleEditing} onDelete={handleDeleteOpen}></TableData>
+            <Searchbar searchQuery={searchQuery} onSearchChange={setSearchQuery}></Searchbar>
+            <TableData columns={columns} data={filteredData} onView={handleViewing} onEdit={handleEditing} onDelete={handleDeleteOpen}></TableData>
             <div className="flex">
                 <button disabled={index==1} className={"hover: cursor-pointer border "} onClick={prevPage}>Página Anterior</button>
                 <button disabled={index==totalPages} className={"hover: cursor-pointer border"} onClick={nextPage}>Página Siguiente</button>

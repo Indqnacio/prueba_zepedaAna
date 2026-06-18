@@ -4,6 +4,7 @@ import { useEffect, useState } from "react"
 import TableData from "./tableData"
 import VehiclesModal from "./modals/vehicles"
 import ConfirmModal from "./confirmModal"
+import Searchbar from "./searchbar"
 
 export default function VehiclesPage(){
     const [vehicles, setVehicles] = useState([])
@@ -13,6 +14,7 @@ export default function VehiclesPage(){
     const [modalMode, setModalMode] = useState('creating')
     const [selectedVehicle, setSelectedVehicle] = useState(null);
     const [toDeleteItem, setToDeleteItem] = useState('');
+    const [searchQuery, setSearchQuery] = useState('');
     const [index, setIndex]=useState(1);
 
     const columns = [
@@ -40,6 +42,13 @@ export default function VehiclesPage(){
     async function prevPage() {
          setIndex(index-1)
     }
+    const filteredData=vehicles.filter((item)=>{
+        const query = searchQuery.toLocaleLowerCase();
+        return(
+            item.name.toLocaleLowerCase().includes(query)
+        );
+    });
+
     const handleCreating = ()=>{
         setModalMode("creating")
         setSelectedVehicle(null)
@@ -95,8 +104,9 @@ export default function VehiclesPage(){
     return(
         <>
         <h1>Página principal de Vehículos</h1>
+        <Searchbar searchQuery={searchQuery} onSearchChange={setSearchQuery}></Searchbar>
          <button onClick={handleCreating}>Agregar Vehículo</button>
-        <TableData columns={columns} data={vehicles} onView={handleViewing} onDelete={handleDeleteOpen} onEdit={handleEditing}/>
+        <TableData columns={columns} data={filteredData} onView={handleViewing} onDelete={handleDeleteOpen} onEdit={handleEditing}/>
          <div className="flex">
                 
                 <button disabled={index===1} className={"hover: cursor-pointer border "} onClick={prevPage}>Página Anterior</button>

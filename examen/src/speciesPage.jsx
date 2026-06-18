@@ -4,6 +4,7 @@ import TablaPersonajes from './tablaPersonajes';
 import TableData from './tableData';
 import SpeciesModal from './modals/species';
 import ConfirmModal from './confirmModal';
+import Searchbar from "./searchbar";
 export default function SpeciesPage(){
     const [species, setSpecies] = useState([]);
     const [totalPages, setTotalPages] = useState(0);
@@ -13,6 +14,7 @@ export default function SpeciesPage(){
     const [selectedSpecie, setSelectedSpecie] = useState(null); 
     const [isConfirmOpen, setIsConfirmOpen] = useState(false);
     const [toDeleteItem, setToDeleteItem] = useState('');
+    const [searchQuery, setSearchQuery] = useState('');
      
     async function getSpecies(){
         const aux = await axios.get(`http://localhost:3000/getEspecies?page=${index}&limit=10`)
@@ -30,6 +32,12 @@ export default function SpeciesPage(){
     async function prevPage() {
          setIndex(index-1)
     }
+    const filteredData=species.filter((item)=>{
+        const query = searchQuery.toLocaleLowerCase();
+        return(
+            item.name.toLocaleLowerCase().includes(query)
+        );
+    });
     const handleCreating = ()=>{
         setModalMode("creating")
         setSelectedSpecie(null)
@@ -99,7 +107,8 @@ export default function SpeciesPage(){
         <>
         <h1>Página principal de Especies</h1>
         <button onClick={handleCreating}>Agregar Vehículo</button>
-        <TableData columns={columns} data={species} onView={handleViewing} onEdit={handleEditing} onDelete={handleDeleteOpen}/>
+        <Searchbar searchQuery={searchQuery} onSearchChange={setSearchQuery}></Searchbar>
+        <TableData columns={columns} data={filteredData} onView={handleViewing} onEdit={handleEditing} onDelete={handleDeleteOpen}/>
           <div className="flex">
                 
                 <button disabled={index===1} className={"hover: cursor-pointer border "} onClick={prevPage}>Página Anterior</button>
