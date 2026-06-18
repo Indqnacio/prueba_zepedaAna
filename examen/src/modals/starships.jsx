@@ -65,7 +65,7 @@ export default function StarshipsModal({isOpen, onClose, data, mode, onSave}){
         <div className="w-screen max-w-md transform transition-all ease-in-out duration-500 sm:duration-700">
           <div className="h-full flex flex-col bg-white shadow-xl overflow-y-auto">
             <div className="px-4 py-6 bg-gray-50 border-b border-gray-200 flex items-center justify-between">
-                {isEditing?(<h2 className="text-lg font-medium text-gray-900">Editar Nave</h2>):(<h2 className="text-lg font-medium text-gray-900">Registrar nueva Nave</h2>)}
+                {isEditing?(<h2 className="text-lg font-medium text-gray-900">Editar Nave</h2>):(<h2 className="text-lg font-medium text-gray-900">Agregar nueva Nave</h2>)}
               <button 
                 onClick={onClose}
                 className="rounded-md text-gray-400 hover:text-gray-500 focus:outline-none"

@@ -96,8 +96,6 @@ export default function CharactersPage(){
         }
     }
     const handleSaving = async (datos)=>{
-        console.log("Quiere guardar")
-        console.log("MOdal mode ", modalMode)
         if(modalMode === "editing"){
             console.log("datos a actualizar ", datos)
             const res= await axios.put("http://localhost:3000/putPersonaje", datos)

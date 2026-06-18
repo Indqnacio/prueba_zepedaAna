@@ -133,11 +133,14 @@ export default function CharactersModal({isOpen, onClose, data, mode, onSave}){
                 if(!payload.homeworld){
                   delete payload.homeworld
                 }
-               /* const response = await axios.post('http://localhost:3000/postPersonaje', data);
-                c*/
-                await onSave(payload);
-               // console.log("Form mandado exitosamente ", data);
-                
+                console.log("payload ",payload)
+                if (mode==="editing"){
+                  console.log("quiero editaaaaaaaaar ")
+                  const res = axios.put('http://localhost:3000/putPersonaje',payload)
+                  console.log(res)
+                }
+                const res = await onSave(payload);
+                console.log(res)
                 resetForm();
                 onClose();
             }catch(error){
@@ -158,7 +161,7 @@ export default function CharactersModal({isOpen, onClose, data, mode, onSave}){
                 <div className="h-full flex flex-col bg-white shadow-xl overflow-y-auto">
 
                   <div className="px-4 py-6 bg-gray-50 border-b border-gray-200 flex items-center justify-between">
-                    {isEditing?(<h2 className="text-lg font-medium text-gray-900">Editar Personaje</h2>):(<h2 className="text-lg font-medium text-gray-900">REgistrar Nuevo Personaje</h2>)}
+                    {isEditing?(<h2 className="text-lg font-medium text-gray-900">Editar Personaje</h2>):(<h2 className="text-lg font-medium text-gray-900">Registrar Nuevo Personaje</h2>)}
                     <button 
                       onClick={onClose}
                       className="rounded-md text-gray-400 hover:text-gray-500 focus:outline-none"
