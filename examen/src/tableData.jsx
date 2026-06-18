@@ -60,15 +60,18 @@ export default function TableData({columns, data, onView, onEdit, onDelete}){
                               <div className="flex justify-center items-center gap-1">
                                 <button className="hover:cursor-pointer p-1 rounded-xl 
                                 bg-blue-800/10 text-blue-400 hover:bg-blue-800/20" 
-                                onClick={()=>onView(item)}><Eye/></button>
+                                onClick={()=>onView(item)}><Eye size={16}/></button>
 
                               <button className="hover:cursor-pointer p-1 rounded-xl 
                                 bg-orange-500/10 text-orange-400 hover:bg-orange-800/20" 
-                                onClick={()=>onEdit(item)}><Pencil/></button>
+                                onClick={()=>onEdit(item)}><Pencil size={16}/></button>
 
                               <button className="hover:cursor-pointer p-1 rounded-xl 
                                 bg-red-500/10 text-red-400 hover:bg-red-800/20"  
-                                onClick={()=>onDelete(item)}><Trash2/></button>
+                                onClick={()=>onDelete(item)}>
+                                  <Trash2 size={16}
+                                  className="transition-transform group-hover:scale-110"/>
+                              </button>
                               </div>
                               
                             </td>
