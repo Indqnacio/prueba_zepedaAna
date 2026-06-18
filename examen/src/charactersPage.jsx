@@ -117,7 +117,7 @@ export default function CharactersPage(){
             
             
             <div className="flex inline-flex bg-gray-50 p-2 items-center rounded-2xl shadow-xl flex flex-row gap-1 text-lg gap-3 align-items-center">
-                <UsersRound/><h1 className="text-2xl font-semibold">Personajes de Starwars</h1>
+                <UsersRound/><h1 className="text-2xl font-semibold">Personajes de Star Wars</h1>
             </div>
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 w-full">
                 <Searchbar searchQuery={searchQuery} onSearchChange={setSearchQuery}/>
@@ -128,11 +128,8 @@ export default function CharactersPage(){
             </div>
             
              
-            {characters && characters.length>0?(
-                <TableData columns={columns} onView={handleViewing} onEdit={handleEditing} data={filteredData} onDelete={handleDeleteOpen}/>
-            ):(
-                <TableData columns={columns} onView={handleViewing} onEdit={handleEditing} data={filteredData} onDelete={handleDeleteOpen}/>
-            )}
+
+            <TableData columns={columns} onView={handleViewing} onEdit={handleEditing} data={filteredData} onDelete={handleDeleteOpen}/>
             <div className="flex items-center justify-end p-4 gap-3">
                 <p className="font-medium">
                     Página <span className="text-slate-600">{index}</span>

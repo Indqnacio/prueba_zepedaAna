@@ -28,7 +28,7 @@ export default function Sidebar({activePage, setActivePage}){
                         bg-clip-text transition-all duration-300 
                         overflow-hidden whitespace-nowrap 
                         ${isCollapsed ? "w-0 opacity-0 pointer-events-none" : "w-auto opacity-100"}`}>
-                            Gestor de Starwars
+                            Gestor de Star Wars
                     </span>
                     <Button onClick={()=> setIsCollapsed(!isCollapsed)} 
                     className="p-2 rounded-lg bg-indigo-950 

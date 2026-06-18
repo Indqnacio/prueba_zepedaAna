@@ -30,9 +30,9 @@ export default function TableData({columns, data, onView, onEdit, onDelete}){
   }
     return(
       <div className="w-full  mx-auto my-4 ">
-        <div className="overflow-hidden rounded-2xl border border-gray-200 shadow-xl">
-            <table className="w-full border-collapse ">
-            <thead className="bg-blue-800 text-md text-lg tracking-wider">
+        <div className="overflow-hidden rounded-2xl border border-gray-200 shadow-xl max-w-[1400px] max-h-[550px] overflow-y-auto overflow-x-auto">
+            <table className="w-full border-collapse">
+            <thead className="bg-blue-800 text-md text-lg tracking-wider sticky top-0 z-10">
               <tr>
                 {columns.map((column) =>(
                     (<th className="px-6 py-4 font-semibold text-center text-gray-50" key={column.id}>{column.label}</th>)
@@ -78,7 +78,7 @@ export default function TableData({columns, data, onView, onEdit, onDelete}){
                           )
                         }
                         return(
-                          <td key={column.id}>{value}</td>
+                          <td className="p-1.5" key={column.id}>{value}</td>
                         )
                       })}
                    </tr>
