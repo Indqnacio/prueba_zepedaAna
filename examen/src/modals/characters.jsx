@@ -3,7 +3,7 @@ import { useState, useEffect } from "react"
 import axios from "axios"
 import { useFormik } from "formik";
 import * as Yup from 'yup';
-import {Loader2, X} from 'lucide-react';
+import {CircleX, Loader2, X} from 'lucide-react';
 import { Select, Chip, MenuItem, FormControl } from "@mui/material";
 export default function CharactersModal({isOpen, onClose, data, mode, onSave}){
     const isReadOnly = mode ==="viewing";
@@ -154,23 +154,20 @@ export default function CharactersModal({isOpen, onClose, data, mode, onSave}){
     if(!isOpen) return null;
     return(
       <>
-        <div className="fixed inset-0 z-50 overflow-hidden">
-            <div className="absolute inset-0 bg-black/50 transition-opacity" onClick={onClose}></div>
-            <div className="absolute inset-y-0 right-0 max-w-full flex">
-              <div className="w-screen max-w-md transform transition-all ease-in-out duration-500 sm:duration-700">
-                <div className="h-full flex flex-col bg-white shadow-xl overflow-y-auto">
 
-                  <div className="px-4 py-6 bg-gray-50 border-b border-gray-200 flex items-center justify-between">
-                    {isEditing?(<h2 className="text-lg font-medium text-gray-900">Editar Personaje</h2>):(<h2 className="text-lg font-medium text-gray-900">Registrar Nuevo Personaje</h2>)}
-                    <button 
-                      onClick={onClose}
-                      className="rounded-md text-gray-400 hover:text-gray-500 focus:outline-none"
-                    >
-                    </button>
-                  </div>
-
-                  <div className="mt-6 relative flex-1 px-4 sm:px-6">
-                    <form onSubmit={formik.handleSubmit} className="space-y-6">
+      
+        <div className="fixed inset-0 z-50 overflow-hidden flex items-center justify-end">
+            <div 
+            className="absolute inset-0 bg-black/50 backdrop-blur-xs transition-opacity" onClick={onClose}></div>
+            <div className="w-full max-w-2xl h-full bg-gray-900 border-1 border-gray-100 shadow-2xl relative z-10 text-slate-100 flex flex-col">
+              <div className="px-6 py-5 bg-gray-100 flex items-center justify-between">
+                <h2 className="text-lg font-medium text-gray-900">{isEditing?"Editar Personaje":"Agregar Personaje"}</h2>
+                <button onClick={onClose} className="text-slate-400 hover:text-white transition-colors cursor-pointer">
+                  <CircleX/>
+                </button>
+              </div>
+              <div className="p-6 flex-1 overflow-y-auto">
+                  <form onSubmit={formik.handleSubmit} className="space-y-6">
 
                       <div>
                   <label htmlFor="name" className="block text-sm font-medium text-gray-700">Nombre</label>
@@ -592,6 +589,23 @@ export default function CharactersModal({isOpen, onClose, data, mode, onSave}){
                   </div>
                 )}
                     </form>
+              </div>
+            </div>
+            <div className="absolute inset-y-0 right-0 max-w-full flex">
+              <div className="w-screen max-w-md transform transition-all ease-in-out duration-500 sm:duration-700">
+                <div className="h-full flex flex-col bg-white shadow-xl overflow-y-auto">
+
+                  <div className="px-4 py-6 bg-gray-50 border-b border-gray-200 flex items-center justify-between">
+                    {isEditing?(<h2 className="text-lg font-medium text-gray-900">Editar Personaje</h2>):(<h2 className="text-lg font-medium text-gray-900">Registrar Nuevo Personaje</h2>)}
+                    <button 
+                      onClick={onClose}
+                      className="rounded-md text-gray-400 hover:text-gray-500 focus:outline-none"
+                    >
+                    </button>
+                  </div>
+
+                  <div className="mt-6 relative flex-1 px-4 sm:px-6">
+                    
                   </div>
                 </div>
               </div>
