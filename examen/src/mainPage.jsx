@@ -95,7 +95,7 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
     }
     return (
         <>
-        <div className='flex'>
+        <div className='flex bg-gray-100 min-h-screen w-full'>
             <div className='flex bg-slate-950 h-screen text-slate-100 overflow-hidden'>
                 <Sidebar activePage={activePage} setActivePage={setActivePage}/>
             </div>

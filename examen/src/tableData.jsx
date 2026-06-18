@@ -39,7 +39,7 @@ export default function TableData({columns, data, onView, onEdit, onDelete}){
                 ))}
               </tr>
             </thead>
-            <tbody className="divide-y- divide-slate-800/60">
+            <tbody className="divide-y- divide-slate-800/60 bg-gray-50">
               {data.length===0 &&(
                 <tr>
                   <td colSpan={columns.length} className="px-6 py-12 text-center text-slate-500 roboto font-medium">

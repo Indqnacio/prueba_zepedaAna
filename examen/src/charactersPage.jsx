@@ -4,6 +4,8 @@ import TableData from "./tableData";
 import CharactersModal from "./modals/characters";
 import ConfirmModal from "./confirmModal";
 import Searchbar from "./searchbar";
+import { UsersRound } from 'lucide-react';
+
 export default function CharactersPage(){
     const [isModalOpen, setIsModalOpen] = useState(false)
     const [isConfirmOpen, setIsConfirmOpen] = useState(false);
@@ -116,9 +118,15 @@ useEffect(() => {
     return(
         <>
         <div className="w-full">
-            <h1>Personajes de Starwars</h1>
-             <button onClick={handleCreating} className={"hover: cursor-pointer"}> Agregar Personaje</button>
-             <Searchbar searchQuery={searchQuery} onSearchChange={setSearchQuery}></Searchbar>
+            <Searchbar searchQuery={searchQuery} onSearchChange={setSearchQuery}></Searchbar>
+            <div className="flex inline-flex">
+                <UsersRound/><h1>Personajes de Starwars</h1>
+            </div>
+            <div className="flex w-full items-end">
+                <button onClick={handleCreating} className={"hover: cursor-pointer"}> Agregar Personaje</button>
+             
+            </div>
+             
             {characters && characters.length>0?(
                 <TableData columns={columns} onView={handleViewing} onEdit={handleEditing} data={filteredData} onDelete={handleDeleteOpen}/>
             ):(
