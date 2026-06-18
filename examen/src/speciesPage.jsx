@@ -107,7 +107,7 @@ export default function SpeciesPage(){
                 <p>Página: {index}/{totalPages}</p>
             </div>
         <SpeciesModal isOpen={isModalOpen} mode={modalMode} onClose={()=>{setIsModalOpen(false); setSelectedSpecie(null)}} data={selectedSpecie} onSave={handleSaving} ></SpeciesModal>
-        <ConfirmModal isOpen={isConfirmOpen} onClose={()=>{setIsConfirmOpen(false); setToDeleteItem(null);}} message={`¿Desea eliminar la especie?`} onDelete={handleDeleting}></ConfirmModal>
+        <ConfirmModal isOpen={isConfirmOpen} onClose={()=>{setIsConfirmOpen(false); setToDeleteItem("");}} message={`¿Desea eliminar la especie ${toDeleteItem.name}?`} onDelete={handleDeleting}></ConfirmModal>
         </>
         
     )

@@ -98,7 +98,7 @@ export default function MoviesPage(){
                 <p>Página: {index}/{totalPages}</p>
             </div>
             <MoviesModal isOpen={isModalOpen} mode={modalMode} onClose={()=>{setIsModalOpen(false); setSelectedMovie(null)}} data={selectedMovie} onSave={handleSaving}></MoviesModal>
-            <ConfirmModal isOpen={isConfirmOpen} onClose={()=>{setIsConfirmOpen(false); setToDeleteItem(null);}} message={"Desea eliminar la película"} onDelete={handleDeleting}></ConfirmModal>
+            <ConfirmModal isOpen={isConfirmOpen} onClose={()=>{setIsConfirmOpen(false); setToDeleteItem("");}} message={`¿Desea eliminar la película ${toDeleteItem.title}?`} onDelete={handleDeleting}></ConfirmModal>
         </>
     ) 
 }
