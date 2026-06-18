@@ -29,7 +29,7 @@ export default function TableData({columns, data, onView, onEdit, onDelete}){
     setIsModalOpen(true)
   }
     return(
-      <div className="w-full  mx-auto my-4">
+      <div className="w-full  mx-auto my-4 ">
         <div className="overflow-hidden rounded-2xl border border-gray-200 shadow-xl">
             <table className="w-full border-collapse ">
             <thead className="bg-blue-800 text-md text-lg tracking-wider">

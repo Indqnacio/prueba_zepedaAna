@@ -4,7 +4,7 @@ import TableData from "./tableData";
 import CharactersModal from "./modals/characters";
 import ConfirmModal from "./confirmModal";
 import Searchbar from "./searchbar";
-import { UsersRound, Plus } from 'lucide-react';
+import { UsersRound, Plus, CircleChevronLeft, CircleChevronRight } from 'lucide-react';
 
 export default function CharactersPage(){
     const [isModalOpen, setIsModalOpen] = useState(false)
@@ -28,11 +28,7 @@ export default function CharactersPage(){
     {id: 'birth_year', label: 'Fecha de Nacimiento'},
     {id: 'gender', label: 'Género'},
     {id: 'actions',label:'Acciones'}
-//    {id: 'homeworld', label: 'Planeta de Nacimiento'},
 ]
-useEffect(() => {
-        console.log(films)
-    }, [films]);
 
         async function fetchMovies(){
       const res = await axios.get('http://localhost:3000/getPeliPerso')
@@ -145,11 +141,11 @@ useEffect(() => {
                 <div className="flex gap-2">
                     <button disabled={index===1} 
                       className={"inline-flex items-center gap-1 bg-blue-200/50 hover:bg-blue-800/20 disabled:opacity-60 text-blue-800 cursor-pointer disabled:bg-blue-200/50 disabled:cursor-not-allowed p-2 rounded-xl"} 
-                      onClick={prevPage}>Página Anterior
+                      onClick={prevPage}><CircleChevronLeft/>
                     </button>
                     <button disabled={index===totalPages} 
                     className={"inline-flex items-center gap-1 bg-blue-200/50 hover:bg-blue-800/20 disabled:opacity-60 text-blue-800 cursor-pointer disabled:bg-blue-200/50 disabled:cursor-not-allowed p-2 rounded-xl"} 
-                        onClick={nextPage}>Página Siguiente
+                        onClick={nextPage}><CircleChevronRight/>
                     </button>
                 </div>
               

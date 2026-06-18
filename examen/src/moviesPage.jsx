@@ -5,6 +5,7 @@ import TableData from "./tableData";
 import MoviesModal from "./modals/movies";
 import ConfirmModal from "./confirmModal";
 import Searchbar from "./searchbar";
+import { Clapperboard, Plus, CircleChevronLeft, CircleChevronRight} from "lucide-react";
 export default function MoviesPage(){
     const [movies, setMovies] = useState([]);
     const [isModalOpen, setIsModalOpen] = useState(false);
@@ -28,7 +29,6 @@ export default function MoviesPage(){
     }
       useEffect(() => {
         getMovies();
-        console.log(modalMode)
     }, [index]);
     async function nextPage() {
          setIndex(index+1)
@@ -97,14 +97,38 @@ export default function MoviesPage(){
     }
     return(
         <>
-            <h1>Página principal de Películas</h1>
-            <button onClick={handleCreating}>Agregar Película</button>
-            <Searchbar searchQuery={searchQuery} onSearchChange={setSearchQuery}></Searchbar>
+        <div className="w-full flex flex-col gap-6">
+            <div className="flex inline-flex bg-gray-50 p-2 items-center rounded-2xl shadow-xl flex flex-row gap-1 text-lg gap-3 align-items-center">
+                <Clapperboard/><h1 className="text-2xl font-semibold">Películas de Starwars</h1>
+            </div>
+        </div>
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 w-full mt-7">
+                <Searchbar searchQuery={searchQuery} onSearchChange={setSearchQuery}/>
+                <div className="flex w-full justify-between">
+                    <button onClick={handleCreating} 
+                    className={"hover: cursor-pointer flex flex-row gap-1 rounded-full hover:bg-blue-800/20 bg-blue-200/50 p-3 text-blue-800"}> <Plus/>Agregar Película</button>
+                </div>
+        </div>
+        {movies&&movies.length>0?(
             <TableData columns={columns} data={filteredData} onView={handleViewing} onEdit={handleEditing} onDelete={handleDeleteOpen}></TableData>
-            <div className="flex">
-                <button disabled={index==1} className={"hover: cursor-pointer border "} onClick={prevPage}>Página Anterior</button>
-                <button disabled={index==totalPages} className={"hover: cursor-pointer border"} onClick={nextPage}>Página Siguiente</button>
-                <p>Página: {index}/{totalPages}</p>
+        ):(
+            <TableData columns={columns} data={filteredData} onView={handleViewing} onEdit={handleEditing} onDelete={handleDeleteOpen}></TableData>
+        )}
+        <div className="flex items-center justify-end p-4 gap-3">
+             <p className="font-medium">
+                    Página <span className="text-slate-600">{index}</span>
+                    de {" "} <span className="text-slate-600">{totalPages}</span>
+            </p>
+            <div className="flex gap-2">
+                    <button disabled={index===1} 
+                      className={"inline-flex items-center gap-1 bg-blue-200/50 hover:bg-blue-800/20 disabled:opacity-60 text-blue-800 cursor-pointer disabled:bg-blue-200/50 disabled:cursor-not-allowed p-2 rounded-xl"} 
+                      onClick={prevPage}><CircleChevronLeft/>
+                    </button>
+                    <button disabled={index===totalPages} 
+                    className={"inline-flex items-center gap-1 bg-blue-200/50 hover:bg-blue-800/20 disabled:opacity-60 text-blue-800 cursor-pointer disabled:bg-blue-200/50 disabled:cursor-not-allowed p-2 rounded-xl"} 
+                        onClick={nextPage}><CircleChevronRight/>
+                    </button>
+                </div>
             </div>
             <MoviesModal isOpen={isModalOpen} mode={modalMode} onClose={()=>{setIsModalOpen(false); setSelectedMovie(null)}} data={selectedMovie} onSave={handleSaving}></MoviesModal>
             <ConfirmModal isOpen={isConfirmOpen} onClose={()=>{setIsConfirmOpen(false); setToDeleteItem("");}} message={`¿Desea eliminar la película ${toDeleteItem.title}?`} onDelete={handleDeleting}></ConfirmModal>
