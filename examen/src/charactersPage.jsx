@@ -4,7 +4,7 @@ import TableData from "./tableData";
 import CharactersModal from "./modals/characters";
 import ConfirmModal from "./confirmModal";
 import Searchbar from "./searchbar";
-import { UsersRound } from 'lucide-react';
+import { UsersRound, Plus } from 'lucide-react';
 
 export default function CharactersPage(){
     const [isModalOpen, setIsModalOpen] = useState(false)
@@ -20,7 +20,7 @@ export default function CharactersPage(){
     const [searchQuery, setSearchQuery] = useState('');
     const columns = [
     {id: 'name', label: 'Nombre', minWidth:60 },
-    {id: 'height', label: 'Altura', format: (value) => value.toFixed(2)},
+   {id: 'height', label: 'Altura', format: (value) => value.toFixed(2)},
     {id: 'mass', label: 'Peso', format: (value) => value.toFixed(2)},
     {id: 'skin_color', label: 'Color de Piel'},
     {id: 'hair_color', label: 'Color de Cabello'},
@@ -117,26 +117,42 @@ useEffect(() => {
     }
     return(
         <>
-        <div className="w-full">
-            <Searchbar searchQuery={searchQuery} onSearchChange={setSearchQuery}></Searchbar>
-            <div className="flex inline-flex">
-                <UsersRound/><h1>Personajes de Starwars</h1>
+        <div className="w-full flex flex-col gap-6">
+            
+            
+            <div className="flex inline-flex bg-gray-50 p-2 items-center rounded-2xl shadow-xl flex flex-row gap-1 text-lg gap-3 align-items-center">
+                <UsersRound/><h1 className="text-2xl font-semibold">Personajes de Starwars</h1>
             </div>
-            <div className="flex w-full items-end">
-                <button onClick={handleCreating} className={"hover: cursor-pointer"}> Agregar Personaje</button>
-             
+            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 w-full">
+                <Searchbar searchQuery={searchQuery} onSearchChange={setSearchQuery}/>
+                <div className="flex w-full justify-between">
+                    <button onClick={handleCreating} 
+                    className={"hover: cursor-pointer flex flex-row gap-1 rounded-full hover:bg-blue-800/20 bg-blue-200/50 p-3 text-blue-800"}> <Plus/>Agregar Personaje</button>
+                </div>
             </div>
+            
              
             {characters && characters.length>0?(
                 <TableData columns={columns} onView={handleViewing} onEdit={handleEditing} data={filteredData} onDelete={handleDeleteOpen}/>
             ):(
                 <TableData columns={columns} onView={handleViewing} onEdit={handleEditing} data={filteredData} onDelete={handleDeleteOpen}/>
             )}
-            <div className="flex">
-                
-                <button disabled={index===1} className={"hover: cursor-pointer border "} onClick={prevPage}>Página Anterior</button>
-                <button disabled={index===totalPages} className={"hover: cursor-pointer border"} onClick={nextPage}>Página Siguiente</button>
-                <p>Página: {index}/{totalPages}</p>
+            <div className="flex items-center justify-end p-4 gap-3">
+                <p className="font-medium">
+                    Página <span className="text-slate-600">{index}</span>
+                    de {" "} <span className="text-slate-600">{totalPages}</span>
+                </p>
+                <div className="flex gap-2">
+                    <button disabled={index===1} 
+                      className={"inline-flex items-center gap-1 bg-blue-200/50 hover:bg-blue-800/20 disabled:opacity-60 text-blue-800 cursor-pointer disabled:bg-blue-200/50 disabled:cursor-not-allowed p-2 rounded-xl"} 
+                      onClick={prevPage}>Página Anterior
+                    </button>
+                    <button disabled={index===totalPages} 
+                    className={"inline-flex items-center gap-1 bg-blue-200/50 hover:bg-blue-800/20 disabled:opacity-60 text-blue-800 cursor-pointer disabled:bg-blue-200/50 disabled:cursor-not-allowed p-2 rounded-xl"} 
+                        onClick={nextPage}>Página Siguiente
+                    </button>
+                </div>
+              
             </div>
             <CharactersModal mode={modalMode} isOpen={isModalOpen} modal={modalMode} onClose={()=>{setIsModalOpen(false); setSelectedCharacter(null)}} data={selectedCharacter} onSave={handleSaving}></CharactersModal>
             <ConfirmModal isOpen={isConfirmOpen} onClose={()=>{setIsConfirmOpen(false); setToDeleteItem("");}} message={`¿Desea eliminar el personaje ${toDeleteItem.name}?`} onDelete={handleDeleting}></ConfirmModal>
