@@ -152,7 +152,7 @@ export default function CharactersModal({isOpen, onClose, data, mode, onSave}){
                   <form onSubmit={formik.handleSubmit} className="space-y-6">
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                       <div className="space-y-4">
-                         <label htmlFor="name" className="block text-sm font-medium text-gray-700">Nombre</label>
+                        <label htmlFor="name" className="block text-sm font-medium text-gray-700">Nombre</label>
                   <input
                     id="name"
                     name="name"
@@ -168,7 +168,7 @@ export default function CharactersModal({isOpen, onClose, data, mode, onSave}){
                   ) : null}
                       </div>
                       <div className="space-y-4">
-                               <label htmlFor="birth_year" className="block text-sm font-medium text-gray-700">Fecha de Nacimiento</label>
+                        <label htmlFor="birth_year" className="block text-sm font-medium text-gray-700">Fecha de Nacimiento</label>
                   <input
                     id="birth_year"
                     name="birth_year"
@@ -252,7 +252,7 @@ export default function CharactersModal({isOpen, onClose, data, mode, onSave}){
                   <input
                     id="mass"
                     name="mass"
-                    type="text"
+                    type="number"
                     disabled={isReadOnly}
                     onChange={formik.handleChange}
                     onBlur={formik.handleBlur}
@@ -525,7 +525,7 @@ export default function CharactersModal({isOpen, onClose, data, mode, onSave}){
                             formik.setFieldValue('films', MoviesArray);
                           }}
                           className="hover:bg-blue-500/20 p-0.5 rounded-md transition-colors cursor-pointer text-blue-400">
-                           <X size={14}/> 
+                            <X size={14}/> 
                           </button>
                         )}  
                       </div>

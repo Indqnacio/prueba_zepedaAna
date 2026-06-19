@@ -79,7 +79,8 @@ export default function SpeciesPage(){
             setIsConfirmOpen(false);
             getSpecies();
         }catch(error){
-            alert("Error al borrar elemento ", error)
+            const MessageErrorBackend = error.response?.data?.message || "Ocurrió un error";
+            launchAlert("Error", MessageErrorBackend)
         }
     }
     const handleSaving = async (datos)=>{

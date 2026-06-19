@@ -50,9 +50,9 @@ export default function MoviesModal({isOpen, onClose, data, mode, onSave}){
     
     return(
         <>
-             <div className="fixed inset-0 z-50 overflow-hidden flex items-center justify-end">
-                <div className="absolute inset-0 bg-black/50 transition-opacity" onClick={onClose}></div>
-                <div className="absolute inset-y-0 right-0 max-w-full flex">
+          <div className="fixed inset-0 z-50 overflow-hidden flex items-center justify-end">
+              <div className="absolute inset-0 bg-black/50 transition-opacity" onClick={onClose}></div>
+              <div className="absolute inset-y-0 right-0 max-w-full flex">
         <div className="w-screen max-w-md transform transition-all ease-in-out duration-500 sm:duration-700">
           <div className="h-full flex flex-col bg-white shadow-xl overflow-y-auto">
             <div className="px-4 py-6 bg-gray-50 border-b border-gray-200 flex items-center justify-between">

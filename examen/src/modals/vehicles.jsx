@@ -11,7 +11,7 @@ export default function VehiclesModal({isOpen, onClose, data, mode, onSave}){
             name: Yup.string()
             .required('El título es obligatorio'),
             model: Yup.string()
-            .required('El director es obligatorio'),
+            .required('El modelo es obligatorio'),
             vehicle_class: Yup.string(),
             length: Yup.string(),
             passengers: Yup.string(),

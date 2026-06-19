@@ -86,8 +86,8 @@ export default function SpeciesModal({isOpen, onClose, data, mode, onSave}){
                   </div>
                   <div className="p-6 flex-1 overflow-y-auto">
                       <form onSubmit={formik.handleSubmit} className="space-y-6">
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                            <div>
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                      <div>
                   <label htmlFor="name" className="block text-sm font-medium text-gray-700">Nombre</label>
                   <input
                     id="name"
@@ -183,7 +183,7 @@ export default function SpeciesModal({isOpen, onClose, data, mode, onSave}){
                     <div className="text-red-600 text-sm mt-1">{formik.errors.eye_colors}</div>
                   ) : null}
                 </div>
-                 <div>
+                <div>
                   <label htmlFor="hair_colors" className="block text-sm font-medium text-gray-700">Color de Cabello</label>
                   <input
                     id="hair_colors"
@@ -199,7 +199,7 @@ export default function SpeciesModal({isOpen, onClose, data, mode, onSave}){
                     <div className="text-red-600 text-sm mt-1">{formik.errors.hair_colors}</div>
                   ) : null}
                 </div>
-                 <div>
+                <div>
                   <label htmlFor="eye_colors" className="block text-sm font-medium text-gray-700">Color de Piel</label>
                   <input
                     id="skin_colors"
@@ -215,7 +215,7 @@ export default function SpeciesModal({isOpen, onClose, data, mode, onSave}){
                     <div className="text-red-600 text-sm mt-1">{formik.errors.skin_colors}</div>
                   ) : null}
                 </div>
-                 <div>
+                <div>
                   <label htmlFor="language" className="block text-sm font-medium text-gray-700">Idioma</label>
                   <input
                     id="language"
@@ -231,7 +231,7 @@ export default function SpeciesModal({isOpen, onClose, data, mode, onSave}){
                     <div className="text-red-600 text-sm mt-1">{formik.errors.language}</div>
                   ) : null}
                 </div>
-                   <div>
+                  <div>
                   <label htmlFor="planets" className="font-medium text-gray-700">Planeta</label>
                   <select 
                   name="planet" 
@@ -260,14 +260,19 @@ export default function SpeciesModal({isOpen, onClose, data, mode, onSave}){
                   <button
                     type="button"
                     onClick={onClose}
-                    className="bg-white cursor-pointer py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-200 focus:outline-none"
+                    className="bg-white cursor-pointer py-2 px-4 border 
+                    border-gray-300 rounded-md shadow-sm text-sm font-medium 
+                    text-gray-700 hover:bg-gray-200 focus:outline-none"
                   >
                     Cancelar
                   </button>
                   <button
                     type="submit"
                     disabled={formik.isSubmitting}
-                    className="inline-flex justify-center cursor-pointer bg-blue-800 py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white hover:bg-blue-950 focus:outline-none disabled:bg-indigo-300"
+                    className="inline-flex justify-center cursor-pointer 
+                    bg-blue-800 py-2 px-4 border border-transparent 
+                    rounded-md shadow-sm text-sm font-medium text-white 
+                    hover:bg-blue-950 focus:outline-none disabled:bg-indigo-300"
                   >
                     {formik.isSubmitting ? 'Guardando...' : 'Guardar'}
                   </button>
@@ -276,7 +281,9 @@ export default function SpeciesModal({isOpen, onClose, data, mode, onSave}){
                   <button
                     type="button"
                     onClick={onClose}
-                    className="bg-white cursor-pointer py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none"
+                    className="bg-white cursor-pointer py-2 px-4 border 
+                    border-gray-300 rounded-md shadow-sm text-sm font-medium 
+                    text-gray-700 hover:bg-gray-50 focus:outline-none"
                   >
                     Cerrar
                   </button> </div>)}
@@ -287,10 +294,8 @@ export default function SpeciesModal({isOpen, onClose, data, mode, onSave}){
                 <div className="absolute inset-y-0 right-0 max-w-full flex">
         <div className="w-screen max-w-md transform transition-all ease-in-out duration-500 sm:duration-700">
           <div className="h-full flex flex-col bg-white shadow-xl overflow-y-auto">
-            
-            {/* Modal Header */}
+
             <div className="px-4 py-6 bg-gray-50 border-b border-gray-200 flex items-center justify-between">
-               
                 {isEditing? (<h2 className="text-lg font-medium text-gray-900">Editar Especie</h2>):(<h2 className="text-lg font-medium text-gray-900">Registrar Nueva Especie</h2>)}
               <button 
                 onClick={onClose}
@@ -306,7 +311,7 @@ export default function SpeciesModal({isOpen, onClose, data, mode, onSave}){
           </div>
         </div>
       </div>
-             </div> 
-        </>
+      </div> 
+      </>
     )
 }

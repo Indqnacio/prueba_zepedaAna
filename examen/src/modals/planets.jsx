@@ -176,7 +176,7 @@ export default function PlanetsModal({isOpen, onClose, data, mode, onSave}){
                     <div className="text-red-600 text-sm mt-1">{formik.errors.climate}</div>
                   ) : null}
                 </div>
-                 <div className="space-y-4">
+                <div className="space-y-4">
                   <label htmlFor="terrain" className="block text-sm font-medium text-gray-700">Terreno</label>
                   <input
                     id="terrain"
@@ -192,7 +192,7 @@ export default function PlanetsModal({isOpen, onClose, data, mode, onSave}){
                     <div className="text-red-600 text-sm mt-1">{formik.errors.terrain}</div>
                   ) : null}
                 </div>
-                   <div className="space-y">
+                  <div className="space-y">
                   <label htmlFor="surface_water" className="block text-sm font-medium text-gray-700">Superficie de Agua</label>
                   <input
                     id="surface_water"
@@ -239,7 +239,7 @@ export default function PlanetsModal({isOpen, onClose, data, mode, onSave}){
               </form>
             </div>
       </div>
-             </div> 
+          </div> 
         </>
     )
 }

@@ -69,9 +69,9 @@ export default function StarshipsModal({isOpen, onClose, data, mode, onSave}){
                   <div className="p-6 flex-1 overflow-y-auto">
                         <form onSubmit={formik.handleSubmit} className="space-y-6">
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                            <div>
-                  <label htmlFor="name" className="block text-sm font-medium text-gray-700">Nombre</label>
-                  <input
+                      <div>
+                      <label htmlFor="name" className="block text-sm font-medium text-gray-700">Nombre</label>
+                    <input
                     id="name"
                     name="name"
                     type="text"
@@ -249,7 +249,7 @@ export default function StarshipsModal({isOpen, onClose, data, mode, onSave}){
                   </button>
                 </div>
                 ):(
-                   <div className="flex justify-end space-x-3 pt-4 border-t border-gray-200">
+                  <div className="flex justify-end space-x-3 pt-4 border-t border-gray-200">
                   <button
                     type="button"
                     onClick={onClose}
