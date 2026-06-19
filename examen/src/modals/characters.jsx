@@ -371,7 +371,7 @@ export default function CharactersModal({isOpen, onClose, data, mode, onSave}){
                             formik.setFieldValue('species', newArray);
                           }}
                           className="hover:bg-blue-500/20 p-0.5 rounded-md transition-colors cursor-pointer text-blue-400">
-                           <X size={14}/> 
+                            <X size={14}/> 
                           </button>
                         )}  
                       </div>
@@ -382,7 +382,7 @@ export default function CharactersModal({isOpen, onClose, data, mode, onSave}){
                     <div className="space-y-4">
                       <label className="block font-medium text-gray-700 mb-2">Naves</label>
                       {!isReadOnly &&(
-                         <FormControl fullWidth size="small">
+                        <FormControl fullWidth size="small">
                         <Select displayEmpty
                         className="max-w-[300px]"
                         disabled={isReadOnly}
@@ -428,7 +428,7 @@ export default function CharactersModal({isOpen, onClose, data, mode, onSave}){
                             formik.setFieldValue('starships', ArrayShips);
                           }}
                           className="hover:bg-blue-500/20 p-0.5 rounded-md transition-colors cursor-pointer text-blue-400">
-                           <X size={14}/> 
+                            <X size={14}/> 
                           </button>
                         )}  
                       </div>
@@ -486,7 +486,7 @@ export default function CharactersModal({isOpen, onClose, data, mode, onSave}){
                             formik.setFieldValue('vehicles', newArray);
                           }}
                           className="hover:bg-blue-500/20 p-0.5 rounded-md transition-colors cursor-pointer text-blue-400">
-                           <X size={14}/> 
+                            <X size={14}/> 
                           </button>
                         )}  
                       </div>

@@ -136,7 +136,7 @@ export default function StarshipsPage(){
 
             </div>
              <StarshipsModal isOpen={isModalOpen} mode={modalMode} onClose={()=>{setIsModalOpen(false); setSelectedStarship(null)}} data={selectedStarship} onSave={handleSaving}></StarshipsModal>
-            <ConfirmModal isOpen={isConfirmOpen} onClose={()=>{setIsConfirmOpen(false); setToDeleteItem("");}} message={`¿Desea eliminar la nave ${toDeleteItem.name}?`} onDelete={handleDeleting}></ConfirmModal>
+            <ConfirmModal isOpen={isConfirmOpen} onClose={()=>{setIsConfirmOpen(false); setToDeleteItem("");}} title={`¿Desea eliminar la nave ${toDeleteItem.name}?`} onDelete={handleDeleting}></ConfirmModal>
         </div>           
         </>
     )

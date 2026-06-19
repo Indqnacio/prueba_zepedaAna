@@ -262,14 +262,14 @@ export default function SpeciesModal({isOpen, onClose, data, mode, onSave}){
                   <button
                     type="button"
                     onClick={onClose}
-                    className="bg-white py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none"
+                    className="bg-white cursor-pointer py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-200 focus:outline-none"
                   >
                     Cancelar
                   </button>
                   <button
                     type="submit"
                     disabled={formik.isSubmitting}
-                    className="inline-flex justify-center bg-indigo-600 py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white hover:bg-indigo-700 focus:outline-none disabled:bg-indigo-300"
+                    className="inline-flex justify-center cursor-pointer bg-blue-800 py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white hover:bg-blue-950 focus:outline-none disabled:bg-indigo-300"
                   >
                     {formik.isSubmitting ? 'Guardando...' : 'Guardar'}
                   </button>
@@ -278,7 +278,7 @@ export default function SpeciesModal({isOpen, onClose, data, mode, onSave}){
                   <button
                     type="button"
                     onClick={onClose}
-                    className="bg-white py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none"
+                    className="bg-white cursor-pointer py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none"
                   >
                     Cerrar
                   </button> </div>)}
@@ -300,11 +300,11 @@ export default function SpeciesModal({isOpen, onClose, data, mode, onSave}){
               >
               </button>
             </div>
-
             <div className="mt-6 relative flex-1 px-4 sm:px-6">
               
             </div>
             
+
           </div>
         </div>
       </div>

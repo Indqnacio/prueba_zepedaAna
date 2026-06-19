@@ -135,7 +135,7 @@ export default function VehiclesPage(){
 
             </div>
             <VehiclesModal isOpen={isModalOpen} mode={modalMode} onClose={()=>{setIsModalOpen(false); setSelectedVehicle(null)}} data={selectedVehicle} onSave={handleSaving}></VehiclesModal>
-        <ConfirmModal isOpen={isConfirmOpen} onClose={()=>{setIsConfirmOpen(false); setToDeleteItem("");}} message={`¿Desea eliminar el vehículo ${toDeleteItem.name}?`} onDelete={handleDeleting}></ConfirmModal>
+        <ConfirmModal isOpen={isConfirmOpen} onClose={()=>{setIsConfirmOpen(false); setToDeleteItem("");}} title={`¿Desea eliminar el vehículo ${toDeleteItem.name}?`} onDelete={handleDeleting}></ConfirmModal>
         </div>
         
         

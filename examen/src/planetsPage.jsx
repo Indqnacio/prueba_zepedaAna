@@ -141,7 +141,7 @@ export default function PlanetsPage(){
         mode={modalMode} 
         onClose={()=>{setIsModalOpen(false); 
         setSelectedPlanet(null); setIsModalOpen(null)}} data={selectedPlanet} onSave={handleSaving}/>
-        <ConfirmModal isOpen={isConfirmOpen} onClose={()=>{setIsConfirmOpen(false); setToDeleteItem("");}} message={`¿Desea eliminar el planeta ${toDeleteItem.name}?`} onDelete={handleDeleting}></ConfirmModal>
+        <ConfirmModal isOpen={isConfirmOpen} onClose={()=>{setIsConfirmOpen(false); setToDeleteItem("");}} title={`¿Desea eliminar el planeta ${toDeleteItem.name}?`} onDelete={handleDeleting}></ConfirmModal>
         </>
     )
 }

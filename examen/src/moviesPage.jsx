@@ -5,6 +5,7 @@ import TableData from "./tableData";
 import MoviesModal from "./modals/movies";
 import ConfirmModal from "./confirmModal";
 import Searchbar from "./searchbar";
+import AlertPopUp from "./alertPopUp";
 import { Clapperboard, Plus, CircleChevronLeft, CircleChevronRight} from "lucide-react";
 export default function MoviesPage(){
     const [movies, setMovies] = useState([]);
@@ -16,6 +17,15 @@ export default function MoviesPage(){
     const [toDeleteItem, setToDeleteItem] = useState('');
     const [selectedMovie, setSelectedMovie] = useState(null);
     const [searchQuery, setSearchQuery] = useState('');
+    const [isNotificationOpen, setIsNotificationOpen] = useState(false);
+    const [notificationType, setNotificationType] = useState("");
+    const [notificationMessage, setNotificationMessage] = useState("");
+   /* const [notification, setNotification] = useState({
+        isOpen: false,
+        type: "",
+        message: ""
+    })*/
+
     const columns = [
     {id: 'title', label: 'Personaje', minWidth:"10%" },
     {id: 'director', label: 'Director', minWidth:"10%"},
@@ -27,7 +37,7 @@ export default function MoviesPage(){
         setMovies(aux.data.docs)
         setTotalPages(aux.data.totalPages)
     }
-      useEffect(() => {
+    useEffect(() => {
         getMovies();
     }, [index]);
     async function nextPage() {
@@ -43,6 +53,12 @@ export default function MoviesPage(){
             item.title.toLocaleLowerCase().includes(query)
         );
     });
+    const launchAlert = (type, message)=>{
+        setIsNotificationOpen(true);
+        setNotificationMessage(message);
+        setNotificationType(type)
+//        setNotification({isOpen: true, type, message});
+    }
     const handleCreating = ()=>{
         setModalMode("creating")
         setSelectedMovie(null)
@@ -65,14 +81,15 @@ export default function MoviesPage(){
         setToDeleteItem(movie)
 
     }
+    
     const handleDeleting = async()=>{
         try{
             const payload={
             id: `${toDeleteItem._id}`
             }
-            console.log("data a enviar ", payload);
+            //console.log("data a enviar ", payload);
             const res = await axios.delete("http://localhost:3000/delePeli",{data:payload})
-            console.log(res)
+            //console.log(res)
             setIsConfirmOpen(false);
             getMovies();
         }catch(error){
@@ -81,19 +98,29 @@ export default function MoviesPage(){
         }
     }
     const handleSaving = async (datos)=>{
-        console.log("MOdal mode ", modalMode)
-        if(modalMode === "editing"){
-            console.log("datos a actualizar ", datos)
+        try{
+            if(modalMode === "editing"){
+          //  console.log("datos a actualizar ", datos)
             const res= await axios.put("http://localhost:3000/putPeli", datos)
             console.log(res)
-        };
-        alert("Pelicula actualizada con éxito")
+        }
+//        alert("Pelicula actualizada con éxito")
         if(modalMode === "creating"){
             console.log("datos a postear ", datos)
-           const res= await axios.post("http://localhost:3000/postPeli", datos)
-           console.log(res)
+        const res= await axios.post("http://localhost:3000/postPeli", datos)
+        console.log(res)
         };
+        launchAlert("isSuccess","Cambios realizados con éxito.")
+        setIsModalOpen(false);
         getMovies();
+        } catch(error){
+            const MessageErrorBackend = error.response?.data?.message || "Ocurrió un error";
+            launchAlert("Error", MessageErrorBackend)
+        }
+        
+    }
+    const closeNotification=()=>{
+        setIsNotificationOpen(false)
     }
     return(
         <>
@@ -110,14 +137,14 @@ export default function MoviesPage(){
             </div>
             <TableData columns={columns} data={filteredData} onView={handleViewing} onEdit={handleEditing} onDelete={handleDeleteOpen}></TableData>
             <div className="flex items-center justify-end p-4 gap-3">
-             <p className="font-medium">
+            <p className="font-medium">
                     Página <span className="text-slate-600">{index}</span>
                     de {" "} <span className="text-slate-600">{totalPages}</span>
             </p>
             <div className="flex gap-2">
-                    <button disabled={index===1} 
-                      className={"inline-flex items-center gap-1 bg-blue-200/50 hover:bg-blue-800/20 disabled:opacity-60 text-blue-800 cursor-pointer disabled:bg-blue-200/50 disabled:cursor-not-allowed p-2 rounded-xl"} 
-                      onClick={prevPage}><CircleChevronLeft/>
+                <button disabled={index===1} 
+                    className={"inline-flex items-center gap-1 bg-blue-200/50 hover:bg-blue-800/20 disabled:opacity-60 text-blue-800 cursor-pointer disabled:bg-blue-200/50 disabled:cursor-not-allowed p-2 rounded-xl"} 
+                    onClick={prevPage}><CircleChevronLeft/>
                     </button>
                     <button disabled={index===totalPages} 
                     className={"inline-flex items-center gap-1 bg-blue-200/50 hover:bg-blue-800/20 disabled:opacity-60 text-blue-800 cursor-pointer disabled:bg-blue-200/50 disabled:cursor-not-allowed p-2 rounded-xl"} 
@@ -126,11 +153,9 @@ export default function MoviesPage(){
                 </div>
             </div>
             <MoviesModal isOpen={isModalOpen} mode={modalMode} onClose={()=>{setIsModalOpen(false); setSelectedMovie(null)}} data={selectedMovie} onSave={handleSaving}></MoviesModal>
-            <ConfirmModal isOpen={isConfirmOpen} onClose={()=>{setIsConfirmOpen(false); setToDeleteItem("");}} message={`¿Desea eliminar la película ${toDeleteItem.title}?`} onDelete={handleDeleting}></ConfirmModal>
+            <ConfirmModal isOpen={isConfirmOpen} onClose={()=>{setIsConfirmOpen(false); setToDeleteItem("");}} title={`¿Desea eliminar la película ${toDeleteItem.title}?`} onDelete={handleDeleting}></ConfirmModal>
+            <AlertPopUp isOpen={isNotificationOpen} type={notificationType} message={notificationMessage} onClose={()=>setIsNotificationOpen(false)}></AlertPopUp>
         </div>
-        
-
-        
         </>
     ) 
 }

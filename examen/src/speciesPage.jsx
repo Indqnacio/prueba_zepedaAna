@@ -78,7 +78,7 @@ export default function SpeciesPage(){
     }
     const handleSaving = async (datos)=>{
         console.log("MOdal mode ", modalMode)
-        if(modalMode === "editing"){onDelete
+        if(modalMode === "editing"){
             console.log("datos a actualizar ", datos)
             const res= await axios.put("http://localhost:3000/putEspecie", datos)
             console.log(res)
@@ -114,7 +114,7 @@ export default function SpeciesPage(){
                 <Searchbar searchQuery={searchQuery} onSearchChange={setSearchQuery}/>
                 <div className="flex w-full justify-between">
                     <button onClick={handleCreating} 
-                    className={"hover: cursor-pointer flex flex-row gap-1 rounded-full hover:bg-blue-800/20 bg-blue-200/50 p-3 text-blue-800"}> <Plus/>Agregar Especie</button>
+                    className={"hover: cursor-pointer flex flex-row gap-1 rounded-full hover:bg-blue-950 bg-blue-800 text-white p-3 text-blue-800"}> <Plus/>Agregar Especie</button>
                 </div>
             </div>
             <TableData columns={columns} onView={handleViewing} onEdit={handleEditing} data={filteredData} onDelete={handleDeleteOpen}/>
@@ -123,7 +123,7 @@ export default function SpeciesPage(){
                     Página <span className="text-slate-600">{index}</span>
                     de {" "} <span className="text-slate-600">{totalPages}</span>
                 </p>
-                <div className="flex gap-2">
+                <div className="flex gaphandleDeleting-2">
                     <button disabled={index===1} 
                       className={"inline-flex items-center gap-1 bg-blue-200/50 hover:bg-blue-800/20 disabled:opacity-60 text-blue-800 cursor-pointer disabled:bg-blue-200/50 disabled:cursor-not-allowed p-2 rounded-xl"} 
                       onClick={prevPage}><CircleChevronLeft/>
@@ -135,7 +135,7 @@ export default function SpeciesPage(){
                 </div>
             </div>
              <SpeciesModal isOpen={isModalOpen} mode={modalMode} onClose={()=>{setIsModalOpen(false); setSelectedSpecie(null)}} data={selectedSpecie} onSave={handleSaving} ></SpeciesModal>
-        <ConfirmModal isOpen={isConfirmOpen} onClose={()=>{setIsConfirmOpen(false); setToDeleteItem("");}} message={`¿Desea eliminar la especie ${toDeleteItem.name}?`} onDelete={handleDeleting}></ConfirmModal>
+        <ConfirmModal isOpen={isConfirmOpen} onClose={()=>{setIsConfirmOpen(false); setToDeleteItem("");}} title={`¿Desea eliminar la especie ${toDeleteItem.name}?`} onDelete={handleDeleting}></ConfirmModal>
           </div>
         
         
