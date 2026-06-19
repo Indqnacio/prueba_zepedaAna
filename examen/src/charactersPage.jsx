@@ -99,6 +99,7 @@ export default function CharactersPage(){
             fetchCharacters();
         }catch(error){
             alert("Error al borrar elemento ", error)
+            console.log("Error ", error);
         }
     }
     const handleSaving = async (datos)=>{
@@ -107,7 +108,9 @@ export default function CharactersPage(){
                 const res= await axios.put("http://localhost:3000/putPersonaje", datos)
             };
             if(modalMode === "creating"){
+                console.log("datos a postear ", datos)
                 const res= await axios.post("http://localhost:3000/postPersonaje", datos)
+                console.log(res)
             };
             launchAlert("isSuccess","Cambios realizados con éxito.")
             setIsModalOpen(false);

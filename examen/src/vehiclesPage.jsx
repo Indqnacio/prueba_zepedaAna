@@ -87,10 +87,12 @@ export default function VehiclesPage(){
             id: `${toDeleteItem._id}`
             }
             const res = await axios.delete("http://localhost:3000/deleteVehiculo",{data:payload})
+            launchAlert("isSuccess","Registro eliminado con éxito.")
             setIsConfirmOpen(false);
             fetchVehicles();
         }catch(error){
-            alert("Error al borrar elemento ", error)
+            const MessageErrorBackend = error.response?.data?.message || "Ocurrió un error";
+            launchAlert("Error", MessageErrorBackend)
         }
     }
     const handleSaving = async (datos)=>{
@@ -112,10 +114,10 @@ export default function VehiclesPage(){
     return(
         <>
         <div className="w-full flex flex-col gap-6">
-             <div className="flex inline-flex bg-gray-50 p-2 items-center rounded-2xl shadow-xl flex flex-row gap-1 text-lg gap-3 align-items-center">
+            <div className="flex inline-flex bg-gray-50 p-2 items-center rounded-2xl shadow-xl flex flex-row gap-1 text-lg gap-3 align-items-center">
                 <Car/><h1 className="text-2xl font-semibold">Vehículos de Star Wars</h1>
             </div>
-             <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 w-full">
+            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 w-full">
                     <Searchbar searchQuery={searchQuery} onSearchChange={setSearchQuery}/>
                     <div className="flex w-full justify-between">
                         <button onClick={handleCreating} 

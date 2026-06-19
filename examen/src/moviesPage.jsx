@@ -81,10 +81,12 @@ export default function MoviesPage(){
             id: `${toDeleteItem._id}`
             }
             const res = await axios.delete("http://localhost:3000/delePeli",{data:payload})
+            launchAlert("isSuccess","Registro eliminado con éxito.")
             setIsConfirmOpen(false);
             getMovies();
         }catch(error){
-            alert("Error al borrar elemento ", error)
+            const MessageErrorBackend = error.response?.data?.message || "Ocurrió un error";
+            launchAlert("Error", MessageErrorBackend)
         }
     }
     const handleSaving = async (datos)=>{

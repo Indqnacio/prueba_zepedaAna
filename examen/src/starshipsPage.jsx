@@ -86,10 +86,12 @@ export default function StarshipsPage(){
             id: `${toDeleteItem._id}`
             }
             const res = await axios.delete("http://localhost:3000/deleNave",{data:payload})
+            launchAlert("isSuccess","Registro eliminado con éxito.")
             setIsConfirmOpen(false);
             fetchStarships();
         }catch(error){
-            alert("Error al borrar elemento ", error)
+            const MessageErrorBackend = error.response?.data?.message || "Ocurrió un error";
+            launchAlert("Error", MessageErrorBackend)
         }
     }
     const handleSaving = async (datos)=>{
