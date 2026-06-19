@@ -70,7 +70,6 @@ export default function VehiclesPage(){
         setModalMode("editing")
         setSelectedVehicle(vehicle)
         setIsModalOpen(true)
-        console.log("se disparo handle editing")
     }
     const handleViewing = (vehicle)=>{
         setModalMode("viewing")
@@ -87,28 +86,20 @@ export default function VehiclesPage(){
             const payload={
             id: `${toDeleteItem._id}`
             }
-            console.log("data a enviar ", payload);
             const res = await axios.delete("http://localhost:3000/deleteVehiculo",{data:payload})
-            console.log(res)
             setIsConfirmOpen(false);
             fetchVehicles();
         }catch(error){
             alert("Error al borrar elemento ", error)
-            console.log("Error ", error);
         }
     }
     const handleSaving = async (datos)=>{
         try{
-            console.log("MOdal mode ", modalMode)
             if(modalMode === "editing"){
-                console.log("datos a actualizar ", datos)
                 const res= await axios.put("http://localhost:3000/putVehiculo", datos)
-                console.log(res)
             };
             if(modalMode === "creating"){
-                console.log("datos a postear ", datos)
                 const res= await axios.post("http://localhost:3000/postVehiculo", datos)
-                console.log(res)
             };
             launchAlert("isSuccess","Cambios realizados con éxito.")
             setIsModalOpen(false);

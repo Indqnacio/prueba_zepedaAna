@@ -70,7 +70,6 @@ export default function PlanetsPage(){
         setModalMode("editing")
         setSelectedPlanet(planet)
         setIsModalOpen(true)
-        console.log("se disparo handle editing")
     }
     const handleViewing = (planet)=>{
         setModalMode("viewing")
@@ -84,16 +83,11 @@ export default function PlanetsPage(){
     }
     const handleSaving = async (datos)=>{
         try{
-            console.log("MOdal mode ", modalMode)
             if(modalMode === "editing"){
-                console.log("datos a actualizar ", datos)
                 const res= await axios.put("http://localhost:3000/putPlaneta", datos)
-                console.log(res)
             };
             if(modalMode === "creating"){
-                console.log("datos a postear ", datos)
                 const res= await axios.post("http://localhost:3000/postPlaneta", datos)
-                console.log(res)
             };
             launchAlert("isSuccess","Cambios realizados con éxito.")
             setIsModalOpen(false);
@@ -109,14 +103,11 @@ export default function PlanetsPage(){
             const payload={
             id: `${toDeleteItem._id}`
             }
-            console.log("data a enviar ", payload);
             const res = await axios.delete("http://localhost:3000/delePlaneta",{data:payload})
-            console.log(res)
             setIsConfirmOpen(false);
             fetchPlanets();
         }catch(error){
             alert("Error al borrar elemento ", error)
-            console.log("Error ", error);
         }
     }
     return(

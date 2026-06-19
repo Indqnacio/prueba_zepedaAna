@@ -63,7 +63,6 @@ export default function MoviesPage(){
         setModalMode("editing")
         setSelectedMovie(movie)
         setIsModalOpen(true)
-        console.log("se disparo handle editing")
     }
     const handleViewing = (movie)=>{
         setModalMode("viewing")
@@ -81,32 +80,24 @@ export default function MoviesPage(){
             const payload={
             id: `${toDeleteItem._id}`
             }
-            //console.log("data a enviar ", payload);
             const res = await axios.delete("http://localhost:3000/delePeli",{data:payload})
-            //console.log(res)
             setIsConfirmOpen(false);
             getMovies();
         }catch(error){
             alert("Error al borrar elemento ", error)
-            console.log("Error ", error);
         }
     }
     const handleSaving = async (datos)=>{
         try{
             if(modalMode === "editing"){
-          //  console.log("datos a actualizar ", datos)
-            const res= await axios.put("http://localhost:3000/putPeli", datos)
-            console.log(res)
-        }
-//        alert("Pelicula actualizada con éxito")
-        if(modalMode === "creating"){
-            console.log("datos a postear ", datos)
-        const res= await axios.post("http://localhost:3000/postPeli", datos)
-        console.log(res)
-        };
-        launchAlert("isSuccess","Cambios realizados con éxito.")
-        setIsModalOpen(false);
-        getMovies();
+                const res= await axios.put("http://localhost:3000/putPeli", datos)
+            }
+            if(modalMode === "creating"){
+                const res= await axios.post("http://localhost:3000/postPeli", datos)
+            };
+            launchAlert("isSuccess","Cambios realizados con éxito.")
+            setIsModalOpen(false);
+            getMovies();
         } catch(error){
             const MessageErrorBackend = error.response?.data?.message || "Ocurrió un error";
             launchAlert("Error", MessageErrorBackend)

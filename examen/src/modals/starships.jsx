@@ -40,13 +40,8 @@ export default function StarshipsModal({isOpen, onClose, data, mode, onSave}){
             try{ const payload={...values}
               if(!payload._id){
                 delete payload._id
-                console.log("se elimino")
               }
               await onSave(payload)
-/*                console.log(values)
-                const response = await axios.post('http://localhost:3000/postNave', values);
-                console.log("Form mandado exitosamente ", response.data);
-                alert('Data enviado')*/
                 resetForm();
                 onClose();
             }catch(error){
@@ -60,18 +55,18 @@ export default function StarshipsModal({isOpen, onClose, data, mode, onSave}){
     if(!isOpen) return null;
     return(
         <>
-             <div className="fixed inset-0 z-50 overflow-hidden flex items-center justify-end">
+          <div className="fixed inset-0 z-50 overflow-hidden flex items-center justify-end">
                 <div className="absolute inset-0 bg-black/50 backdrop-blur-xs transition-opacity duration-500" onClick={onClose}></div>
                 <div className="w-full max-w-lg h-full bg-gray-100 border-1 border-gray-50 round round-xl shadow-2xl relative z-10 text-slate-100 flex flex-col">
-                   <div className="px-6 py-5 bg-gray-100 flex items-center justify-between">
+                  <div className="px-6 py-5 bg-gray-100 flex items-center justify-between">
                     <h2 className="text-lg font-medium text-gray-900">{isEditing?"Editar Nave":"Agregar Nave"}</h2>
-                     <button 
+                    <button 
                       onClick={onClose}
                       className="rounded-md text-gray-400 hover:text-gray-500 focus:outline-none"
                       ><CircleX/>
                       </button>
-                   </div>
-                   <div className="p-6 flex-1 overflow-y-auto">
+                  </div>
+                  <div className="p-6 flex-1 overflow-y-auto">
                         <form onSubmit={formik.handleSubmit} className="space-y-6">
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                             <div>

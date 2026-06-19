@@ -43,11 +43,11 @@ export default function CharactersModal({isOpen, onClose, data, mode, onSave}){
     }
     async function fetchMovies(){
       const res = await axios.get('http://localhost:3000/getPeliPerso')
-      console.log(res)
+
       const data = res.data
       setFilms(data)
     }
-     useEffect(() => {
+    useEffect(() => {
         fetchVehicles();
         fetchPlanets();
         fetchSpecies();
@@ -56,30 +56,22 @@ export default function CharactersModal({isOpen, onClose, data, mode, onSave}){
         setIsLoading(false)
     }, []);
 
-    useEffect(()=>{
-      console.log("modal mode ", mode)
-    },[mode])
 
     const handleMoviesOnChange=(event)=>{
       setSelectedFilms(event.target.value);
-      console.log("Pelicula seleccionada ", event.target.value);
     }
 
     const handleSpeciesOnChange=(event)=>{
       setSelectedSpecies(event.target.value);
-      console.log("Especie seleccionada ", event.target.value);
     }
     const handleVehiclesOnChange=(event)=>{
       setSelectedVehicles(event.target.value);
-      console.log("Vehículo seleccionado ", event.target.value);
     }
     const handlePlanetOnChange=(event)=>{
       setSelectedPlanets(event.target.value);
-      console.log("Planeta seleccionado ", event.target.value);
     }
     const handleStarshipsOnChange=(event)=>{
       setSelectedStarships(event.target.value);
-      console.log("Nave seleccionada ", event.target.value);
     }
     const validationSchema=Yup.object({
             name: Yup.string()
@@ -128,22 +120,11 @@ export default function CharactersModal({isOpen, onClose, data, mode, onSave}){
                 const payload={...data}
                 if(!payload._id){
                   delete payload._id
-                  console.log("se elimino")
                 }
                 if(!payload.homeworld){
                   delete payload.homeworld
                 }
-                console.log("payload ",payload)
-              /*  if (mode==="editing"){
-                  const res = await axios.put('http://localhost:3000/putPersonaje',payload)
-                  alert('Peronaje actualizado con éxito ');
-                  
-                  console.log(res)
-                }*/
-              /*  else{*/
-                  const res = await onSave(payload);
-                  console.log(res)
-                //}
+                const res = await onSave(payload);
                 resetForm();
                 onClose();
             }catch(error){

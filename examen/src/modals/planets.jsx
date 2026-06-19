@@ -6,7 +6,6 @@ import { CircleX } from "lucide-react";
 export default function PlanetsModal({isOpen, onClose, data, mode, onSave}){
   const isReadOnly = mode ==="viewing";
   const isEditing = mode === "editing"; 
-  console.log(data) 
   const validationSchema = Yup.object({
         name: Yup.string()
         .required('El nombre del planeta es obligatorio'),
@@ -37,15 +36,10 @@ export default function PlanetsModal({isOpen, onClose, data, mode, onSave}){
               const payload={...values}
               if(!payload._id){
                 delete payload._id
-                console.log("se elimino")
               }
               await onSave(payload)
               resetForm();
               onClose();
-/*                const response = await axios.post('http://localhost:3000/postPlaneta', values);
-                alert('Data enviado')
-                resetForm();
-                onClose();*/
             }catch(error){
                 console.error("Error mandando los datos: ", error.message)
                 alert('Fallo al guardar los datos ', error.message);
@@ -54,9 +48,6 @@ export default function PlanetsModal({isOpen, onClose, data, mode, onSave}){
             }
         }
     });
-    useEffect(()=>{
-        console.log("MODE ", mode)
-    },[mode])
     if(!isOpen) return null;
     return(
         <>

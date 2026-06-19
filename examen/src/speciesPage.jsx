@@ -58,7 +58,6 @@ export default function SpeciesPage(){
         setModalMode("editing")
         setSelectedSpecie(specie)
         setIsModalOpen(true)
-        console.log("se disparo handle editing")
     }
     const handleViewing = (specie)=>{
         setModalMode("viewing")
@@ -75,14 +74,11 @@ export default function SpeciesPage(){
             const payload={
             id: `${toDeleteItem._id}`
             }
-            console.log("data a enviar ", payload);
             const res = await axios.delete("http://localhost:3000/deleEspecie",{data:payload})
-            console.log(res)
             setIsConfirmOpen(false);
             getSpecies();
         }catch(error){
             alert("Error al borrar elemento ", error)
-            console.log("Error ", error);
         }
     }
     const handleSaving = async (datos)=>{

@@ -11,7 +11,6 @@ import { CircleX } from "lucide-react";
 export default function SpeciesModal({isOpen, onClose, data, mode, onSave}){
     const isReadOnly = mode ==="viewing";
     const isEditing = mode === "editing";
-    console.log("DATOS A VISUALIZAR ", data)
     const [planets, setPlanets] = useState([])
 
     async function fetchPlanets(){
@@ -60,7 +59,6 @@ export default function SpeciesModal({isOpen, onClose, data, mode, onSave}){
               if(!payload._id){
                 delete payload._id
               }
-              console.log(payload)
               await onSave(payload);
                 resetForm();
                 onClose();

@@ -25,7 +25,6 @@ export default function TableData({columns, data, onView, onEdit, onDelete}){
 
   const handleOpen = (e, personaje) => {
     setItem(personaje); 
-   // console.log(item); 
     setIsModalOpen(true)
   }
     return(

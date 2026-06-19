@@ -12,7 +12,6 @@ import { CircleX } from 'lucide-react';
 export default function MoviesModal({isOpen, onClose, data, mode, onSave}){
     const isReadOnly = mode ==="viewing";
     const isEditing = mode === "editing";
-    console.log(isEditing)
     const validationSchema=Yup.object({
         title: Yup.string()
         .required('El título es obligatorio'),

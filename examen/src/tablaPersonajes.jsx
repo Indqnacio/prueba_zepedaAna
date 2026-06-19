@@ -29,7 +29,6 @@ const columns = [
     {id: 'homeworld', label: 'Planeta de Nacimiento'},
 ]
 useEffect(() => {
-    console.log(personajes);
 }, [personajes]);
 const handleChangePage = (event, newPage) => {
     setPagina(newPage);
@@ -41,7 +40,6 @@ const handleChangePage = (event, newPage) => {
   };
   const handleOpen = (e, personaje) => {
     setItem(personaje); 
-    console.log(item); 
     setIsModalOpen(true)
   }
 

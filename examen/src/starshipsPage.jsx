@@ -63,7 +63,6 @@ export default function StarshipsPage(){
         setModalMode("editing")
         setSelectedStarship(starship)
         setIsModalOpen(true)
-        //console.log("se disparo handle editing")
     }
     const handleViewing = (starship)=>{
         setModalMode("viewing")
@@ -86,14 +85,11 @@ export default function StarshipsPage(){
             const payload={
             id: `${toDeleteItem._id}`
             }
-            console.log("data a enviar ", payload);
             const res = await axios.delete("http://localhost:3000/deleNave",{data:payload})
-            console.log(res)
             setIsConfirmOpen(false);
             fetchStarships();
         }catch(error){
             alert("Error al borrar elemento ", error)
-            console.log("Error ", error);
         }
     }
     const handleSaving = async (datos)=>{

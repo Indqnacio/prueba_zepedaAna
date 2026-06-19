@@ -7,11 +7,7 @@ export default function AlertPopUp({isOpen, onClose, type, message}){
                 onClose();
             },4000);
             return()=>clearTimeout(timer);
-            console.log("en teoria se elimino el timer ")
         }
-        console.log("isOpen ", isOpen)
-        console.log("type ", type)
-        console.log("message ", message)
     }, [isOpen])
 
     if(!isOpen) return null;

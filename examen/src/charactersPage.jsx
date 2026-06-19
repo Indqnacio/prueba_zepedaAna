@@ -78,7 +78,6 @@ export default function CharactersPage(){
         setModalMode("editing")
         setSelectedCharacter(character)
         setIsModalOpen(true)
-        console.log("se disparo handle editing")
     }
     const handleViewing = (character)=>{
         setModalMode("viewing")
@@ -95,27 +94,20 @@ export default function CharactersPage(){
             const payload={
             id: `${toDeleteItem._id}`
             }
-            console.log("data a enviar ", payload);
             const res = await axios.delete("http://localhost:3000/deletePersonaje",{data:payload})
-            console.log(res)
             setIsConfirmOpen(false);
             fetchCharacters();
         }catch(error){
             alert("Error al borrar elemento ", error)
-            console.log("Error ", error);
         }
     }
     const handleSaving = async (datos)=>{
         try{
             if(modalMode === "editing"){
-                console.log("datos a actualizar ", datos)
                 const res= await axios.put("http://localhost:3000/putPersonaje", datos)
-                console.log(res)
             };
             if(modalMode === "creating"){
-                console.log("datos a postear ", datos)
                 const res= await axios.post("http://localhost:3000/postPersonaje", datos)
-                console.log(res)
             };
             launchAlert("isSuccess","Cambios realizados con éxito.")
             setIsModalOpen(false);
