@@ -4,6 +4,7 @@ import TableData from "./tableData";
 import CharactersModal from "./modals/characters";
 import ConfirmModal from "./confirmModal";
 import Searchbar from "./searchbar";
+import AlertPopUp from "./alertPopUp";
 import { UsersRound, Plus, CircleChevronLeft, CircleChevronRight } from 'lucide-react';
 
 export default function CharactersPage(){
@@ -18,9 +19,13 @@ export default function CharactersPage(){
     const [modalMode, setModalMode] = useState('creating')
     const [selectedCharacter, setSelectedCharacter] = useState(null);
     const [searchQuery, setSearchQuery] = useState('');
+    const [isNotificationOpen, setIsNotificationOpen] = useState(false);
+    const [notificationType, setNotificationType] = useState("");
+    const [notificationMessage, setNotificationMessage] = useState("");
+
     const columns = [
     {id: 'name', label: 'Nombre', minWidth:60 },
-   {id: 'height', label: 'Altura', format: (value) => value.toFixed(2)},
+    {id: 'height', label: 'Altura', format: (value) => value.toFixed(2)},
     {id: 'mass', label: 'Peso', format: (value) => value.toFixed(2)},
     {id: 'skin_color', label: 'Color de Piel'},
     {id: 'hair_color', label: 'Color de Cabello'},
@@ -30,10 +35,10 @@ export default function CharactersPage(){
     {id: 'actions',label:'Acciones'}
 ]
 
-        async function fetchMovies(){
-      const res = await axios.get('http://localhost:3000/getPeliPerso')
-      const data = res.data.docs
-      setFilms(data)
+    async function fetchMovies(){
+        const res = await axios.get('http://localhost:3000/getPeliPerso')
+        const data = res.data.docs
+        setFilms(data)
     }
     const fetchCharacters = async() => {
         const res = await axios.get(`http://localhost:3000/getPersonajes?page=${index}&limit=10`);
@@ -46,19 +51,24 @@ export default function CharactersPage(){
         fetchCharacters();
         fetchMovies();
     },[index])
-     const filteredData=characters.filter((item)=>{
+    const filteredData=characters.filter((item)=>{
         const query = searchQuery.toLocaleLowerCase();
         return(
             item.name.toLocaleLowerCase().includes(query)
         );
     });
     async function nextPage() {
-         setIndex(index+1)
+        setIndex(index+1)
     }
     async function prevPage() {
-         setIndex(index-1)
+        setIndex(index-1)
     }
-     const handleCreating = ()=>{
+    const launchAlert = (type, message)=>{
+        setIsNotificationOpen(true);
+        setNotificationMessage(message);
+        setNotificationType(type)
+    }
+    const handleCreating = ()=>{
         setModalMode("creating")
         setSelectedCharacter(null)
         setIsModalOpen(true)
@@ -75,7 +85,7 @@ export default function CharactersPage(){
         setSelectedCharacter(character)
         setIsModalOpen(true)
     }
-     const handleDeleteOpen = (character)=>{
+    const handleDeleteOpen = (character)=>{
         setIsConfirmOpen(true)
         setToDeleteItem(character)
 
@@ -96,24 +106,28 @@ export default function CharactersPage(){
         }
     }
     const handleSaving = async (datos)=>{
-        if(modalMode === "editing"){
-            console.log("datos a actualizar ", datos)
-            const res= await axios.put("http://localhost:3000/putPersonaje", datos)
-            console.log(res)
-        };
-        alert("Personaje guardado con éxito")
-        if(modalMode === "creating"){
-            console.log("datos a postear ", datos)
-           const res= await axios.post("http://localhost:3000/postPersonaje", datos)
-           console.log(res)
-        };
-        fetchCharacters();
+        try{
+            if(modalMode === "editing"){
+                console.log("datos a actualizar ", datos)
+                const res= await axios.put("http://localhost:3000/putPersonaje", datos)
+                console.log(res)
+            };
+            if(modalMode === "creating"){
+                console.log("datos a postear ", datos)
+                const res= await axios.post("http://localhost:3000/postPersonaje", datos)
+                console.log(res)
+            };
+            launchAlert("isSuccess","Cambios realizados con éxito.")
+            setIsModalOpen(false);
+            fetchCharacters();
+        }catch(error){
+            const MessageErrorBackend = error.response?.data?.message || "Ocurrió un error";
+            launchAlert("Error", MessageErrorBackend)
+        }
     }
     return(
         <>
         <div className="w-full flex flex-col gap-6">
-            
-            
             <div className="flex inline-flex bg-gray-50 p-2 items-center rounded-2xl shadow-xl flex flex-row gap-1 text-lg gap-3 align-items-center">
                 <UsersRound/><h1 className="text-2xl font-semibold">Personajes de Star Wars</h1>
             </div>
@@ -124,9 +138,6 @@ export default function CharactersPage(){
                     className={"hover: cursor-pointer flex flex-row gap-1 rounded-full hover:bg-blue-800/20 bg-blue-200/50 p-3 text-blue-800"}> <Plus/>Agregar Personaje</button>
                 </div>
             </div>
-            
-             
-
             <TableData columns={columns} onView={handleViewing} onEdit={handleEditing} data={filteredData} onDelete={handleDeleteOpen}/>
             <div className="flex items-center justify-end p-4 gap-3">
                 <p className="font-medium">
@@ -135,18 +146,18 @@ export default function CharactersPage(){
                 </p>
                 <div className="flex gap-2">
                     <button disabled={index===1} 
-                      className={"inline-flex items-center gap-1 bg-blue-200/50 hover:bg-blue-800/20 disabled:opacity-60 text-blue-800 cursor-pointer disabled:bg-blue-200/50 disabled:cursor-not-allowed p-2 rounded-xl"} 
-                      onClick={prevPage}><CircleChevronLeft/>
+                    className={"inline-flex items-center gap-1 bg-blue-200/50 hover:bg-blue-800/20 disabled:opacity-60 text-blue-800 cursor-pointer disabled:bg-blue-200/50 disabled:cursor-not-allowed p-2 rounded-xl"} 
+                    onClick={prevPage}><CircleChevronLeft/>
                     </button>
                     <button disabled={index===totalPages} 
                     className={"inline-flex items-center gap-1 bg-blue-200/50 hover:bg-blue-800/20 disabled:opacity-60 text-blue-800 cursor-pointer disabled:bg-blue-200/50 disabled:cursor-not-allowed p-2 rounded-xl"} 
                         onClick={nextPage}><CircleChevronRight/>
                     </button>
                 </div>
-              
             </div>
             <CharactersModal mode={modalMode} isOpen={isModalOpen} modal={modalMode} onClose={()=>{setIsModalOpen(false); setSelectedCharacter(null)}} data={selectedCharacter} onSave={handleSaving}></CharactersModal>
             <ConfirmModal isOpen={isConfirmOpen} onClose={()=>{setIsConfirmOpen(false); setToDeleteItem("");}} title={`¿Desea eliminar el personaje ${toDeleteItem.name}?`} onDelete={handleDeleting}></ConfirmModal>
+            <AlertPopUp isOpen={isNotificationOpen} type={notificationType} message={notificationMessage} onClose={()=>setIsNotificationOpen(false)}></AlertPopUp>
         </div>
 
         </>
