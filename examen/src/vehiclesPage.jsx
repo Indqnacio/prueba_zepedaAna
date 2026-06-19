@@ -5,6 +5,7 @@ import TableData from "./tableData"
 import VehiclesModal from "./modals/vehicles"
 import ConfirmModal from "./confirmModal"
 import Searchbar from "./searchbar"
+import AlertPopUp from "./alertPopUp"
 import { Car,Plus, CircleChevronLeft, CircleChevronRight } from 'lucide-react';
 
 export default function VehiclesPage(){
@@ -17,6 +18,9 @@ export default function VehiclesPage(){
     const [toDeleteItem, setToDeleteItem] = useState('');
     const [searchQuery, setSearchQuery] = useState('');
     const [index, setIndex]=useState(1);
+    const [isNotificationOpen, setIsNotificationOpen] = useState(false);
+    const [notificationType, setNotificationType] = useState("");
+    const [notificationMessage, setNotificationMessage] = useState("");
 
     const columns = [
     {id: 'name', label: 'Nombre', minWidth:"10%" },
@@ -32,16 +36,16 @@ export default function VehiclesPage(){
     async function fetchVehicles() {
         const aux = await axios.get(`http://localhost:3000/getVehiculos?page=${index}&limit=10`)
         setVehicles(aux.data.docs)
-         setTotalPages(aux.data.totalPages)
+        setTotalPages(aux.data.totalPages)
     }
     useEffect(()=>{
         fetchVehicles();
     },[index])
         async function nextPage() {
-         setIndex(index+1)
+        setIndex(index+1)
     }
     async function prevPage() {
-         setIndex(index-1)
+        setIndex(index-1)
     }
     const filteredData=vehicles.filter((item)=>{
         const query = searchQuery.toLocaleLowerCase();
@@ -49,6 +53,12 @@ export default function VehiclesPage(){
             item.name.toLocaleLowerCase().includes(query)
         );
     });
+
+    const launchAlert = (type, message)=>{
+        setIsNotificationOpen(true);
+        setNotificationMessage(message);
+        setNotificationType(type)
+    }
 
     const handleCreating = ()=>{
         setModalMode("creating")
@@ -88,19 +98,25 @@ export default function VehiclesPage(){
         }
     }
     const handleSaving = async (datos)=>{
-        console.log("MOdal mode ", modalMode)
-        if(modalMode === "editing"){
-            console.log("datos a actualizar ", datos)
-            const res= await axios.put("http://localhost:3000/putVehiculo", datos)
-            console.log(res)
-        };
-        alert("Pelicula actualizada con éxito")
-        if(modalMode === "creating"){
-            console.log("datos a postear ", datos)
-           const res= await axios.post("http://localhost:3000/postVehiculo", datos)
-           console.log(res)
-        };
-        fetchVehicles();
+        try{
+            console.log("MOdal mode ", modalMode)
+            if(modalMode === "editing"){
+                console.log("datos a actualizar ", datos)
+                const res= await axios.put("http://localhost:3000/putVehiculo", datos)
+                console.log(res)
+            };
+            if(modalMode === "creating"){
+                console.log("datos a postear ", datos)
+                const res= await axios.post("http://localhost:3000/postVehiculo", datos)
+                console.log(res)
+            };
+            launchAlert("isSuccess","Cambios realizados con éxito.")
+            setIsModalOpen(false);
+            fetchVehicles();
+        }catch(error){
+            const MessageErrorBackend = error.response?.data?.message || "Ocurrió un error";
+            launchAlert("Error", MessageErrorBackend)
+        }
     }
     return(
         <>
@@ -124,8 +140,8 @@ export default function VehiclesPage(){
                 </p>
                 <div className="flex gap-2">
                     <button disabled={index===1} 
-                      className={"inline-flex items-center gap-1 bg-blue-200/50 hover:bg-blue-800/20 disabled:opacity-60 text-blue-800 cursor-pointer disabled:bg-blue-200/50 disabled:cursor-not-allowed p-2 rounded-xl"} 
-                      onClick={prevPage}><CircleChevronLeft/>
+                    className={"inline-flex items-center gap-1 bg-blue-200/50 hover:bg-blue-800/20 disabled:opacity-60 text-blue-800 cursor-pointer disabled:bg-blue-200/50 disabled:cursor-not-allowed p-2 rounded-xl"} 
+                    onClick={prevPage}><CircleChevronLeft/>
                     </button>
                     <button disabled={index===totalPages} 
                     className={"inline-flex items-center gap-1 bg-blue-200/50 hover:bg-blue-800/20 disabled:opacity-60 text-blue-800 cursor-pointer disabled:bg-blue-200/50 disabled:cursor-not-allowed p-2 rounded-xl"} 
@@ -135,7 +151,8 @@ export default function VehiclesPage(){
 
             </div>
             <VehiclesModal isOpen={isModalOpen} mode={modalMode} onClose={()=>{setIsModalOpen(false); setSelectedVehicle(null)}} data={selectedVehicle} onSave={handleSaving}></VehiclesModal>
-        <ConfirmModal isOpen={isConfirmOpen} onClose={()=>{setIsConfirmOpen(false); setToDeleteItem("");}} message={`¿Desea eliminar el vehículo ${toDeleteItem.name}?`} onDelete={handleDeleting}></ConfirmModal>
+            <ConfirmModal isOpen={isConfirmOpen} onClose={()=>{setIsConfirmOpen(false); setToDeleteItem("");}} message={`¿Desea eliminar el vehículo ${toDeleteItem.name}?`} onDelete={handleDeleting}></ConfirmModal>
+            <AlertPopUp isOpen={isNotificationOpen} type={notificationType} message={notificationMessage} onClose={()=>setIsNotificationOpen(false)}></AlertPopUp>
         </div>
         
         
