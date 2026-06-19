@@ -5,6 +5,7 @@ import TableData from './tableData';
 import SpeciesModal from './modals/species';
 import ConfirmModal from './confirmModal';
 import Searchbar from "./searchbar";
+import AlertPopUp from "./alertPopUp";
 import { PersonStanding,Plus, CircleChevronLeft, CircleChevronRight } from 'lucide-react';
 export default function SpeciesPage(){
     const [species, setSpecies] = useState([]);
@@ -16,7 +17,10 @@ export default function SpeciesPage(){
     const [isConfirmOpen, setIsConfirmOpen] = useState(false);
     const [toDeleteItem, setToDeleteItem] = useState('');
     const [searchQuery, setSearchQuery] = useState('');
-     
+    const [isNotificationOpen, setIsNotificationOpen] = useState(false);
+    const [notificationType, setNotificationType] = useState("");
+    const [notificationMessage, setNotificationMessage] = useState("");
+    
     async function getSpecies(){
         const aux = await axios.get(`http://localhost:3000/getEspecies?page=${index}&limit=10`)
         setSpecies(aux.data.docs)
@@ -28,10 +32,10 @@ export default function SpeciesPage(){
 
 
     async function nextPage() {
-         setIndex(index+1)
+        setIndex(index+1)
     }
     async function prevPage() {
-         setIndex(index-1)
+        setIndex(index-1)
     }
     const filteredData=species.filter((item)=>{
         const query = searchQuery.toLocaleLowerCase();
@@ -39,6 +43,11 @@ export default function SpeciesPage(){
             item.name.toLocaleLowerCase().includes(query)
         );
     });
+    const launchAlert = (type, message)=>{
+        setIsNotificationOpen(true);
+        setNotificationMessage(message);
+        setNotificationType(type)
+    }
     const handleCreating = ()=>{
         setModalMode("creating")
         setSelectedSpecie(null)
@@ -62,7 +71,7 @@ export default function SpeciesPage(){
 
     }
     const handleDeleting =async ()=>{
-          try{
+        try{
             const payload={
             id: `${toDeleteItem._id}`
             }
@@ -77,19 +86,20 @@ export default function SpeciesPage(){
         }
     }
     const handleSaving = async (datos)=>{
-        console.log("MOdal mode ", modalMode)
-        if(modalMode === "editing"){
-            console.log("datos a actualizar ", datos)
-            const res= await axios.put("http://localhost:3000/putEspecie", datos)
-            console.log(res)
-        };
-        alert("Pelicula actualizada con éxito")
-        if(modalMode === "creating"){
-            console.log("datos a postear ", datos)
-           const res= await axios.post("http://localhost:3000/postEspecie", datos)
-           console.log(res)
-        };
-        getSpecies();
+        try{
+            if(modalMode === "editing"){
+                const res= await axios.put("http://localhost:3000/putEspecie", datos);
+            };
+            if(modalMode === "creating"){
+                const res= await axios.post("http://localhost:3000/postEspecie", datos);
+            };
+            launchAlert("isSuccess","Cambios realizados con éxito.")
+            setIsModalOpen(false);
+            getSpecies();
+        }catch(error){
+            const MessageErrorBackend = error.response?.data?.message || "Ocurrió un error";
+            launchAlert("Error", MessageErrorBackend)
+        }
     }
     const columns = [
     {id: 'name', label: 'Nombre', minWidth:"10%" },
@@ -134,12 +144,10 @@ export default function SpeciesPage(){
                     </button>
                 </div>
             </div>
-             <SpeciesModal isOpen={isModalOpen} mode={modalMode} onClose={()=>{setIsModalOpen(false); setSelectedSpecie(null)}} data={selectedSpecie} onSave={handleSaving} ></SpeciesModal>
-        <ConfirmModal isOpen={isConfirmOpen} onClose={()=>{setIsConfirmOpen(false); setToDeleteItem("");}} title={`¿Desea eliminar la especie ${toDeleteItem.name}?`} onDelete={handleDeleting}></ConfirmModal>
-          </div>
-        
-        
-       
+            <SpeciesModal isOpen={isModalOpen} mode={modalMode} onClose={()=>{setIsModalOpen(false); setSelectedSpecie(null)}} data={selectedSpecie} onSave={handleSaving} ></SpeciesModal>
+            <ConfirmModal isOpen={isConfirmOpen} onClose={()=>{setIsConfirmOpen(false); setToDeleteItem("");}} title={`¿Desea eliminar la especie ${toDeleteItem.name}?`} onDelete={handleDeleting}></ConfirmModal>
+            <AlertPopUp isOpen={isNotificationOpen} type={notificationType} message={notificationMessage} onClose={()=>setIsNotificationOpen(false)}></AlertPopUp>
+        </div>
         </>
         
     )

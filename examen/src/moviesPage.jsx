@@ -20,11 +20,6 @@ export default function MoviesPage(){
     const [isNotificationOpen, setIsNotificationOpen] = useState(false);
     const [notificationType, setNotificationType] = useState("");
     const [notificationMessage, setNotificationMessage] = useState("");
-   /* const [notification, setNotification] = useState({
-        isOpen: false,
-        type: "",
-        message: ""
-    })*/
 
     const columns = [
     {id: 'title', label: 'Personaje', minWidth:"10%" },
@@ -57,7 +52,6 @@ export default function MoviesPage(){
         setIsNotificationOpen(true);
         setNotificationMessage(message);
         setNotificationType(type)
-//        setNotification({isOpen: true, type, message});
     }
     const handleCreating = ()=>{
         setModalMode("creating")

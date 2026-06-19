@@ -5,6 +5,7 @@ import TableData from "./tableData"
 import StarshipsModal from "./modals/starships"
 import ConfirmModal from "./confirmModal"
 import Searchbar from "./searchbar"
+import AlertPopUp from "./alertPopUp";
 import { Rocket,Plus, CircleChevronLeft, CircleChevronRight } from 'lucide-react';
 export default function StarshipsPage(){
     const [starships, setStarships] = useState([])
@@ -16,6 +17,9 @@ export default function StarshipsPage(){
     const [selectedStarship, setSelectedStarship] = useState(null);
     const [toDeleteItem, setToDeleteItem] = useState('');
     const [searchQuery, setSearchQuery] = useState('');
+    const [isNotificationOpen, setIsNotificationOpen] = useState(false);
+    const [notificationType, setNotificationType] = useState("");
+    const [notificationMessage, setNotificationMessage] = useState("");
 
     const columns = [
     {id: 'name', label: 'Nombre', minWidth:"10%" },
@@ -39,10 +43,15 @@ export default function StarshipsPage(){
         fetchStarships();
     },[index])
     async function nextPage() {
-         setIndex(index+1)
+        setIndex(index+1)
     }
     async function prevPage() {
-         setIndex(index-1)
+        setIndex(index-1)
+    }
+    const launchAlert = (type, message)=>{
+        setIsNotificationOpen(true);
+        setNotificationMessage(message);
+        setNotificationType(type)
     }
     const handleCreating = ()=>{
         setModalMode("creating")
@@ -88,19 +97,21 @@ export default function StarshipsPage(){
         }
     }
     const handleSaving = async (datos)=>{
-        console.log("MOdal mode ", modalMode)
-        if(modalMode === "editing"){
-            console.log("datos a actualizar ", datos)
-            const res= await axios.put("http://localhost:3000/putNave", datos)
-            console.log(res)
-        };
-        alert("Pelicula actualizada con éxito")
-        if(modalMode === "creating"){
-            console.log("datos a postear ", datos)
-           const res= await axios.post("http://localhost:3000/postNave", datos)
-           console.log(res)
-        };
-        fetchStarships();
+        try{
+            if(modalMode === "editing"){
+                const res= await axios.put("http://localhost:3000/putNave", datos)
+            };
+            if(modalMode === "creating"){
+                const res= await axios.post("http://localhost:3000/postNave", datos)
+            };
+            launchAlert("isSuccess","Cambios realizados con éxito.")
+            setIsModalOpen(false);
+            fetchStarships();
+        } catch(error){
+            const MessageErrorBackend = error.response?.data?.message || "Ocurrió un error";
+            launchAlert("Error", MessageErrorBackend)
+        }
+        
     }
     return(
         <>
@@ -125,8 +136,8 @@ export default function StarshipsPage(){
                 </p>
                 <div className="flex gap-2">
                     <button disabled={index===1} 
-                      className={"inline-flex items-center gap-1 bg-blue-200/50 hover:bg-blue-800/20 disabled:opacity-60 text-blue-800 cursor-pointer disabled:bg-blue-200/50 disabled:cursor-not-allowed p-2 rounded-xl"} 
-                      onClick={prevPage}><CircleChevronLeft/>
+                        className={"inline-flex items-center gap-1 bg-blue-200/50 hover:bg-blue-800/20 disabled:opacity-60 text-blue-800 cursor-pointer disabled:bg-blue-200/50 disabled:cursor-not-allowed p-2 rounded-xl"} 
+                        onClick={prevPage}><CircleChevronLeft/>
                     </button>
                     <button disabled={index===totalPages} 
                     className={"inline-flex items-center gap-1 bg-blue-200/50 hover:bg-blue-800/20 disabled:opacity-60 text-blue-800 cursor-pointer disabled:bg-blue-200/50 disabled:cursor-not-allowed p-2 rounded-xl"} 
@@ -135,8 +146,9 @@ export default function StarshipsPage(){
                 </div>
 
             </div>
-             <StarshipsModal isOpen={isModalOpen} mode={modalMode} onClose={()=>{setIsModalOpen(false); setSelectedStarship(null)}} data={selectedStarship} onSave={handleSaving}></StarshipsModal>
+            <StarshipsModal isOpen={isModalOpen} mode={modalMode} onClose={()=>{setIsModalOpen(false); setSelectedStarship(null)}} data={selectedStarship} onSave={handleSaving}></StarshipsModal>
             <ConfirmModal isOpen={isConfirmOpen} onClose={()=>{setIsConfirmOpen(false); setToDeleteItem("");}} title={`¿Desea eliminar la nave ${toDeleteItem.name}?`} onDelete={handleDeleting}></ConfirmModal>
+            <AlertPopUp isOpen={isNotificationOpen} type={notificationType} message={notificationMessage} onClose={()=>setIsNotificationOpen(false)}></AlertPopUp>
         </div>           
         </>
     )
