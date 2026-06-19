@@ -3,7 +3,7 @@ import ListItemIcon from '@mui/material/ListItemIcon';
 import { useEffect, useState } from "react";
 import { Button } from "@mui/material";
 import AirplanemodeActiveIcon from '@mui/icons-material/AirplanemodeActive';
-import {CircleChevronRight, CircleChevronLeft} from 'lucide-react';
+import {CircleChevronRight, CircleChevronLeft, Clapperboard, Orbit, Car, PersonStanding,Rocket,UsersRound } from 'lucide-react';
 
 export default function Sidebar({activePage, setActivePage}){
     const [isCollapsed, setIsCollapsed] = useState(true);
@@ -15,6 +15,23 @@ export default function Sidebar({activePage, setActivePage}){
         {id:'starships', label:'Naves', href:'/starships'},
         {id:'species', label:'Especies', href:'/species'}]
     
+        const renderIcon=(page)=>{
+            switch(page){
+                case "movies":
+                    return <Clapperboard/>
+                case "planets":
+                    return <Orbit/>
+                case "vehicles":
+                    return <Car/>
+                case "starships":
+                    return <Rocket/>
+                case "species":
+                    return <PersonStanding/>
+                case "characters":
+                    return <UsersRound/>
+                }
+        }
+        
     return(
         <>
         
@@ -46,10 +63,10 @@ export default function Sidebar({activePage, setActivePage}){
                                 ${isActive ? "bg-blue-600/20 text-blue-400 font-semibold border-1-4 border-blue-500 rounded-1-none pl-2" : 
                                 "text-slate-400 hover:text-white hover:bg-slate-800"}`}>
                                     <div className={`transition-colors shrink-0 ${isActive ? "text-blue-400": "text-slate-400 group-hover:text-blue-400"}`}>
-                                        <AirplanemodeActiveIcon/>
+                                        {renderIcon(item.id)}
                                     </div>
                                     <span className={`whitespace-nowrap transition-all duration-300 overflowhidden text-left ${isCollapsed ? "w-0 opacity-0 pointer-events-none" : "w-auto opacity-100"}`}>
-                                       {item.label}
+                                        {item.label}
                                     </span>
                                 </buton>
                         );
