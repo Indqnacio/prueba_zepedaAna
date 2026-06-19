@@ -51,7 +51,7 @@ export default function MoviesModal({isOpen, onClose, data, mode, onSave}){
     
     return(
         <>
-             <div className="fixed inset-0 z-50 overflow-hidden">
+             <div className="fixed inset-0 z-50 overflow-hidden flex items-center justify-end">
                 <div className="absolute inset-0 bg-black/50 transition-opacity" onClick={onClose}></div>
                 <div className="absolute inset-y-0 right-0 max-w-full flex">
         <div className="w-screen max-w-md transform transition-all ease-in-out duration-500 sm:duration-700">
@@ -67,7 +67,8 @@ export default function MoviesModal({isOpen, onClose, data, mode, onSave}){
 
             <div className="mt-6 relative flex-1 px-4 sm:px-6">
               <form onSubmit={formik.handleSubmit} className="space-y-6">
-                <div>
+                <div className="p-6 flex-1 overflow-y-auto">
+                    <div className="space-y-4">
                   <label htmlFor="title" className="block text-sm font-medium text-gray-700">Nombre</label>
                   <input
                     id="title"
@@ -82,10 +83,10 @@ export default function MoviesModal({isOpen, onClose, data, mode, onSave}){
                   {formik.touched.title && formik.errors.title ? (
                     <div className="text-red-600 text-sm mt-1">{formik.errors.title}</div>
                   ) : null}
-                </div>
-                <div>
-                  <label htmlFor="director" className="block text-sm font-medium text-gray-700">Director</label>
-                  <input
+                    </div>
+                    <div className="space-y-4">
+                    <label htmlFor="director" className="block text-sm font-medium text-gray-700">Director</label>
+                    <input
                     id="director"
                     name="director"
                     type="text"
@@ -98,8 +99,8 @@ export default function MoviesModal({isOpen, onClose, data, mode, onSave}){
                   {formik.touched.director && formik.errors.director ? (
                     <div className="text-red-600 text-sm mt-1">{formik.errors.director}</div>
                   ) : null}
-                </div>
-                <div>
+                    </div>
+                    <div className="space-y-4">
                   <label htmlFor="title" className="block text-sm font-medium text-gray-700">Producer</label>
                   <input
                     id="producer"
@@ -115,6 +116,11 @@ export default function MoviesModal({isOpen, onClose, data, mode, onSave}){
                     <div className="text-red-600 text-sm mt-1">{formik.errors.producer}</div>
                   ) : null}
                 </div>
+
+                </div>
+              
+
+                
 
                 {!isReadOnly?(
                   <div className="flex justify-end space-x-3 pt-4 border-t border-gray-200">

@@ -8,7 +8,7 @@ import TableHead from '@mui/material/TableHead';
 import TablePagination from '@mui/material/TablePagination';
 import TableRow from '@mui/material/TableRow';
 import Button from '@mui/material/Button';
-import axios from "axios";
+import axios from "axios"; 
 import ExtraInfoModal from "./extraInfoModal";
 import { Eye, Pencil, Trash2 } from "lucide-react";
 
@@ -29,7 +29,7 @@ export default function TableData({columns, data, onView, onEdit, onDelete}){
     setIsModalOpen(true)
   }
     return(
-      <div className="w-full flex justify-center mx-auto my-4 ">
+      <div className="w-full flex justify-center mx-auto my-4 "> 
         <div className="overflow-hidden rounded-2xl border border-gray-200 shadow-xl max-w-[1400px] max-h-[550px] overflow-y-auto overflow-x-auto">
             <table className="w-full border-collapse">
             <thead className="bg-blue-800 text-md text-lg tracking-wider sticky top-0 z-10">
@@ -52,7 +52,6 @@ export default function TableData({columns, data, onView, onEdit, onDelete}){
                     <tr className="hover:bg-slate-100 transition-colors text-center" key={item.name}>
                       {columns.map((column)=>{
                         const value = item[column.id];
-
                         if(column.id==='actions'){
                           return(
                             

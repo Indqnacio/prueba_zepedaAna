@@ -134,13 +134,16 @@ export default function CharactersModal({isOpen, onClose, data, mode, onSave}){
                   delete payload.homeworld
                 }
                 console.log("payload ",payload)
-                if (mode==="editing"){
-                  console.log("quiero editaaaaaaaaar ")
-                  const res = axios.put('http://localhost:3000/putPersonaje',payload)
+              /*  if (mode==="editing"){
+                  const res = await axios.put('http://localhost:3000/putPersonaje',payload)
+                  alert('Peronaje actualizado con éxito ');
+                  
                   console.log(res)
-                }
-                const res = await onSave(payload);
-                console.log(res)
+                }*/
+              /*  else{*/
+                  const res = await onSave(payload);
+                  console.log(res)
+                //}
                 resetForm();
                 onClose();
             }catch(error){
@@ -154,23 +157,21 @@ export default function CharactersModal({isOpen, onClose, data, mode, onSave}){
     if(!isOpen) return null;
     return(
       <>
-
-      
         <div className="fixed inset-0 z-50 overflow-hidden flex items-center justify-end">
             <div 
-            className="absolute inset-0 bg-black/50 backdrop-blur-xs transition-opacity" onClick={onClose}></div>
-            <div className="w-full max-w-2xl h-full bg-gray-900 border-1 border-gray-100 shadow-2xl relative z-10 text-slate-100 flex flex-col">
+            className="absolute inset-0 bg-black/50 backdrop-blur-xs transition-opacity duration-500" onClick={onClose}></div>
+            <div className="w-full max-w-2xl h-full bg-gray-100 border-1 border-gray-50 round round-xl shadow-2xl relative z-10 text-slate-100 flex flex-col">
               <div className="px-6 py-5 bg-gray-100 flex items-center justify-between">
                 <h2 className="text-lg font-medium text-gray-900">{isEditing?"Editar Personaje":"Agregar Personaje"}</h2>
-                <button onClick={onClose} className="text-slate-400 hover:text-white transition-colors cursor-pointer">
+                <button onClick={onClose} className="text-slate-400 hover:text-black transition-colors cursor-pointer">
                   <CircleX/>
                 </button>
               </div>
               <div className="p-6 flex-1 overflow-y-auto">
                   <form onSubmit={formik.handleSubmit} className="space-y-6">
-
-                      <div>
-                  <label htmlFor="name" className="block text-sm font-medium text-gray-700">Nombre</label>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                      <div className="space-y-4">
+                         <label htmlFor="name" className="block text-sm font-medium text-gray-700">Nombre</label>
                   <input
                     id="name"
                     name="name"
@@ -179,14 +180,14 @@ export default function CharactersModal({isOpen, onClose, data, mode, onSave}){
                     onChange={formik.handleChange}
                     onBlur={formik.handleBlur}
                     value={formik.values.name}
-                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm p-2 border"
+                    className="mt-1 block w-full rounded-md border-gray-300 max-w-[300px] shadow-sm text-gray-900 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm p-2 border"
                   />
                   {formik.touched.name && formik.errors.name ? (
                     <div className="text-red-600 text-sm mt-1">{formik.errors.name}</div>
                   ) : null}
                       </div>
-                      <div>
-                  <label htmlFor="birth_year" className="block text-sm font-medium text-gray-700">Fecha de Nacimiento</label>
+                      <div className="space-y-4">
+                               <label htmlFor="birth_year" className="block text-sm font-medium text-gray-700">Fecha de Nacimiento</label>
                   <input
                     id="birth_year"
                     name="birth_year"
@@ -195,13 +196,13 @@ export default function CharactersModal({isOpen, onClose, data, mode, onSave}){
                     onChange={formik.handleChange}
                     onBlur={formik.handleBlur}
                     value={formik.values.birth_year}
-                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm p-2 border"
+                    className="mt-1 block w-full rounded-md border-gray-300 max-w-[300px] text-gray-900  shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm p-2 border"
                   />
                   {formik.touched.birth_year && formik.errors.birth_year ? (
                     <div className="text-red-600 text-sm mt-1">{formik.errors.birth_year}</div>
                   ) : null}
-                  </div>
-                  <div>
+                      </div>
+                      <div className="space-y-4">
                   <label htmlFor="eye_color" className="block text-sm font-medium text-gray-700">Color de Ojos</label>
                   <input
                     id="eye_color"
@@ -211,13 +212,13 @@ export default function CharactersModal({isOpen, onClose, data, mode, onSave}){
                     onChange={formik.handleChange}
                     onBlur={formik.handleBlur}
                     value={formik.values.eye_color}
-                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm p-2 border"
+                    className="mt-1 block w-full rounded-md border-gray-300 text-gray-900 max-w-[300px] shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm p-2 border"
                   />
                   {formik.touched.eye_color && formik.errors.eye_color ? (
                     <div className="text-red-600 text-sm mt-1">{formik.errors.eye_color}</div>
                   ) : null}
                   </div>
-                  <div>
+                  <div className="space-y-4">
                   <label htmlFor="gender" className="block text-sm font-medium text-gray-700">Género</label>
                   <input
                     id="gender"
@@ -227,13 +228,13 @@ export default function CharactersModal({isOpen, onClose, data, mode, onSave}){
                     onChange={formik.handleChange}
                     onBlur={formik.handleBlur}
                     value={formik.values.gender}
-                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm p-2 border"
+                    className="mt-1 block w-full rounded-md border-gray-300 max-w-[300px] text-gray-900  shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm p-2 border"
                   />
                   {formik.touched.gender && formik.errors.gender ? (
                     <div className="text-red-600 text-sm mt-1">{formik.errors.gender}</div>
                   ) : null}
                 </div>
-                <div>
+                <div className="space-y-4">
                   <label htmlFor="hair_color" className="block text-sm font-medium text-gray-700">Color de Cabello</label>
                   <input
                     id="hair_color"
@@ -243,13 +244,13 @@ export default function CharactersModal({isOpen, onClose, data, mode, onSave}){
                     onChange={formik.handleChange}
                     onBlur={formik.handleBlur}
                     value={formik.values.hair_color}
-                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm p-2 border"
+                    className="mt-1 block w-full rounded-md border-gray-300 max-w-[300px] text-gray-900  shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm p-2 border"
                   />
                   {formik.touched.hair_color && formik.errors.hair_color ? (
                     <div className="text-red-600 text-sm mt-1">{formik.errors.hair_color}</div>
                   ) : null}
                 </div>
-                <div>
+                <div className="space-y-4">
                   <label htmlFor="height" className="block text-sm font-medium text-gray-700">Altura</label>
                   <input
                     id="height"
@@ -259,13 +260,13 @@ export default function CharactersModal({isOpen, onClose, data, mode, onSave}){
                     onChange={formik.handleChange}
                     onBlur={formik.handleBlur}
                     value={formik.values.height}
-                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm p-2 border"
+                    className="mt-1 block w-full max-w-[300px] rounded-md text-gray-900  border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm p-2 border"
                   />
                   {formik.touched.height && formik.errors.height ? (
                     <div className="text-red-600 text-sm mt-1">{formik.errors.height}</div>
                   ) : null}
                 </div>
-                <div>
+                <div className="space-y-4">
                   <label htmlFor="mass" className="block text-sm font-medium text-gray-700">Peso</label>
                   <input
                     id="mass"
@@ -275,13 +276,13 @@ export default function CharactersModal({isOpen, onClose, data, mode, onSave}){
                     onChange={formik.handleChange}
                     onBlur={formik.handleBlur}
                     value={formik.values.mass}
-                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm p-2 border"
+                    className="mt-1 block w-full max-w-[300px] rounded-md text-gray-900  border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm p-2 border"
                   />
                   {formik.touched.mass && formik.errors.mass ? (
                     <div className="text-red-600 text-sm mt-1">{formik.errors.mass}</div>
                   ) : null}
                 </div>
-                <div>
+                <div className="space-y-4">
                   <label htmlFor="skin_color" className="block text-sm font-medium text-gray-700">Color de Piel</label>
                   <input
                     id="skin_color"
@@ -291,14 +292,13 @@ export default function CharactersModal({isOpen, onClose, data, mode, onSave}){
                     onChange={formik.handleChange}
                     onBlur={formik.handleBlur}
                     value={formik.values.skin_color}
-                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm p-2 border"
+                    className="mt-1 block w-full max-w-[300px] rounded-md text-gray-900  border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm p-2 border"
                   />
                   {formik.touched.skin_color && formik.errors.skin_color ? (
                     <div className="text-red-600 text-sm mt-1">{formik.errors.skin_color}</div>
                   ) : null}
                 </div>
-
-                 <div>
+                <div className="space-y-4">
                   <label htmlFor="planets" className="font-medium text-gray-700">Planeta</label>
                   <select 
                   name="planet" 
@@ -309,7 +309,7 @@ export default function CharactersModal({isOpen, onClose, data, mode, onSave}){
                   onChange={(e)=>{
                     formik.setFieldValue('homeworld', e.target.value)
                   }}
-                  className="w-full px-3 py-2 border rounded-md focus:ring-blue-500 focus:online-none bg-white min-h-[100px]"
+                  className="w-full px-3 py-2 shadow-sm rounded-md focus:ring-blue-500 max-w-[300px] focus:online-none bg-white max-h-[200px] text-black"
                   >
                   {isLoading ? (
                     <option>Cargando Opciones</option>
@@ -321,12 +321,13 @@ export default function CharactersModal({isOpen, onClose, data, mode, onSave}){
                     
                   </select>
                 </div>
-                  <div className="border border-slate-800 bg-slate-950/40 p-5 rounded-xl space-y-4">
-                    <div>
-                      <label className="block text-sm font-medium text-slate-300 mb-2">Especie</label>
+                <div>
+                  <div className="space-y-4">
+                      <label className="block font-medium text-gray-700 mb-2">Especie</label>
                       {!isReadOnly && (
                         <FormControl fullWidth size="small">
                         <Select displayEmpty
+                        className="max-w-[300px]"
                         disabled={isReadOnly}
                         value=""
                         onChange={(event) =>{
@@ -336,13 +337,10 @@ export default function CharactersModal({isOpen, onClose, data, mode, onSave}){
                             formik.setFieldValue('species',[...formik.values.species, specieObject]);
                           }
                         }}
-                        sx={{bgcolor: '#bfc1c7',
-                          color: '#94a3b8',
-                          '.MuiOutlinedInput-notchedOutline': {borderColor:'#1e293b'},
-                          '&:hover .MuiOutlinedInput-notchedOutline': {borderColor: '#3b82f6'},
-                          '&.Mui-focused .MuiOutlinedInput-notchedOutline':{borderColor: '#3b82f6'}
+                        sx={{bgcolor: '#ffffff',
+                          color: '#000000'
                         }}
-                        MenuProps={{ paperprops:{sx:{bgcolor:'#0f172a', color: '#f8fafc'}}}}
+                        MenuProps={{ paperprops:{sx:{bgcolor:'#0f172a', color: '#0058af'}}}}
                         >
                           <option value="" disabled className="text-slate-500">Elija una especie</option>
                           {species.map((specie)=>(
@@ -356,18 +354,17 @@ export default function CharactersModal({isOpen, onClose, data, mode, onSave}){
                       {formik.touched.species && formik.errors.species && (
                         <div className="text-rose-500 text-xs mt-1">{formik.errors.species}</div>
                       )}
-                    </div>
                   </div>
                   <div className="flex flex-wrap gap-2 pt-2">
                     {formik.values.species.length === 0 && (
-                      <p className="text-xs text-slate-500 italic">Ninguna Especie seleccionada.</p>
+                      <p className="text-xs text-gray-700 italic">Ninguna Especie seleccionada.</p>
                     )}
                     {formik.values.species.map((specie)=>{ 
                       const specieData = specie.name? specie: species.find(n=>n._id===specie) || {name: specie};
                       return(
                       <div
                       key={specie}
-                      className="flex items-center gap-2 bg-blue-600/10 border border-blue-500/30 text-black-200 px-3 py-1.5 rounded-xl text-sm font-medium animate-in faded-in zoom-in-95 duration-150">
+                      className="flex items-center gap-2 bg-blue-600/10 border border-blue-500/30 text-gray-700 px-3 py-1.5 rounded-xl text-sm font-medium animate-in faded-in zoom-in-95 duration-150">
                         <span>{specie.name}</span>
                         {!isReadOnly && (
                           <button type="button" onClick={()=>{const newArray = formik.values.species.filter(item => item !== specie);
@@ -380,13 +377,14 @@ export default function CharactersModal({isOpen, onClose, data, mode, onSave}){
                       </div>
                     )})}
                   </div>
-
-                   <div className="border border-slate-800 bg-slate-950/40 p-5 rounded-xl space-y-4">
-                    <div>
-                      <label className="block text-sm font-medium text-slate-300 mb-2">Naves</label>
+                </div>
+                <div>
+                    <div className="space-y-4">
+                      <label className="block font-medium text-gray-700 mb-2">Naves</label>
                       {!isReadOnly &&(
                          <FormControl fullWidth size="small">
                         <Select displayEmpty
+                        className="max-w-[300px]"
                         disabled={isReadOnly}
                         value=""
                         onChange={(event) =>{
@@ -396,11 +394,8 @@ export default function CharactersModal({isOpen, onClose, data, mode, onSave}){
                             formik.setFieldValue('starships',[...formik.values.starships, starshipObject]);
                           }
                         }}
-                        sx={{bgcolor: '#bfc1c7',
-                          color: '#94a3b8',
-                          '.MuiOutlinedInput-notchedOutline': {borderColor:'#1e293b'},
-                          '&:hover .MuiOutlinedInput-notchedOutline': {borderColor: '#3b82f6'},
-                          '&.Mui-focused .MuiOutlinedInput-notchedOutline':{borderColor: '#3b82f6'}
+                        sx={{bgcolor: '#ffffff',
+                          color: '#000000'
                         }}
                         MenuProps={{ paperprops:{sx:{bgcolor:'#0f172a', color: '#f8fafc'}}}}
                         >
@@ -417,17 +412,16 @@ export default function CharactersModal({isOpen, onClose, data, mode, onSave}){
                         <div className="text-rose-500 text-xs mt-1">{formik.errors.starships}</div>
                       )}
                     </div>
-                  </div>
-                  <div className="flex flex-wrap gap-2 pt-2">
+                    <div className="flex flex-wrap gap-2 pt-2">
                     {formik.values.starships.length === 0 && (
-                      <p className="text-xs text-slate-500 italic">Ninguna Nave seleccionada.</p>
+                      <p className="text-xs text-gray-700 italic">Ninguna Nave seleccionada.</p>
                     )}
                     {formik.values.starships.map((starship)=>{ 
                       const specieData = starship.name? starship: starships.find(n=>n._id===starship) || {name: starship};
                       return(
                       <div
                       key={starship}
-                      className="flex items-center gap-2 bg-blue-600/10 border border-blue-500/30 text-black-200 px-3 py-1.5 rounded-xl text-sm font-medium animate-in faded-in zoom-in-95 duration-150">
+                      className="flex items-center gap-2 bg-blue-600/10 border border-blue-500/30 text-gray-700 px-3 py-1.5 rounded-xl text-sm font-medium animate-in faded-in zoom-in-95 duration-150">
                         <span>{starship.name}</span>
                         {!isReadOnly && (
                           <button type="button" onClick={()=>{const ArrayShips = formik.values.starships.filter(item => item !== starship);
@@ -440,13 +434,14 @@ export default function CharactersModal({isOpen, onClose, data, mode, onSave}){
                       </div>
                     )})}
                   </div>
-
-                    <div className="border border-slate-800 bg-slate-950/40 p-5 rounded-xl space-y-4">
-                    <div>
-                      <label className="block text-sm font-medium text-slate-300 mb-2">Vehículos</label>
+                </div>
+                <div>
+                    <div className="space-y-4">
+                      <label className="block font-medium text-gray-700 mb-2">Vehículos</label>
                       {!isReadOnly &&(
                         <FormControl fullWidth size="small">
                         <Select displayEmpty
+                        className="max-w-[300px]"
                         disabled={isReadOnly}
                         value=""
                         onChange={(event) =>{
@@ -456,11 +451,8 @@ export default function CharactersModal({isOpen, onClose, data, mode, onSave}){
                             formik.setFieldValue('vehicles',[...formik.values.vehicles, vehicleObject]);
                           }
                         }}
-                        sx={{bgcolor: '#bfc1c7',
-                          color: '#94a3b8',
-                          '.MuiOutlinedInput-notchedOutline': {borderColor:'#1e293b'},
-                          '&:hover .MuiOutlinedInput-notchedOutline': {borderColor: '#3b82f6'},
-                          '&.Mui-focused .MuiOutlinedInput-notchedOutline':{borderColor: '#3b82f6'}
+                        sx={{bgcolor: '#ffffff',
+                          color: '#000000'
                         }}
                         MenuProps={{ paperprops:{sx:{bgcolor:'#0f172a', color: '#f8fafc'}}}}
                         >
@@ -478,17 +470,16 @@ export default function CharactersModal({isOpen, onClose, data, mode, onSave}){
                         <div className="text-rose-500 text-xs mt-1">{formik.errors.species}</div>
                       )}
                     </div>
-                  </div>
-                  <div className="flex flex-wrap gap-2 pt-2">
+                    <div className="flex flex-wrap gap-2 pt-2">
                     {formik.values.vehicles.length === 0 && (
-                      <p className="text-xs text-slate-500 italic">Ningún Vehículo seleccionado.</p>
+                      <p className="text-xs text-gray-700 italic">Ningún Vehículo seleccionado.</p>
                     )}
                     {formik.values.vehicles.map((vehicle)=>{ 
                       const vehicleData = vehicle.name? vehicle: vehicle.find(n=>n._id===vehicle) || {name: vehicle};
                       return(
                       <div
                       key={vehicle}
-                      className="flex items-center gap-2 bg-blue-600/10 border border-blue-500/30 text-black-200 px-3 py-1.5 rounded-xl text-sm font-medium animate-in faded-in zoom-in-95 duration-150">
+                      className="flex items-center gap-2 bg-blue-600/10 border border-blue-500/30 text-gray-700 px-3 py-1.5 rounded-xl text-sm font-medium animate-in faded-in zoom-in-95 duration-150">
                         <span>{vehicle.name}</span>
                         {!isReadOnly && (
                           <button type="button" onClick={()=>{const newArray = formik.values.vehicles.filter(item => item !== vehicle);
@@ -501,12 +492,14 @@ export default function CharactersModal({isOpen, onClose, data, mode, onSave}){
                       </div>
                     )})}
                   </div>
-                    <div className="border border-slate-800 bg-slate-950/40 p-5 rounded-xl space-y-4">
-                    <div>
-                      <label className="block text-sm font-medium text-slate-300 mb-2">Películas</label>
+                </div>
+                  <div>
+                    <div className="space-y-4">
+                      <label className="block font-medium text-gray-700 mb-2">Películas</label>
                       {!isReadOnly && (
                         <FormControl fullWidth size="small">
                         <Select displayEmpty
+                        className="max-w-[300px]"
                         disabled={isReadOnly}
                         value=""
                         onChange={(event) =>{
@@ -516,15 +509,12 @@ export default function CharactersModal({isOpen, onClose, data, mode, onSave}){
                             formik.setFieldValue('films',[...formik.values.films, filmObject]);
                           }
                         }}
-                        sx={{bgcolor: '#bfc1c7',
-                          color: '#94a3b8',
-                          '.MuiOutlinedInput-notchedOutline': {borderColor:'#1e293b'},
-                          '&:hover .MuiOutlinedInput-notchedOutline': {borderColor: '#3b82f6'},
-                          '&.Mui-focused .MuiOutlinedInput-notchedOutline':{borderColor: '#3b82f6'}
+                        sx={{bgcolor: '#ffffff',
+                          color: '#000000'
                         }}
                         MenuProps={{ paperprops:{sx:{bgcolor:'#0f172a', color: '#f8fafc'}}}}
                         >
-                          <option value="" disabled className="text-slate-500">Elija una película</option>
+                          <option value="" disabled className="text-gray-700">Elija una película</option>
                           {films.map((film)=>(
                             <MenuItem key={film._id} id={film._id} value={film._id}>
                               {film.title}
@@ -538,17 +528,16 @@ export default function CharactersModal({isOpen, onClose, data, mode, onSave}){
                         <div className="text-rose-500 text-xs mt-1">{formik.errors.films}</div>
                       )}
                     </div>
-                  </div>
-                  <div className="flex flex-wrap gap-2 pt-2">
+                    <div className="flex flex-wrap gap-2 pt-2">
                     {formik.values.films.length === 0 && (
-                      <p className="text-xs text-slate-500 italic">Ninguna película seleccionada.</p>
+                      <p className="text-xs text-gray-700 italic">Ninguna película seleccionada.</p>
                     )}
                     {formik.values.films.map((film)=>{ 
                       const specieData = film.title? film: films.find(n=>n._id===film) || {title: film};
                       return(
                       <div
                       key={film}
-                      className="flex items-center gap-2 bg-blue-600/10 border border-blue-500/30 text-black-200 px-3 py-1.5 rounded-xl text-sm font-medium animate-in faded-in zoom-in-95 duration-150">
+                      className="flex items-center gap-2 bg-blue-600/10 border border-blue-500/30 text-gray-700 px-3 py-1.5 rounded-xl text-sm font-medium animate-in faded-in zoom-in-95 duration-150">
                         <span>{film.title}</span>
                         {!isReadOnly && (
                           <button type="button" onClick={()=>{const MoviesArray = formik.values.films.filter(item => item !== film);
@@ -561,6 +550,12 @@ export default function CharactersModal({isOpen, onClose, data, mode, onSave}){
                       </div>
                     )})}
                   </div>
+                    
+                  </div>
+
+
+                    </div>
+                  
                 {!isReadOnly?( 
                   <div className="flex justify-end space-x-3 pt-4 border-t border-gray-200">
                   <button
@@ -589,25 +584,6 @@ export default function CharactersModal({isOpen, onClose, data, mode, onSave}){
                   </div>
                 )}
                     </form>
-              </div>
-            </div>
-            <div className="absolute inset-y-0 right-0 max-w-full flex">
-              <div className="w-screen max-w-md transform transition-all ease-in-out duration-500 sm:duration-700">
-                <div className="h-full flex flex-col bg-white shadow-xl overflow-y-auto">
-
-                  <div className="px-4 py-6 bg-gray-50 border-b border-gray-200 flex items-center justify-between">
-                    {isEditing?(<h2 className="text-lg font-medium text-gray-900">Editar Personaje</h2>):(<h2 className="text-lg font-medium text-gray-900">Registrar Nuevo Personaje</h2>)}
-                    <button 
-                      onClick={onClose}
-                      className="rounded-md text-gray-400 hover:text-gray-500 focus:outline-none"
-                    >
-                    </button>
-                  </div>
-
-                  <div className="mt-6 relative flex-1 px-4 sm:px-6">
-                    
-                  </div>
-                </div>
               </div>
             </div>
           </div> 
