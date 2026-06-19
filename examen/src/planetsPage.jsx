@@ -5,6 +5,7 @@ import TableData from "./tableData"
 import PlanetsModal from "./modals/planets"
 import ConfirmModal from "./confirmModal"
 import Searchbar from "./searchbar";
+import AlertPopUp from "./alertPopUp"
 import { Orbit,CircleChevronRight,CircleChevronLeft, Plus } from 'lucide-react';
 export default function PlanetsPage(){
 
@@ -17,6 +18,10 @@ export default function PlanetsPage(){
     const [index, setIndex]=useState(1);
     const [toDeleteItem, setToDeleteItem] = useState('');
     const [searchQuery, setSearchQuery] = useState('');
+    const [isNotificationOpen, setIsNotificationOpen] = useState(false);
+    const [notificationType, setNotificationType] = useState("");
+    const [notificationMessage, setNotificationMessage] = useState("");
+
     const columns = [
     {id: 'name', label: 'Nombre', minWidth:"10%" },
     {id: 'diameter', label: 'Diametro', minWidth:"10%"},
@@ -37,11 +42,11 @@ export default function PlanetsPage(){
     useEffect(()=>{
         fetchPlanets();
     },[index])
-     async function nextPage() {
-         setIndex(index+1)
+    async function nextPage() {
+        setIndex(index+1)
     }
     async function prevPage() {
-         setIndex(index-1)
+        setIndex(index-1)
     }
 
     const filteredData=planets.filter((item)=>{
@@ -50,6 +55,11 @@ export default function PlanetsPage(){
             item.name.toLocaleLowerCase().includes(query)
         );
     });
+    const launchAlert = (type, message)=>{
+        setIsNotificationOpen(true);
+        setNotificationMessage(message);
+        setNotificationType(type)
+    }
     const handleCreating = ()=>{
         setModalMode("creating")
         setSelectedPlanet(null)
@@ -73,19 +83,25 @@ export default function PlanetsPage(){
         setToDeleteItem(movie)
     }
     const handleSaving = async (datos)=>{
-        console.log("MOdal mode ", modalMode)
-        if(modalMode === "editing"){
-            console.log("datos a actualizar ", datos)
-            const res= await axios.put("http://localhost:3000/putPlaneta", datos)
-            console.log(res)
-        };
-        alert("Planeta actualizada con éxito")
-        if(modalMode === "creating"){
-            console.log("datos a postear ", datos)
-           const res= await axios.post("http://localhost:3000/postPlaneta", datos)
-           console.log(res)
-        };
-        fetchPlanets();
+        try{
+            console.log("MOdal mode ", modalMode)
+            if(modalMode === "editing"){
+                console.log("datos a actualizar ", datos)
+                const res= await axios.put("http://localhost:3000/putPlaneta", datos)
+                console.log(res)
+            };
+            if(modalMode === "creating"){
+                console.log("datos a postear ", datos)
+                const res= await axios.post("http://localhost:3000/postPlaneta", datos)
+                console.log(res)
+            };
+            launchAlert("isSuccess","Cambios realizados con éxito.")
+            setIsModalOpen(false);
+            fetchPlanets();
+        }catch(error){
+            const MessageErrorBackend = error.response?.data?.message || "Ocurrió un error";
+            launchAlert("Error", MessageErrorBackend)
+        }
     }
 
     const handleDeleting = async()=>{
@@ -103,7 +119,6 @@ export default function PlanetsPage(){
             console.log("Error ", error);
         }
     }
-
     return(
         <>
         <div className="w-full flex flex-col gap-6">
@@ -118,22 +133,21 @@ export default function PlanetsPage(){
                 </div>
             </div>
             <TableData columns={columns} data={filteredData} onView={handleViewing} onDelete={handleDeleteOpen} onEdit={handleEditing} />
-             <div className="flex items-center justify-end p-4 gap-3">
+            <div className="flex items-center justify-end p-4 gap-3">
                 <p className="font-medium">
                     Página <span className="text-slate-600">{index}</span>
                     de {" "} <span className="text-slate-600">{totalPages}</span>
                 </p>
                 <div className="flex gap-2">
                     <button disabled={index===1} 
-                      className={"inline-flex items-center gap-1 bg-blue-200/50 hover:bg-blue-800/20 disabled:opacity-60 text-blue-800 cursor-pointer disabled:bg-blue-200/50 disabled:cursor-not-allowed p-2 rounded-xl"} 
-                      onClick={prevPage}><CircleChevronLeft/>
+                    className={"inline-flex items-center gap-1 bg-blue-200/50 hover:bg-blue-800/20 disabled:opacity-60 text-blue-800 cursor-pointer disabled:bg-blue-200/50 disabled:cursor-not-allowed p-2 rounded-xl"} 
+                    onClick={prevPage}><CircleChevronLeft/>
                     </button>
                     <button disabled={index===totalPages} 
                     className={"inline-flex items-center gap-1 bg-blue-200/50 hover:bg-blue-800/20 disabled:opacity-60 text-blue-800 cursor-pointer disabled:bg-blue-200/50 disabled:cursor-not-allowed p-2 rounded-xl"} 
                         onClick={nextPage}><CircleChevronRight/>
                     </button>
                 </div>
-              
             </div>
         </div>
         <PlanetsModal 
@@ -142,6 +156,7 @@ export default function PlanetsPage(){
         onClose={()=>{setIsModalOpen(false); 
         setSelectedPlanet(null); setIsModalOpen(null)}} data={selectedPlanet} onSave={handleSaving}/>
         <ConfirmModal isOpen={isConfirmOpen} onClose={()=>{setIsConfirmOpen(false); setToDeleteItem("");}} title={`¿Desea eliminar el planeta ${toDeleteItem.name}?`} onDelete={handleDeleting}></ConfirmModal>
+        <AlertPopUp isOpen={isNotificationOpen} type={notificationType} message={notificationMessage} onClose={()=>setIsNotificationOpen(false)}></AlertPopUp>
         </>
     )
 }
